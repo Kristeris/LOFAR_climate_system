@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ClimateSensorData} from '../models/climate-sensor-data';
 import { environment } from '../../env/enviroment';
+import { map } from 'rxjs/operators';
 
 
 
@@ -15,13 +16,26 @@ export class ClimateSensorDataService {
 
     constructor(private http: HttpClient) { }
 
-    getAllSensorData(): Observable<ClimateSensorData[]> {
-        var apiUrl = environment.serverUrl + 'api/sensors';
-        return this.http.get<ClimateSensorData[]>(this.apiUrl);
-    }
+    // getAllSensorData(): Observable<ClimateSensorData[]> {
+    //     var apiUrl = environment.serverUrl + 'api/sensors';
+    //     return this.http.get<ClimateSensorData[]>(this.apiUrl);
+    // }
 
-    getSensorDataById(id: number): Observable<ClimateSensorData> {
-    return this.http.get<ClimateSensorData>(`${this.apiUrl}/${id}`);
+    // getSensorDataById(id: number): Observable<ClimateSensorData> {
+    // return this.http.get<ClimateSensorData>(`${this.apiUrl}/${id}`);
+    // }
+
+    getAllSensorData() {
+      const url = environment.serverUrl + 'users/all';
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      return this.http.get(url, config).pipe(
+        map(res => res)
+      );
     }
 
     
