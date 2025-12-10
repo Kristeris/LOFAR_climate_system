@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@angular/cli": "^21.0.1"
+    "@angular/cli": "^21.0.1",
+    "@angular/common": "^21.0.3"
   }
 }
