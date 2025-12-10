@@ -1,21 +1,22 @@
+<!-- 
 <div class="sensor-container">
   <div class="header">
     <h1>Climate Sensor Data</h1>
     <button (click)="refresh()" class="refresh-btn">Refresh Data</button>
   </div>
 
-  <!-- Loading State -->
+  
   <div *ngIf="loading" class="loading">
     <p>Loading sensor data...</p>
   </div>
 
-  <!-- Error State -->
+  
   <div *ngIf="error" class="error">
     <p>{{ error }}</p>
     <button (click)="loadSensorData()">Try Again</button>
   </div>
 
-  <!-- Data Display -->
+  
   <div *ngIf="!loading && !error" class="data-section">
     <div *ngIf="sensorData.length === 0" class="no-data">
       <p>No sensor data available</p>
@@ -43,4 +44,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

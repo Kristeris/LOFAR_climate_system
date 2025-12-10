@@ -25,17 +25,31 @@ export class ClimateSensorDataService {
     // return this.http.get<ClimateSensorData>(`${this.apiUrl}/${id}`);
     // }
 
-    getAllSensorData() {
-      const url = environment.serverUrl + 'users/all';
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
+    
+    // getAllSensorData(): Observable<ClimateSensorData[]> {
+    //   const url = environment.serverUrl + 'users/all';
+    //   const config = {
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   };
 
-      return this.http.get(url, config).pipe(
+    //   return this.http.get(url, config).pipe(
+    //     map(res => res)
+    //   );
+    // }
+    
+    getAllSensorData() {
+        const url = environment.serverUrl + 'users/all';
+        const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        };
+
+        return this.http.get(url, config).pipe(
         map(res => res)
-      );
+        );
     }
 
     
