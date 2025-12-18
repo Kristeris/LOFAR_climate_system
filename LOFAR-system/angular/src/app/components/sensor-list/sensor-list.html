@@ -1,1 +1,43 @@
-<p>sensor-list works!</p>
+<div class="sensor-container">
+    <h2>Climate Sensor Data</h2>
+
+    <div class="button-group">
+        <button (click)="loadSensors()">Load All Sensors</button>
+        <button (click)="loadLatest10()">Load Latest 10</button>
+    </div>
+
+    @if (loading()) {
+    <p>Loading sensor data...</p>
+    }
+
+    @if (error()) {
+    <p class="error">{{ error() }}</p>
+    }
+
+    @if (!loading() && sensors().length > 0) {
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Temperature (°C)</th>
+            <th>Humidity (%)</th>
+            <th>Date & Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (sensor of sensors(); track sensor.sensorId) {
+            <tr>
+            <td>{{ sensor.sensorId }}</td>
+            <td>{{ sensor.temperature }}</td>
+            <td>{{ sensor.humidity }}</td>
+            <td>{{ sensor.sensorDateTime }}</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    }
+
+    @if (!loading() && sensors().length === 0 && !error()) {
+    <p>No sensor data available.</p>
+    }
+</div>
