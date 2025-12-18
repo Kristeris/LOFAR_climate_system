@@ -36,11 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
-###env###
-config.env
-.env
-node_modules
-
-package-lock.json
-package.json
-.angular/
+###dependencies###
+/node_modules
+/node_modules/
+angular/.angular/
