@@ -1,0 +1,42 @@
+<div class="chart-container">
+  <h2>Climate Sensor Data Visualization</h2>
+
+  <div class="button-group">
+    <button (click)="loadSensors()" [disabled]="loading()">Load All Sensors</button>
+    <button (click)="loadLatest10()" [disabled]="loading()">Load Latest 10</button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <p>Loading sensor data...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (!loading() && sensors().length > 0) {
+    <div class="charts-grid">
+      <div class="chart-item">
+        <div id="temperatureChart" class="chart"></div>
+      </div>
+      
+      <div class="chart-item">
+        <div id="humidityChart" class="chart"></div>
+      </div>
+      
+      <div class="chart-item full-width">
+        <div id="combinedChart" class="chart"></div>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && sensors().length === 0 && !error()) {
+    <div class="no-data">
+      <p>No sensor data available. Please load data to view charts.</p>
+    </div>
+  }
+</div>

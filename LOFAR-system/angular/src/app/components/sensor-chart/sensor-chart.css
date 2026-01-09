@@ -1,0 +1,102 @@
+.chart-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.button-group button {
+  padding: 12px 24px;
+  cursor: pointer;
+  background-color: #4dabf7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button-group button:hover:not(:disabled) {
+  background-color: #339af0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+}
+
+.button-group button:disabled {
+  background-color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.chart-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart {
+  width: 100%;
+  height: 400px;
+  min-height: 400px;
+}
+
+.loading,
+.error,
+.no-data {
+  text-align: center;
+  padding: 40px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.loading {
+  background-color: #e7f5ff;
+  color: #1971c2;
+}
+
+.error {
+  background-color: #ffe3e3;
+  color: #c92a2a;
+  font-weight: bold;
+}
+
+.no-data {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart {
+    height: 300px;
+    min-height: 300px;
+  }
+}
