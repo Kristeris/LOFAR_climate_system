@@ -1,5 +1,5 @@
 to start backend:
-  ./gradlew bootRun
+  gradlew bootRun
 
 
 to start angular:
