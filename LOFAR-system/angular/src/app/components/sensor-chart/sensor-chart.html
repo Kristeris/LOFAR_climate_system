@@ -4,6 +4,16 @@
   <div class="button-group">
     <button (click)="loadSensors()" [disabled]="loading()">Load All Sensors</button>
     <button (click)="loadLatest10()" [disabled]="loading()">Load Latest 10</button>
+    
+    @if (!loading() && sensors().length > 0) {
+      <div class="download-separator"></div>
+      <button (click)="downloadAllCharts('png')" class="download-btn">
+        Download All as PNG
+      </button>
+      <button (click)="downloadAllCharts('jpeg')" class="download-btn">
+        Download All as JPEG
+      </button>
+    }
   </div>
 
   @if (loading()) {
@@ -21,14 +31,47 @@
   @if (!loading() && sensors().length > 0) {
     <div class="charts-grid">
       <div class="chart-item">
+        <div class="chart-header">
+          <h3>Temperature Over Time</h3>
+          <div class="chart-actions">
+            <button (click)="downloadChart('temperature', 'png')" class="icon-btn" title="Download as PNG">
+              📥 PNG
+            </button>
+            <button (click)="downloadChart('temperature', 'jpeg')" class="icon-btn" title="Download as JPEG">
+              📥 JPEG
+            </button>
+          </div>
+        </div>
         <div id="temperatureChart" class="chart"></div>
       </div>
       
       <div class="chart-item">
+        <div class="chart-header">
+          <h3>Humidity Over Time</h3>
+          <div class="chart-actions">
+            <button (click)="downloadChart('humidity', 'png')" class="icon-btn" title="Download as PNG">
+              📥 PNG
+            </button>
+            <button (click)="downloadChart('humidity', 'jpeg')" class="icon-btn" title="Download as JPEG">
+              📥 JPEG
+            </button>
+          </div>
+        </div>
         <div id="humidityChart" class="chart"></div>
       </div>
       
       <div class="chart-item full-width">
+        <div class="chart-header">
+          <h3>Temperature & Humidity Combined</h3>
+          <div class="chart-actions">
+            <button (click)="downloadChart('combined', 'png')" class="icon-btn" title="Download as PNG">
+              📥 PNG
+            </button>
+            <button (click)="downloadChart('combined', 'jpeg')" class="icon-btn" title="Download as JPEG">
+              📥 JPEG
+            </button>
+          </div>
+        </div>
         <div id="combinedChart" class="chart"></div>
       </div>
     </div>

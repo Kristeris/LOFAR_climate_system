@@ -36,3 +36,5 @@ export class ClimateSensorDataService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
+
+

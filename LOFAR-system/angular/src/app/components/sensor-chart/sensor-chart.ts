@@ -10,9 +10,9 @@ import { ClimateSensorDataService } from '../../services/climate-sensor-data';
   templateUrl: './sensor-chart.html',
   styleUrl: './sensor-chart.css',
 })
-export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
+export class SensorChart implements OnInit, OnDestroy {
   sensors = signal<ClimateSensorData[]>([]);
-  loading = signal<boolean>(true);
+  loading = signal<boolean>(false);
   error = signal<string | null>(null);
   
   private temperatureChart: echarts.ECharts | null = null;
@@ -20,6 +20,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
   private combinedChart: echarts.ECharts | null = null;
   private platformId = inject(PLATFORM_ID);
   private isBrowser: boolean;
+  private chartsInitialized = false;
 
   constructor(private sensorService: ClimateSensorDataService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -27,47 +28,46 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
     // Effect to update charts when sensors data changes
     effect(() => {
       const data = this.sensors();
-      if (data.length > 0 && this.isBrowser) {
-        // Use setTimeout to ensure charts are initialized
+      const isLoading = this.loading();
+      
+      if (data.length > 0 && !isLoading && this.isBrowser) {
+        // Wait for DOM to be ready and then update charts
         setTimeout(() => {
+          this.ensureChartsInitialized();
           this.updateCharts(data);
-        }, 100);
+        }, 150);
       }
     });
   }
 
   ngOnInit(): void {
+    // Load all sensors automatically when component initializes
     this.loadSensors();
-  }
-
-  ngAfterViewInit(): void {
-    // Initialize charts after view is ready
-    if (this.isBrowser) {
-      setTimeout(() => {
-        this.initializeCharts();
-        // If data is already loaded, update charts
-        if (this.sensors().length > 0) {
-          this.updateCharts(this.sensors());
-        }
-      }, 200);
-    }
   }
 
   ngOnDestroy(): void {
     // Dispose charts to prevent memory leaks
+    this.disposeCharts();
+  }
+
+  private disposeCharts(): void {
     if (this.temperatureChart) {
       this.temperatureChart.dispose();
+      this.temperatureChart = null;
     }
     if (this.humidityChart) {
       this.humidityChart.dispose();
+      this.humidityChart = null;
     }
     if (this.combinedChart) {
       this.combinedChart.dispose();
+      this.combinedChart = null;
     }
+    this.chartsInitialized = false;
   }
 
-  private initializeCharts(): void {
-    if (!this.isBrowser) return;
+  private ensureChartsInitialized(): void {
+    if (!this.isBrowser || this.chartsInitialized) return;
 
     // Initialize Temperature Chart
     const tempChartDom = document.getElementById('temperatureChart');
@@ -87,15 +87,18 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
       this.combinedChart = echarts.init(combinedChartDom);
     }
 
-    console.log('Charts initialized:', {
-      temperature: !!this.temperatureChart,
-      humidity: !!this.humidityChart,
-      combined: !!this.combinedChart
-    });
+    // Mark as initialized if all charts are created
+    if (this.temperatureChart && this.humidityChart && this.combinedChart) {
+      this.chartsInitialized = true;
+      console.log('Charts initialized successfully');
+    }
   }
 
   private updateCharts(data: ClimateSensorData[]): void {
-    if (!this.isBrowser) return;
+    if (!this.isBrowser || !this.chartsInitialized) {
+      console.log('Charts not ready for update');
+      return;
+    }
 
     console.log('Updating charts with data:', data);
 
@@ -114,8 +117,6 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
     );
     const temperatures = sortedData.map(s => s.temperature);
     const humidity = sortedData.map(s => s.humidity);
-
-    console.log('Chart data:', { dates, temperatures, humidity });
 
     // Temperature Chart
     if (this.temperatureChart) {
@@ -137,7 +138,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
           data: dates,
           axisLabel: {
             rotate: 45,
-            interval: 0
+            interval: 'auto'
           }
         },
         yAxis: {
@@ -169,7 +170,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
         grid: {
           left: '10%',
           right: '10%',
-          bottom: '15%',
+          bottom: '20%',
           containLabel: true
         }
       });
@@ -196,7 +197,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
           data: dates,
           axisLabel: {
             rotate: 45,
-            interval: 0
+            interval: 'auto'
           }
         },
         yAxis: {
@@ -228,7 +229,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
         grid: {
           left: '10%',
           right: '10%',
-          bottom: '15%',
+          bottom: '20%',
           containLabel: true
         }
       });
@@ -261,7 +262,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
           data: dates,
           axisLabel: {
             rotate: 45,
-            interval: 0
+            interval: 'auto'
           }
         },
         yAxis: [
@@ -315,7 +316,7 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
         grid: {
           left: '10%',
           right: '10%',
-          bottom: '15%',
+          bottom: '20%',
           containLabel: true
         }
       });
@@ -326,6 +327,12 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
   loadSensors(): void {
     this.loading.set(true);
     this.error.set(null);
+    
+    // Dispose existing charts before loading new data
+    if (this.chartsInitialized) {
+      this.disposeCharts();
+    }
+    
     this.sensorService.getAll().subscribe({
       next: (data) => {
         console.log('Loaded sensor data:', data);
@@ -343,6 +350,12 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
   loadLatest10(): void {
     this.loading.set(true);
     this.error.set(null);
+    
+    // Dispose existing charts before loading new data
+    if (this.chartsInitialized) {
+      this.disposeCharts();
+    }
+    
     this.sensorService.getLatest10().subscribe({
       next: (data) => {
         console.log('Loaded latest 10 sensor data:', data);
@@ -355,5 +368,62 @@ export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
         console.error('Error loading sensors:', err);
       },
     });
+  }
+
+  downloadChart(chartType: 'temperature' | 'humidity' | 'combined', format: 'png' | 'jpeg'): void {
+    if (!this.isBrowser || !this.chartsInitialized) {
+      console.error('Charts not initialized');
+      return;
+    }
+
+    let chart: echarts.ECharts | null = null;
+    let filename = '';
+
+    switch(chartType) {
+      case 'temperature':
+        chart = this.temperatureChart;
+        filename = `temperature-chart.${format}`;
+        break;
+      case 'humidity':
+        chart = this.humidityChart;
+        filename = `humidity-chart.${format}`;
+        break;
+      case 'combined':
+        chart = this.combinedChart;
+        filename = `combined-chart.${format}`;
+        break;
+    }
+
+    if (!chart) {
+      console.error('Chart not found');
+      return;
+    }
+
+    // Get the chart as base64 image
+    const imageUrl = chart.getDataURL({
+      type: format,
+      pixelRatio: 2,
+      backgroundColor: '#fff'
+    });
+
+    // Create a temporary link and trigger download
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  downloadAllCharts(format: 'png' | 'jpeg'): void {
+    if (!this.isBrowser || !this.chartsInitialized) {
+      console.error('Charts not initialized');
+      return;
+    }
+
+    // Download all charts with a small delay between each
+    this.downloadChart('temperature', format);
+    setTimeout(() => this.downloadChart('humidity', format), 300);
+    setTimeout(() => this.downloadChart('combined', format), 600);
   }
 }
