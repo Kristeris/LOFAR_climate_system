@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, signal, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, signal, effect, AfterViewInit, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import * as echarts from 'echarts';
 import { ClimateSensorData } from '../../models/climate-sensor-data';
 import { ClimateSensorDataService } from '../../services/climate-sensor-data';
@@ -10,7 +10,7 @@ import { ClimateSensorDataService } from '../../services/climate-sensor-data';
   templateUrl: './sensor-chart.html',
   styleUrl: './sensor-chart.css',
 })
-export class SensorChart implements OnInit, OnDestroy {
+export class SensorChart implements OnInit, AfterViewInit, OnDestroy {
   sensors = signal<ClimateSensorData[]>([]);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
@@ -18,20 +18,39 @@ export class SensorChart implements OnInit, OnDestroy {
   private temperatureChart: echarts.ECharts | null = null;
   private humidityChart: echarts.ECharts | null = null;
   private combinedChart: echarts.ECharts | null = null;
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser: boolean;
 
   constructor(private sensorService: ClimateSensorDataService) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    
     // Effect to update charts when sensors data changes
     effect(() => {
       const data = this.sensors();
-      if (data.length > 0) {
-        this.updateCharts(data);
+      if (data.length > 0 && this.isBrowser) {
+        // Use setTimeout to ensure charts are initialized
+        setTimeout(() => {
+          this.updateCharts(data);
+        }, 100);
       }
     });
   }
 
   ngOnInit(): void {
     this.loadSensors();
-    this.initializeCharts();
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize charts after view is ready
+    if (this.isBrowser) {
+      setTimeout(() => {
+        this.initializeCharts();
+        // If data is already loaded, update charts
+        if (this.sensors().length > 0) {
+          this.updateCharts(this.sensors());
+        }
+      }, 200);
+    }
   }
 
   ngOnDestroy(): void {
@@ -48,26 +67,38 @@ export class SensorChart implements OnInit, OnDestroy {
   }
 
   private initializeCharts(): void {
+    if (!this.isBrowser) return;
+
     // Initialize Temperature Chart
     const tempChartDom = document.getElementById('temperatureChart');
-    if (tempChartDom) {
+    if (tempChartDom && !this.temperatureChart) {
       this.temperatureChart = echarts.init(tempChartDom);
     }
 
     // Initialize Humidity Chart
     const humidChartDom = document.getElementById('humidityChart');
-    if (humidChartDom) {
+    if (humidChartDom && !this.humidityChart) {
       this.humidityChart = echarts.init(humidChartDom);
     }
 
     // Initialize Combined Chart
     const combinedChartDom = document.getElementById('combinedChart');
-    if (combinedChartDom) {
+    if (combinedChartDom && !this.combinedChart) {
       this.combinedChart = echarts.init(combinedChartDom);
     }
+
+    console.log('Charts initialized:', {
+      temperature: !!this.temperatureChart,
+      humidity: !!this.humidityChart,
+      combined: !!this.combinedChart
+    });
   }
 
   private updateCharts(data: ClimateSensorData[]): void {
+    if (!this.isBrowser) return;
+
+    console.log('Updating charts with data:', data);
+
     // Sort data by date
     const sortedData = [...data].sort((a, b) => 
       new Date(a.sensorDateTime).getTime() - new Date(b.sensorDateTime).getTime()
@@ -83,6 +114,8 @@ export class SensorChart implements OnInit, OnDestroy {
     );
     const temperatures = sortedData.map(s => s.temperature);
     const humidity = sortedData.map(s => s.humidity);
+
+    console.log('Chart data:', { dates, temperatures, humidity });
 
     // Temperature Chart
     if (this.temperatureChart) {
@@ -140,6 +173,7 @@ export class SensorChart implements OnInit, OnDestroy {
           containLabel: true
         }
       });
+      this.temperatureChart.resize();
     }
 
     // Humidity Chart
@@ -198,6 +232,7 @@ export class SensorChart implements OnInit, OnDestroy {
           containLabel: true
         }
       });
+      this.humidityChart.resize();
     }
 
     // Combined Chart
@@ -284,6 +319,7 @@ export class SensorChart implements OnInit, OnDestroy {
           containLabel: true
         }
       });
+      this.combinedChart.resize();
     }
   }
 
@@ -292,6 +328,7 @@ export class SensorChart implements OnInit, OnDestroy {
     this.error.set(null);
     this.sensorService.getAll().subscribe({
       next: (data) => {
+        console.log('Loaded sensor data:', data);
         this.sensors.set(data);
         this.loading.set(false);
       },
@@ -308,6 +345,7 @@ export class SensorChart implements OnInit, OnDestroy {
     this.error.set(null);
     this.sensorService.getLatest10().subscribe({
       next: (data) => {
+        console.log('Loaded latest 10 sensor data:', data);
         this.sensors.set(data);
         this.loading.set(false);
       },
