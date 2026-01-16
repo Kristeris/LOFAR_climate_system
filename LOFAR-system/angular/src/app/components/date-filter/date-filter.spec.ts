@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataFilter } from './data-filter';
+import { DateFilter } from './date-filter';
 
-describe('DataFilter', () => {
-  let component: DataFilter;
-  let fixture: ComponentFixture<DataFilter>;
+describe('DateFilter', () => {
+  let component: DateFilter;
+  let fixture: ComponentFixture<DateFilter>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataFilter]
+      imports: [DateFilter]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DataFilter);
+    fixture = TestBed.createComponent(DateFilter);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

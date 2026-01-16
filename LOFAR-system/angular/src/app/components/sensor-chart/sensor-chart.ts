@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, signal, effect, AfterViewInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, effect, PLATFORM_ID, inject, computed } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import * as echarts from 'echarts';
 import { ClimateSensorData } from '../../models/climate-sensor-data';
 import { ClimateSensorDataService } from '../../services/climate-sensor-data';
+import { DateFilter, DateFilterCriteria } from '../date-filter/date-filter';
 
 @Component({
   selector: 'app-sensor-chart',
-  imports: [CommonModule],
+  imports: [CommonModule, DateFilter],
   templateUrl: './sensor-chart.html',
   styleUrl: './sensor-chart.css',
 })
@@ -14,6 +15,12 @@ export class SensorChart implements OnInit, OnDestroy {
   sensors = signal<ClimateSensorData[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
+  filterCriteria = signal<DateFilterCriteria>({
+    startDate: null,
+    endDate: null,
+    startTime: null,
+    endTime: null,
+  });
   
   private temperatureChart: echarts.ECharts | null = null;
   private humidityChart: echarts.ECharts | null = null;
@@ -22,16 +29,49 @@ export class SensorChart implements OnInit, OnDestroy {
   private isBrowser: boolean;
   private chartsInitialized = false;
 
+  filteredSensors = computed(() => {
+    const data = this.sensors();
+    const criteria = this.filterCriteria();
+
+    if (!criteria.startDate && !criteria.endDate && !criteria.startTime && !criteria.endTime) {
+      return data;
+    }
+
+    return data.filter((sensor) => {
+      const sensorDateTime = new Date(sensor.sensorDateTime);
+      
+      let startDateTime: Date | null = null;
+      if (criteria.startDate) {
+        const timeStr = criteria.startTime || '00:00';
+        startDateTime = new Date(`${criteria.startDate}T${timeStr}:00`);
+      }
+
+      let endDateTime: Date | null = null;
+      if (criteria.endDate) {
+        const timeStr = criteria.endTime || '23:59';
+        endDateTime = new Date(`${criteria.endDate}T${timeStr}:59`);
+      }
+
+      if (startDateTime && sensorDateTime < startDateTime) {
+        return false;
+      }
+
+      if (endDateTime && sensorDateTime > endDateTime) {
+        return false;
+      }
+
+      return true;
+    });
+  });
+
   constructor(private sensorService: ClimateSensorDataService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     
-    // Effect to update charts when sensors data changes
     effect(() => {
-      const data = this.sensors();
+      const data = this.filteredSensors();
       const isLoading = this.loading();
       
       if (data.length > 0 && !isLoading && this.isBrowser) {
-        // Wait for DOM to be ready and then update charts
         setTimeout(() => {
           this.ensureChartsInitialized();
           this.updateCharts(data);
@@ -41,12 +81,10 @@ export class SensorChart implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Load all sensors automatically when component initializes
     this.loadSensors();
   }
 
   ngOnDestroy(): void {
-    // Dispose charts to prevent memory leaks
     this.disposeCharts();
   }
 
@@ -69,40 +107,31 @@ export class SensorChart implements OnInit, OnDestroy {
   private ensureChartsInitialized(): void {
     if (!this.isBrowser || this.chartsInitialized) return;
 
-    // Initialize Temperature Chart
     const tempChartDom = document.getElementById('temperatureChart');
     if (tempChartDom && !this.temperatureChart) {
       this.temperatureChart = echarts.init(tempChartDom);
     }
 
-    // Initialize Humidity Chart
     const humidChartDom = document.getElementById('humidityChart');
     if (humidChartDom && !this.humidityChart) {
       this.humidityChart = echarts.init(humidChartDom);
     }
 
-    // Initialize Combined Chart
     const combinedChartDom = document.getElementById('combinedChart');
     if (combinedChartDom && !this.combinedChart) {
       this.combinedChart = echarts.init(combinedChartDom);
     }
 
-    // Mark as initialized if all charts are created
     if (this.temperatureChart && this.humidityChart && this.combinedChart) {
       this.chartsInitialized = true;
-      console.log('Charts initialized successfully');
     }
   }
 
   private updateCharts(data: ClimateSensorData[]): void {
     if (!this.isBrowser || !this.chartsInitialized) {
-      console.log('Charts not ready for update');
       return;
     }
 
-    console.log('Updating charts with data:', data);
-
-    // Sort data by date
     const sortedData = [...data].sort((a, b) => 
       new Date(a.sensorDateTime).getTime() - new Date(b.sensorDateTime).getTime()
     );
@@ -118,16 +147,12 @@ export class SensorChart implements OnInit, OnDestroy {
     const temperatures = sortedData.map(s => s.temperature);
     const humidity = sortedData.map(s => s.humidity);
 
-    // Temperature Chart
     if (this.temperatureChart) {
       this.temperatureChart.setOption({
         title: {
           text: 'Temperature Over Time',
           left: 'center',
-          textStyle: {
-            color: '#333',
-            fontSize: 18
-          }
+          textStyle: { color: '#333', fontSize: 18 }
         },
         tooltip: {
           trigger: 'axis',
@@ -136,30 +161,20 @@ export class SensorChart implements OnInit, OnDestroy {
         xAxis: {
           type: 'category',
           data: dates,
-          axisLabel: {
-            rotate: 45,
-            interval: 'auto'
-          }
+          axisLabel: { rotate: 45, interval: 'auto' }
         },
         yAxis: {
           type: 'value',
           name: 'Temperature (°C)',
-          axisLabel: {
-            formatter: '{value}°C'
-          }
+          axisLabel: { formatter: '{value}°C' }
         },
         series: [{
           name: 'Temperature',
           type: 'line',
           data: temperatures,
           smooth: true,
-          lineStyle: {
-            color: '#ff6b6b',
-            width: 3
-          },
-          itemStyle: {
-            color: '#ff6b6b'
-          },
+          lineStyle: { color: '#ff6b6b', width: 3 },
+          itemStyle: { color: '#ff6b6b' },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: 'rgba(255, 107, 107, 0.5)' },
@@ -167,26 +182,17 @@ export class SensorChart implements OnInit, OnDestroy {
             ])
           }
         }],
-        grid: {
-          left: '10%',
-          right: '10%',
-          bottom: '20%',
-          containLabel: true
-        }
+        grid: { left: '10%', right: '10%', bottom: '20%', containLabel: true }
       });
       this.temperatureChart.resize();
     }
 
-    // Humidity Chart
     if (this.humidityChart) {
       this.humidityChart.setOption({
         title: {
           text: 'Humidity Over Time',
           left: 'center',
-          textStyle: {
-            color: '#333',
-            fontSize: 18
-          }
+          textStyle: { color: '#333', fontSize: 18 }
         },
         tooltip: {
           trigger: 'axis',
@@ -195,30 +201,20 @@ export class SensorChart implements OnInit, OnDestroy {
         xAxis: {
           type: 'category',
           data: dates,
-          axisLabel: {
-            rotate: 45,
-            interval: 'auto'
-          }
+          axisLabel: { rotate: 45, interval: 'auto' }
         },
         yAxis: {
           type: 'value',
           name: 'Humidity (%)',
-          axisLabel: {
-            formatter: '{value}%'
-          }
+          axisLabel: { formatter: '{value}%' }
         },
         series: [{
           name: 'Humidity',
           type: 'line',
           data: humidity,
           smooth: true,
-          lineStyle: {
-            color: '#4dabf7',
-            width: 3
-          },
-          itemStyle: {
-            color: '#4dabf7'
-          },
+          lineStyle: { color: '#4dabf7', width: 3 },
+          itemStyle: { color: '#4dabf7' },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: 'rgba(77, 171, 247, 0.5)' },
@@ -226,32 +222,21 @@ export class SensorChart implements OnInit, OnDestroy {
             ])
           }
         }],
-        grid: {
-          left: '10%',
-          right: '10%',
-          bottom: '20%',
-          containLabel: true
-        }
+        grid: { left: '10%', right: '10%', bottom: '20%', containLabel: true }
       });
       this.humidityChart.resize();
     }
 
-    // Combined Chart
     if (this.combinedChart) {
       this.combinedChart.setOption({
         title: {
           text: 'Temperature & Humidity',
           left: 'center',
-          textStyle: {
-            color: '#333',
-            fontSize: 18
-          }
+          textStyle: { color: '#333', fontSize: 18 }
         },
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
+          axisPointer: { type: 'cross' }
         },
         legend: {
           data: ['Temperature', 'Humidity'],
@@ -260,27 +245,20 @@ export class SensorChart implements OnInit, OnDestroy {
         xAxis: {
           type: 'category',
           data: dates,
-          axisLabel: {
-            rotate: 45,
-            interval: 'auto'
-          }
+          axisLabel: { rotate: 45, interval: 'auto' }
         },
         yAxis: [
           {
             type: 'value',
             name: 'Temperature (°C)',
             position: 'left',
-            axisLabel: {
-              formatter: '{value}°C'
-            }
+            axisLabel: { formatter: '{value}°C' }
           },
           {
             type: 'value',
             name: 'Humidity (%)',
             position: 'right',
-            axisLabel: {
-              formatter: '{value}%'
-            }
+            axisLabel: { formatter: '{value}%' }
           }
         ],
         series: [
@@ -290,13 +268,8 @@ export class SensorChart implements OnInit, OnDestroy {
             yAxisIndex: 0,
             data: temperatures,
             smooth: true,
-            lineStyle: {
-              color: '#ff6b6b',
-              width: 2
-            },
-            itemStyle: {
-              color: '#ff6b6b'
-            }
+            lineStyle: { color: '#ff6b6b', width: 2 },
+            itemStyle: { color: '#ff6b6b' }
           },
           {
             name: 'Humidity',
@@ -304,21 +277,11 @@ export class SensorChart implements OnInit, OnDestroy {
             yAxisIndex: 1,
             data: humidity,
             smooth: true,
-            lineStyle: {
-              color: '#4dabf7',
-              width: 2
-            },
-            itemStyle: {
-              color: '#4dabf7'
-            }
+            lineStyle: { color: '#4dabf7', width: 2 },
+            itemStyle: { color: '#4dabf7' }
           }
         ],
-        grid: {
-          left: '10%',
-          right: '10%',
-          bottom: '20%',
-          containLabel: true
-        }
+        grid: { left: '10%', right: '10%', bottom: '20%', containLabel: true }
       });
       this.combinedChart.resize();
     }
@@ -328,14 +291,12 @@ export class SensorChart implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     
-    // Dispose existing charts before loading new data
     if (this.chartsInitialized) {
       this.disposeCharts();
     }
     
     this.sensorService.getAll().subscribe({
       next: (data) => {
-        console.log('Loaded sensor data:', data);
         this.sensors.set(data);
         this.loading.set(false);
       },
@@ -351,14 +312,12 @@ export class SensorChart implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     
-    // Dispose existing charts before loading new data
     if (this.chartsInitialized) {
       this.disposeCharts();
     }
     
     this.sensorService.getLatest10().subscribe({
       next: (data) => {
-        console.log('Loaded latest 10 sensor data:', data);
         this.sensors.set(data);
         this.loading.set(false);
       },
@@ -368,6 +327,10 @@ export class SensorChart implements OnInit, OnDestroy {
         console.error('Error loading sensors:', err);
       },
     });
+  }
+
+  onFilterChange(criteria: DateFilterCriteria): void {
+    this.filterCriteria.set(criteria);
   }
 
   downloadChart(chartType: 'temperature' | 'humidity' | 'combined', format: 'png' | 'jpeg'): void {
@@ -399,14 +362,12 @@ export class SensorChart implements OnInit, OnDestroy {
       return;
     }
 
-    // Get the chart as base64 image
     const imageUrl = chart.getDataURL({
       type: format,
       pixelRatio: 2,
       backgroundColor: '#fff'
     });
 
-    // Create a temporary link and trigger download
     const link = document.createElement('a');
     link.href = imageUrl;
     link.download = filename;
@@ -421,7 +382,6 @@ export class SensorChart implements OnInit, OnDestroy {
       return;
     }
 
-    // Download all charts with a small delay between each
     this.downloadChart('temperature', format);
     setTimeout(() => this.downloadChart('humidity', format), 300);
     setTimeout(() => this.downloadChart('combined', format), 600);

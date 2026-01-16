@@ -1,11 +1,13 @@
 <div class="chart-container">
   <h2>Climate Sensor Data Visualization</h2>
 
+  <app-date-filter (filterChange)="onFilterChange($event)"></app-date-filter>
+
   <div class="button-group">
     <button (click)="loadSensors()" [disabled]="loading()">Load All Sensors</button>
     <button (click)="loadLatest10()" [disabled]="loading()">Load Latest 10</button>
     
-    @if (!loading() && sensors().length > 0) {
+    @if (!loading() && filteredSensors().length > 0) {
       <div class="download-separator"></div>
       <button (click)="downloadAllCharts('png')" class="download-btn">
         Download All as PNG
@@ -29,6 +31,12 @@
   }
 
   @if (!loading() && sensors().length > 0) {
+    <div class="results-info">
+      <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
+    </div>
+  }
+
+  @if (!loading() && filteredSensors().length > 0) {
     <div class="charts-grid">
       <div class="chart-item">
         <div class="chart-header">
@@ -74,6 +82,12 @@
         </div>
         <div id="combinedChart" class="chart"></div>
       </div>
+    </div>
+  }
+
+  @if (!loading() && filteredSensors().length === 0 && sensors().length > 0) {
+    <div class="no-data">
+      <p>No sensor data matches the current filter criteria.</p>
     </div>
   }
 

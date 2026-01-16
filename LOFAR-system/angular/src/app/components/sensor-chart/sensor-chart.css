@@ -60,6 +60,21 @@ h2 {
   opacity: 0.6;
 }
 
+.results-info {
+  background-color: #e7f5ff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border-left: 4px solid #4dabf7;
+}
+
+.results-info p {
+  margin: 0;
+  color: #1971c2;
+  font-weight: 500;
+  font-size: 14px;
+}
+
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -145,8 +160,10 @@ h2 {
 }
 
 .no-data {
-  background-color: #f8f9fa;
-  color: #495057;
+  background-color: #fff3bf;
+  color: #e67700;
+  font-weight: 500;
+  border-left: 4px solid #fab005;
 }
 
 @media (max-width: 768px) {
