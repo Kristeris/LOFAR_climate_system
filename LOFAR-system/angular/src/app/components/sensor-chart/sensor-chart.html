@@ -42,12 +42,20 @@
         <div class="chart-header">
           <h3>Temperature Over Time</h3>
           <div class="chart-actions">
-            <button (click)="downloadChart('temperature', 'png')" class="icon-btn" title="Download as PNG">
-              📥 PNG
-            </button>
-            <button (click)="downloadChart('temperature', 'jpeg')" class="icon-btn" title="Download as JPEG">
-              📥 JPEG
-            </button>
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('temperature')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'temperature') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('temperature', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('temperature', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('temperature', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('temperature')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
           </div>
         </div>
         <div id="temperatureChart" class="chart"></div>
@@ -57,12 +65,20 @@
         <div class="chart-header">
           <h3>Humidity Over Time</h3>
           <div class="chart-actions">
-            <button (click)="downloadChart('humidity', 'png')" class="icon-btn" title="Download as PNG">
-              📥 PNG
-            </button>
-            <button (click)="downloadChart('humidity', 'jpeg')" class="icon-btn" title="Download as JPEG">
-              📥 JPEG
-            </button>
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('humidity')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'humidity') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('humidity', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('humidity', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('humidity', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('humidity')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
           </div>
         </div>
         <div id="humidityChart" class="chart"></div>
@@ -72,12 +88,20 @@
         <div class="chart-header">
           <h3>Temperature & Humidity Combined</h3>
           <div class="chart-actions">
-            <button (click)="downloadChart('combined', 'png')" class="icon-btn" title="Download as PNG">
-              📥 PNG
-            </button>
-            <button (click)="downloadChart('combined', 'jpeg')" class="icon-btn" title="Download as JPEG">
-              📥 JPEG
-            </button>
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('combined')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'combined') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('combined', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('combined', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('combined', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('combined')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
           </div>
         </div>
         <div id="combinedChart" class="chart"></div>

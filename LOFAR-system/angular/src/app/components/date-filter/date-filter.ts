@@ -22,7 +22,7 @@ export class DateFilter {
   endDate = signal<string>('');
   startTime = signal<string>('');
   endTime = signal<string>('');
-
+  showClearButton = signal<boolean>(true);
   isExpanded = signal<boolean>(true);
 
   applyFilter(): void {

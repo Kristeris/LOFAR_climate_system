@@ -16,6 +16,7 @@ export class SensorChart implements OnInit, OnDestroy {
   sensors = signal<ClimateSensorData[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
+  activeDropdown = signal<string | null>(null);
   filterCriteria = signal<DateFilterCriteria>({
     startDate: null,
     endDate: null,
@@ -79,6 +80,10 @@ export class SensorChart implements OnInit, OnDestroy {
         }, 150);
       }
     });
+
+    if (this.isBrowser) {
+      document.addEventListener('click', this.handleClickOutside.bind(this));
+    }
   }
 
   ngOnInit(): void {
@@ -87,6 +92,24 @@ export class SensorChart implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.disposeCharts();
+    if (this.isBrowser) {
+      document.removeEventListener('click', this.handleClickOutside.bind(this));
+    }
+  }
+
+  private handleClickOutside(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.download-dropdown')) {
+      this.activeDropdown.set(null);
+    }
+  }
+
+  toggleDropdown(chartType: string): void {
+    if (this.activeDropdown() === chartType) {
+      this.activeDropdown.set(null);
+    } else {
+      this.activeDropdown.set(chartType);
+    }
   }
 
   private disposeCharts(): void {
@@ -334,7 +357,14 @@ export class SensorChart implements OnInit, OnDestroy {
     this.filterCriteria.set(criteria);
   }
 
-  downloadChart(chartType: 'temperature' | 'humidity' | 'combined', format: 'png' | 'jpeg'): void {
+  downloadChart(chartType: 'temperature' | 'humidity' | 'combined', format: 'png' | 'jpeg' | 'csv'): void {
+    this.activeDropdown.set(null);
+    
+    if (format === 'csv') {
+      this.downloadCSV(chartType);
+      return;
+    }
+
     if (!this.isBrowser || !this.chartsInitialized) {
       console.error('Charts not initialized');
       return;
@@ -377,6 +407,60 @@ export class SensorChart implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
 
+  downloadCSV(chartType: 'temperature' | 'humidity' | 'combined'): void {
+    const data = this.filteredSensors();
+    if (data.length === 0) {
+      console.error('No data to download');
+      return;
+    }
+
+    const sortedData = [...data].sort((a, b) => 
+      new Date(a.sensorDateTime).getTime() - new Date(b.sensorDateTime).getTime()
+    );
+
+    let csvContent = '';
+    let filename = '';
+
+    switch(chartType) {
+      case 'temperature':
+        csvContent = 'Date Time,Temperature (°C)\n';
+        sortedData.forEach(sensor => {
+          const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
+          csvContent += `"${dateTime}",${sensor.temperature}\n`;
+        });
+        filename = 'temperature-data.csv';
+        break;
+
+      case 'humidity':
+        csvContent = 'Date Time,Humidity (%)\n';
+        sortedData.forEach(sensor => {
+          const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
+          csvContent += `"${dateTime}",${sensor.humidity}\n`;
+        });
+        filename = 'humidity-data.csv';
+        break;
+
+      case 'combined':
+        csvContent = 'Date Time,Temperature (°C),Humidity (%)\n';
+        sortedData.forEach(sensor => {
+          const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
+          csvContent += `"${dateTime}",${sensor.temperature},${sensor.humidity}\n`;
+        });
+        filename = 'combined-data.csv';
+        break;
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   downloadAllCharts(format: 'png' | 'jpeg'): void {
     if (!this.isBrowser || !this.chartsInitialized) {
       console.error('Charts not initialized');
@@ -386,5 +470,13 @@ export class SensorChart implements OnInit, OnDestroy {
     this.downloadChart('temperature', format);
     setTimeout(() => this.downloadChart('humidity', format), 300);
     setTimeout(() => this.downloadChart('combined', format), 600);
+  }
+
+  downloadAllFormats(chartType: 'temperature' | 'humidity' | 'combined'): void {
+    this.activeDropdown.set(null);
+    
+    this.downloadChart(chartType, 'png');
+    setTimeout(() => this.downloadChart(chartType, 'jpeg'), 300);
+    setTimeout(() => this.downloadChart(chartType, 'csv'), 600);
   }
 }

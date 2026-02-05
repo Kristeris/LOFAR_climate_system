@@ -114,6 +114,99 @@ h2 {
   gap: 8px;
 }
 
+/* Dropdown Styles */
+.download-dropdown {
+  position: relative;
+}
+
+.download-btn {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #51cf66;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #40c057;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(64, 192, 87, 0.3);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 120px;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #f1f3f5;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #e7f5ff;
+  color: #1971c2;
+}
+
+.dropdown-item:active {
+  background-color: #d0ebff;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #dee2e6;
+  margin: 4px 0;
+}
+
+.dropdown-item.download-all {
+  background-color: #f8f9fa;
+  color: #1971c2;
+  font-weight: 600;
+}
+
+.dropdown-item.download-all:hover {
+  background-color: #4dabf7;
+  color: white;
+}
+
 .icon-btn {
   padding: 6px 12px;
   cursor: pointer;
@@ -200,5 +293,10 @@ h2 {
   .chart-actions {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .dropdown-menu {
+    right: auto;
+    left: 0;
   }
 }
