@@ -59,7 +59,9 @@
       <!-- Action Buttons -->
       <div class="filter-actions">
         <button (click)="applyFilter()" class="apply-btn">Apply Filter</button>
-        <button (click)="clearFilter()" class="clear-btn">Clear All</button>
+        @if (showClearButton) {
+          <button (click)="clearFilter()" class="clear-btn">Clear All</button>
+        }
       </div>
     </div>
   }
