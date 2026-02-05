@@ -423,28 +423,28 @@ export class SensorChart implements OnInit, OnDestroy {
 
     switch(chartType) {
       case 'temperature':
-        csvContent = 'Date Time,Temperature (°C)\n';
+        csvContent = 'Sensor ID,Date Time,Temperature (°C),Humidity (%)\n';
         sortedData.forEach(sensor => {
           const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
-          csvContent += `"${dateTime}",${sensor.temperature}\n`;
+          csvContent += `${sensor.sensorId},"${dateTime}",${sensor.temperature},${sensor.humidity}\n`;
         });
         filename = 'temperature-data.csv';
         break;
 
       case 'humidity':
-        csvContent = 'Date Time,Humidity (%)\n';
+        csvContent = 'Sensor ID,Date Time,Temperature (°C),Humidity (%)\n';
         sortedData.forEach(sensor => {
           const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
-          csvContent += `"${dateTime}",${sensor.humidity}\n`;
+          csvContent += `${sensor.sensorId},"${dateTime}",${sensor.temperature},${sensor.humidity}\n`;
         });
         filename = 'humidity-data.csv';
         break;
 
       case 'combined':
-        csvContent = 'Date Time,Temperature (°C),Humidity (%)\n';
+        csvContent = 'Sensor ID,Date Time,Temperature (°C),Humidity (%)\n';
         sortedData.forEach(sensor => {
           const dateTime = new Date(sensor.sensorDateTime).toLocaleString();
-          csvContent += `"${dateTime}",${sensor.temperature},${sensor.humidity}\n`;
+          csvContent += `${sensor.sensorId},"${dateTime}",${sensor.temperature},${sensor.humidity}\n`;
         });
         filename = 'combined-data.csv';
         break;
@@ -461,7 +461,14 @@ export class SensorChart implements OnInit, OnDestroy {
     URL.revokeObjectURL(url);
   }
 
-  downloadAllCharts(format: 'png' | 'jpeg'): void {
+  downloadAllCharts(format: 'png' | 'jpeg' | 'csv'): void {
+    if (format === 'csv') {
+      this.downloadChart('temperature', 'csv');
+      setTimeout(() => this.downloadChart('humidity', 'csv'), 300);
+      setTimeout(() => this.downloadChart('combined', 'csv'), 600);
+      return;
+    }
+
     if (!this.isBrowser || !this.chartsInitialized) {
       console.error('Charts not initialized');
       return;
