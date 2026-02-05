@@ -11,6 +11,7 @@ import lofar.system.service.ClimateSensorDataService;
 
 @Controller
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/sensors")
 public class ClimateSensorDataController {
 
