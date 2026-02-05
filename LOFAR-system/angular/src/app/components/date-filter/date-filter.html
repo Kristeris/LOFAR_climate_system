@@ -1,0 +1,68 @@
+<div class="filter-container">
+  <div class="filter-header" (click)="toggleExpanded()">
+    <h3>
+      <span class="filter-icon">🔍</span>
+      Filter by Date & Time
+    </h3>
+    <span class="toggle-icon">{{ isExpanded() ? '▼' : '▶' }}</span>
+  </div>
+
+  @if (isExpanded()) {
+    <div class="filter-content">
+      <!-- Custom Date Range -->
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label for="startDate">Start Date:</label>
+          <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            (change)="applyFilter()"
+            class="filter-input"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="startTime">Start Time:</label>
+          <input
+            type="time"
+            id="startTime"
+            [(ngModel)]="startTime"
+            (change)="applyFilter()"
+            class="filter-input"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="endDate">End Date:</label>
+          <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            (change)="applyFilter()"
+            class="filter-input"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="endTime">End Time:</label>
+          <input
+            type="time"
+            id="endTime"
+            [(ngModel)]="endTime"
+            (change)="applyFilter()"
+            class="filter-input"
+          />
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="filter-actions">
+        <button (click)="applyFilter()" class="apply-btn">Apply Filter</button>
+        @if (showClearButton()) {
+          <button (click)="clearFilter()" class="clear-btn">Clear All</button>
+        }
+      </div>
+    </div>
+  }
+</div>

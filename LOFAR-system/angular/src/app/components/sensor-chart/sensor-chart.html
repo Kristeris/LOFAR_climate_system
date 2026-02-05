@@ -1,0 +1,126 @@
+<div class="chart-container">
+  <h2>Climate Sensor Data Visualization</h2>
+
+  <app-date-filter (filterChange)="onFilterChange($event)"></app-date-filter>
+
+  <div class="button-group">
+    <button (click)="loadSensors()" [disabled]="loading()">Load All Sensors</button>
+    <button (click)="loadLatest10()" [disabled]="loading()">Load Latest 10</button>
+    
+    @if (!loading() && filteredSensors().length > 0) {
+      <div class="download-separator"></div>
+      <button (click)="downloadAllCharts('png')" class="download-btn">
+        Download All as PNG
+      </button>
+      <button (click)="downloadAllCharts('jpeg')" class="download-btn">
+        Download All as JPEG
+      </button>
+      <button (click)="downloadAllCharts('csv')" class="download-btn">
+        Download All as CSV
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <p>Loading sensor data...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (!loading() && sensors().length > 0) {
+    <div class="results-info">
+      <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
+    </div>
+  }
+
+  @if (!loading() && filteredSensors().length > 0) {
+    <div class="charts-grid">
+      <div class="chart-item">
+        <div class="chart-header">
+          <h3>Temperature Over Time</h3>
+          <div class="chart-actions">
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('temperature')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'temperature') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('temperature', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('temperature', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('temperature', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('temperature')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        <div id="temperatureChart" class="chart"></div>
+      </div>
+      
+      <div class="chart-item">
+        <div class="chart-header">
+          <h3>Humidity Over Time</h3>
+          <div class="chart-actions">
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('humidity')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'humidity') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('humidity', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('humidity', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('humidity', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('humidity')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        <div id="humidityChart" class="chart"></div>
+      </div>
+      
+      <div class="chart-item full-width">
+        <div class="chart-header">
+          <h3>Temperature & Humidity Combined</h3>
+          <div class="chart-actions">
+            <div class="download-dropdown">
+              <button (click)="toggleDropdown('combined')" class="download-btn">
+                📥 Download
+              </button>
+              @if (activeDropdown() === 'combined') {
+                <div class="dropdown-menu">
+                  <button (click)="downloadChart('combined', 'png')" class="dropdown-item">PNG</button>
+                  <button (click)="downloadChart('combined', 'jpeg')" class="dropdown-item">JPEG</button>
+                  <button (click)="downloadChart('combined', 'csv')" class="dropdown-item">CSV</button>
+                  <div class="dropdown-divider"></div>
+                  <button (click)="downloadAllFormats('combined')" class="dropdown-item download-all">Download All</button>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        <div id="combinedChart" class="chart"></div>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && filteredSensors().length === 0 && sensors().length > 0) {
+    <div class="no-data">
+      <p>No sensor data matches the current filter criteria.</p>
+    </div>
+  }
+
+  @if (!loading() && sensors().length === 0 && !error()) {
+    <div class="no-data">
+      <p>No sensor data available. Please load data to view charts.</p>
+    </div>
+  }
+</div>
