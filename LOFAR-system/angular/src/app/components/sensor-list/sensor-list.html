@@ -1,6 +1,8 @@
 <div class="sensor-container">
     <h2>Climate Sensor Data</h2>
 
+    <app-date-filter (filterChange)="onFilterChange($event)"></app-date-filter>
+
     <div class="button-group">
         <button (click)="loadSensors()">Load All Sensors</button>
         <button (click)="loadLatest10()">Load Latest 10</button>
@@ -14,7 +16,10 @@
     <p class="error">{{ error() }}</p>
     }
 
-    @if (!loading() && sensors().length > 0) {
+    @if (!loading() && filteredSensors().length > 0) {
+    <div class="results-info">
+        <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
+    </div>
     <table>
         <thead>
         <tr>
@@ -25,7 +30,7 @@
         </tr>
         </thead>
         <tbody>
-        @for (sensor of sensors(); track sensor.sensorId) {
+        @for (sensor of filteredSensors(); track sensor.sensorId) {
             <tr>
             <td>{{ sensor.sensorId }}</td>
             <td>{{ sensor.temperature }}</td>
@@ -35,6 +40,10 @@
         }
         </tbody>
     </table>
+    }
+
+    @if (!loading() && filteredSensors().length === 0 && sensors().length > 0) {
+    <p class="no-results">No sensor data matches the current filter criteria.</p>
     }
 
     @if (!loading() && sensors().length === 0 && !error()) {
