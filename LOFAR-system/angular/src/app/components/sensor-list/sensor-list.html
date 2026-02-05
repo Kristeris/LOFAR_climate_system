@@ -3,50 +3,57 @@
 
     <app-date-filter (filterChange)="onFilterChange($event)"></app-date-filter>
 
-    <div class="button-group">
-        <button (click)="loadSensors()">Load All Sensors</button>
-        <button (click)="loadLatest10()">Load Latest 10</button>
+    <!-- Bootstrap Grid for Buttons -->
+    <div class="row g-2 mb-3">
+        <div class="col-12 col-md-6 col-lg-auto">
+            <button (click)="loadSensors()" class="load-btn">Load All Sensors</button>
+        </div>
+        <div class="col-12 col-md-6 col-lg-auto">
+            <button (click)="loadLatest10()" class="load-btn">Load Latest 10</button>
+        </div>
     </div>
 
     @if (loading()) {
-    <p>Loading sensor data...</p>
+        <p class="loading-text">Loading sensor data...</p>
     }
 
     @if (error()) {
-    <p class="error">{{ error() }}</p>
+        <p class="error">{{ error() }}</p>
     }
 
     @if (!loading() && filteredSensors().length > 0) {
-    <div class="results-info">
-        <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
-    </div>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Temperature (°C)</th>
-            <th>Humidity (%)</th>
-            <th>Date & Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        @for (sensor of filteredSensors(); track sensor.sensorId) {
-            <tr>
-            <td>{{ sensor.sensorId }}</td>
-            <td>{{ sensor.temperature }}</td>
-            <td>{{ sensor.humidity }}</td>
-            <td>{{ sensor.sensorDateTime }}</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+        <div class="results-info">
+            <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Temperature (°C)</th>
+                        <th>Humidity (%)</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (sensor of filteredSensors(); track sensor.sensorId) {
+                        <tr>
+                            <td>{{ sensor.sensorId }}</td>
+                            <td>{{ sensor.temperature }}</td>
+                            <td>{{ sensor.humidity }}</td>
+                            <td>{{ sensor.sensorDateTime }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 
     @if (!loading() && filteredSensors().length === 0 && sensors().length > 0) {
-    <p class="no-results">No sensor data matches the current filter criteria.</p>
+        <p class="no-results">No sensor data matches the current filter criteria.</p>
     }
 
     @if (!loading() && sensors().length === 0 && !error()) {
-    <p>No sensor data available.</p>
+        <p class="no-data">No sensor data available.</p>
     }
 </div>

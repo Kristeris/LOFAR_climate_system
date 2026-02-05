@@ -10,13 +10,8 @@ h2 {
   margin-bottom: 20px;
 }
 
-.button-group {
-  margin: 20px 0;
-  display: flex;
-  gap: 10px;
-}
-
-.button-group button {
+/* Bootstrap grid handles layout, we keep button styling */
+.load-btn {
   padding: 10px 20px;
   cursor: pointer;
   background-color: #4dabf7;
@@ -26,12 +21,23 @@ h2 {
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
-.button-group button:hover {
+.load-btn:hover {
   background-color: #339af0;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+}
+
+.loading-text {
+  text-align: center;
+  color: #1971c2;
+  font-weight: 500;
+  background-color: #e7f5ff;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 20px 0;
 }
 
 .results-info {
@@ -49,14 +55,16 @@ h2 {
   font-size: 14px;
 }
 
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 th, td {
@@ -75,7 +83,7 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-tr:hover {
+tbody tr:hover {
   background-color: #e7f5ff;
 }
 
@@ -93,20 +101,21 @@ tr:hover {
   padding: 40px;
   background-color: #fff3bf;
   border-radius: 8px;
-  color: #c92a2a;
+  color: #e67700;
   font-weight: 500;
   border-left: 4px solid #fab005;
 }
 
+.no-data {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #868e96;
+  font-weight: 500;
+}
+
 @media (max-width: 768px) {
-  .button-group {
-    flex-direction: column;
-  }
-
-  .button-group button {
-    width: 100%;
-  }
-
   table {
     font-size: 12px;
   }

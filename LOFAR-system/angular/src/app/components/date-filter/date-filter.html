@@ -9,50 +9,62 @@
 
   @if (isExpanded()) {
     <div class="filter-content">
-      <!-- Custom Date Range -->
-      <div class="filter-grid">
-        <div class="filter-group">
-          <label for="startDate">Start Date:</label>
-          <input
-            type="date"
-            id="startDate"
-            [(ngModel)]="startDate"
-            (change)="applyFilter()"
-            class="filter-input"
-          />
+      <!-- Bootstrap Grid with Custom Styling -->
+      <div class="row g-3 mb-3">
+        <!-- Start Date - Bootstrap responsive columns -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-group">
+            <label for="startDate">Start Date:</label>
+            <input
+              type="date"
+              id="startDate"
+              [(ngModel)]="startDate"
+              (change)="applyFilter()"
+              class="filter-input"
+            />
+          </div>
         </div>
 
-        <div class="filter-group">
-          <label for="startTime">Start Time:</label>
-          <input
-            type="time"
-            id="startTime"
-            [(ngModel)]="startTime"
-            (change)="applyFilter()"
-            class="filter-input"
-          />
+        <!-- Start Time -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-group">
+            <label for="startTime">Start Time:</label>
+            <input
+              type="time"
+              id="startTime"
+              [(ngModel)]="startTime"
+              (change)="applyFilter()"
+              class="filter-input"
+            />
+          </div>
         </div>
 
-        <div class="filter-group">
-          <label for="endDate">End Date:</label>
-          <input
-            type="date"
-            id="endDate"
-            [(ngModel)]="endDate"
-            (change)="applyFilter()"
-            class="filter-input"
-          />
+        <!-- End Date -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-group">
+            <label for="endDate">End Date:</label>
+            <input
+              type="date"
+              id="endDate"
+              [(ngModel)]="endDate"
+              (change)="applyFilter()"
+              class="filter-input"
+            />
+          </div>
         </div>
 
-        <div class="filter-group">
-          <label for="endTime">End Time:</label>
-          <input
-            type="time"
-            id="endTime"
-            [(ngModel)]="endTime"
-            (change)="applyFilter()"
-            class="filter-input"
-          />
+        <!-- End Time -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-group">
+            <label for="endTime">End Time:</label>
+            <input
+              type="time"
+              id="endTime"
+              [(ngModel)]="endTime"
+              (change)="applyFilter()"
+              class="filter-input"
+            />
+          </div>
         </div>
       </div>
 
