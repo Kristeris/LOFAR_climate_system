@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, signal, effect, PLATFORM_ID, inject, computed } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Subscription } from 'rxjs';
 import * as echarts from 'echarts';
 import { ClimateSensorData } from '../../models/climate-sensor-data';
 import { ClimateSensorDataService } from '../../services/climate-sensor-data';
+import { WebSocketService } from '../../services/websocket.service';
 import { DateFilter, DateFilterCriteria } from '../date-filter/date-filter';
 
 
@@ -13,6 +15,7 @@ import { DateFilter, DateFilterCriteria } from '../date-filter/date-filter';
   styleUrl: './sensor-chart.css',
 })
 export class SensorChart implements OnInit, OnDestroy {
+  private webSocketSubscription: Subscription | null = null;
   sensors = signal<ClimateSensorData[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -66,7 +69,7 @@ export class SensorChart implements OnInit, OnDestroy {
     });
   });
 
-  constructor(private sensorService: ClimateSensorDataService) {
+  constructor(private sensorService: ClimateSensorDataService, private webSocketService: WebSocketService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     
     effect(() => {
@@ -88,13 +91,36 @@ export class SensorChart implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadSensors();
+    this.subscribeToWebSocketUpdates();
   }
 
   ngOnDestroy(): void {
+    if (this.webSocketSubscription) {
+      this.webSocketSubscription.unsubscribe();
+    }
     this.disposeCharts();
     if (this.isBrowser) {
       document.removeEventListener('click', this.handleClickOutside.bind(this));
     }
+  }
+
+  private subscribeToWebSocketUpdates(): void {
+    this.webSocketSubscription = this.webSocketService.getSensorDataUpdates().subscribe({
+      next: (newSensorData: ClimateSensorData) => {
+        const currentSensors = this.sensors();
+        // Check if this sensor already exists (avoid duplicates)
+        const exists = currentSensors.some(s => s.sensorId === newSensorData.sensorId && 
+          new Date(s.sensorDateTime).getTime() === new Date(newSensorData.sensorDateTime).getTime());
+        
+        if (!exists) {
+          const updatedSensors = [newSensorData, ...currentSensors];
+          this.sensors.set(updatedSensors);
+        }
+      },
+      error: (err) => {
+        console.error('Error receiving WebSocket updates:', err);
+      }
+    });
   }
 
   private handleClickOutside(event: MouseEvent): void {

@@ -6,6 +6,17 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Polyfills for Node.js globals - MUST BE FIRST -->
+  <script>
+    // Define global before any other scripts load
+    window.global = window;
+    window.process = {
+      env: { DEBUG: undefined },
+      version: '',
+      nextTick: function(fn) { setTimeout(fn, 0); }
+    };
+  </script>
 </head>
 <body>
   <app-root></app-root>

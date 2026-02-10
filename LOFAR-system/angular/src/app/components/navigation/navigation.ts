@@ -20,6 +20,11 @@ import { CommonModule } from '@angular/common';
               Charts
             </a>
           </li>
+          <li>
+            <a routerLink="/ws-test" routerLinkActive="active">
+              🔌 WebSocket Test
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

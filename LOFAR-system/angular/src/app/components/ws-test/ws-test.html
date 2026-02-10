@@ -1,0 +1,146 @@
+<div class="test-container">
+  <h2>🔌 WebSocket Real-Time Monitor</h2>
+  
+  <!-- Connection Status -->
+  <div class="status-section">
+    <div class="status-indicator" [class.connected]="connected()" [class.disconnected]="!connected()">
+      <span class="status-dot"></span>
+      <span class="status-text">
+        {{ connected() ? 'CONNECTED - Listening for updates...' : 'DISCONNECTED' }}
+      </span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Updates Received</div>
+        <div class="stat-value">{{ updateCount() }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Last Update Time</div>
+        <div class="stat-value">{{ lastUpdateTime() }}</div>
+      </div>
+    </div>
+    <div class="endpoint-info">
+      <strong>Endpoint:</strong> ws://localhost:8080/ws-sensor<br>
+      <strong>Topic:</strong> /topic/sensor-data (auto-subscribing)
+    </div>
+  </div>
+
+  <!-- Real-time Data Display -->
+  <div class="realtime-section">
+    <div class="section-header">
+      <h3>📡 LIVE DATA - Updates Automatically</h3>
+      @if (connected()) {
+        <span class="live-indicator">🔴 LIVE</span>
+      }
+    </div>
+    
+    @if (lastData()) {
+      <div class="data-card pulse-animation">
+        <div class="data-row">
+          <span class="label">Sensor ID:</span>
+          <span class="value">{{ lastData()!.sensorId }}</span>
+        </div>
+        <div class="data-row">
+          <span class="label">Temperature:</span>
+          <span class="value temperature">{{ lastData()!.temperature }}°C</span>
+        </div>
+        <div class="data-row">
+          <span class="label">Humidity:</span>
+          <span class="value humidity">{{ lastData()!.humidity }}%</span>
+        </div>
+        <div class="data-row">
+          <span class="label">Date/Time:</span>
+          <span class="value">{{ lastData()!.sensorDateTime }}</span>
+        </div>
+      </div>
+    } @else {
+      <div class="waiting-data">
+        <div class="spinner"></div>
+        <p>Waiting for backend to send data...</p>
+        <p class="hint">💡 Backend sends updates every 10 minutes automatically, or when you trigger the Python script</p>
+      </div>
+    }
+  </div>
+
+  <!-- Data History -->
+  @if (dataHistory().length > 0) {
+    <div class="history-section">
+      <div class="section-header">
+        <h3>📊 Update History (Last {{ dataHistory().length }} updates)</h3>
+        <button (click)="clearHistory()" class="btn-small btn-clear">Clear History</button>
+      </div>
+      
+      <div class="history-grid">
+        @for (data of dataHistory(); track data.sensorId) {
+          <div class="history-card">
+            <div class="history-time">{{ data.sensorDateTime }}</div>
+            <div class="history-data">
+              <span class="temp-badge">🌡️ {{ data.temperature }}°C</span>
+              <span class="humid-badge">💧 {{ data.humidity }}%</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Manual Controls (Optional) -->
+  <div class="controls-section">
+    <h3>🎮 Manual Controls (Optional - Data comes automatically)</h3>
+    <div class="button-group">
+      <button 
+        (click)="requestLatest()" 
+        [disabled]="!connected()"
+        class="btn btn-primary">
+        📊 Manually Request Latest
+      </button>
+      
+      <button 
+        (click)="requestHistory()" 
+        [disabled]="!connected()"
+        class="btn btn-secondary">
+        📈 Request Full History
+      </button>
+      
+      <button 
+        (click)="clearLog()"
+        class="btn btn-clear">
+        🗑️ Clear Log
+      </button>
+    </div>
+  </div>
+
+  <!-- Message Log -->
+  <div class="log-section">
+    <h3>📝 Real-Time Message Log</h3>
+    <div class="log-container">
+      @if (log().length === 0) {
+        <div class="empty-log">
+          Initializing WebSocket connection...
+        </div>
+      } @else {
+        @for (entry of log(); track $index) {
+          <div class="log-entry">{{ entry }}</div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <h3>ℹ️ How It Works:</h3>
+    <ol>
+      <li><strong>Automatic Connection:</strong> WebSocket connects when you open this page</li>
+      <li><strong>Backend Pushes Data:</strong> Every 10 minutes, backend automatically sends new sensor data</li>
+      <li><strong>Frontend Displays Instantly:</strong> Data appears here immediately when received</li>
+      <li><strong>No Manual Refresh:</strong> Everything updates in real-time automatically!</li>
+      <li><strong>Trigger Update:</strong> Run your Python script to manually trigger an immediate update</li>
+    </ol>
+    
+    <div class="trigger-info">
+      <h4>🐍 To Trigger Immediate Update:</h4>
+      <p>Run: <code>python src/main/java/python/SensorOutput.py</code></p>
+      <p>Or visit: <code>http://localhost:8080/sensors/update</code></p>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import SockJS from 'sockjs-client';
-import { Client, IMessage, StompHeaders } from '@stomp/stompjs';
+import { Client, IMessage } from '@stomp/stompjs';
 import { ClimateSensorData } from '../models/climate-sensor-data';
 import { environment } from '../../env/enviroment';
 
@@ -11,7 +11,9 @@ import { environment } from '../../env/enviroment';
 export class WebSocketService {
   private stompClient: Client | null = null;
   private sensorDataSubject = new Subject<ClimateSensorData>();
-  private connectionStatus = new Subject<boolean>();
+  // CHANGED: Use BehaviorSubject instead of Subject for connection status
+  // This ensures components get the current status immediately when they subscribe
+  private connectionStatus = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.connect();
@@ -32,9 +34,11 @@ export class WebSocketService {
 
     this.stompClient.onConnect = (frame: any) => {
       console.log('Connected: ' + frame);
+      // IMPORTANT: Set connection status to true
       this.connectionStatus.next(true);
 
       this.stompClient?.subscribe('/topic/sensor-data', (message: IMessage) => {
+        console.log('📥 Received sensor data:', message.body);
         const sensorData: ClimateSensorData = JSON.parse(message.body);
         this.sensorDataSubject.next(sensorData);
       });
@@ -43,6 +47,11 @@ export class WebSocketService {
     this.stompClient.onStompError = (frame: any) => {
       console.error('Broker reported error: ' + frame.headers['message']);
       console.error('Additional details: ' + frame.body);
+      this.connectionStatus.next(false);
+    };
+
+    this.stompClient.onDisconnect = () => {
+      console.log('Disconnected from WebSocket');
       this.connectionStatus.next(false);
     };
 
@@ -66,19 +75,25 @@ export class WebSocketService {
 
   requestLatestData(): void {
     if (this.stompClient && this.stompClient.connected) {
+      console.log('📤 Requesting latest data...');
       this.stompClient.publish({
         destination: '/app/sensor/request',
         body: ''
       });
+    } else {
+      console.warn('Cannot request data - not connected');
     }
   }
 
   requestHistoricalData(): void {
     if (this.stompClient && this.stompClient.connected) {
+      console.log('📤 Requesting historical data...');
       this.stompClient.publish({
         destination: '/app/sensor/history',
         body: ''
       });
+    } else {
+      console.warn('Cannot request history - not connected');
     }
   }
 }

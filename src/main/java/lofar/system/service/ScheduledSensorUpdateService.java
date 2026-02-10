@@ -1,10 +1,10 @@
 package lofar.system.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lofar.system.model.ClimateSensorData;
 
@@ -26,7 +26,7 @@ public class ScheduledSensorUpdateService {
     @Autowired
     private WebSocketNotificationService webSocketService;
 
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 100000) // needs 600000 for 10min
     public void updateSensorDataAutomatically() {
         logger.info("Scheduled sensor update triggered");
 
@@ -45,8 +45,4 @@ public class ScheduledSensorUpdateService {
         }
     }
 
-    @Scheduled(initialDelay = 5000, fixedRate = Long.MAX_VALUE)
-    public void initialSensorUpdate() {
-        updateSensorDataAutomatically();
-    }
 }
