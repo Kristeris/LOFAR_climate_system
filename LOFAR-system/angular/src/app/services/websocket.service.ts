@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import SockJS from 'sockjs-client';
-import { Client, IMessage, StompHeaders } from '@stomp/stompjs';
+import { Client, IMessage } from '@stomp/stompjs';
 import { ClimateSensorData } from '../models/climate-sensor-data';
 import { environment } from '../../env/enviroment';
+//WebSocketService - Manages WebSocket connection
+
+//Auto-reconnects on disconnect
+//Subscribes to real-time sensor updates
+//Handles connection status
 
 @Injectable({
   providedIn: 'root'
@@ -21,26 +26,27 @@ export class WebSocketService {
     const socket = new SockJS(environment.serverUrl + 'ws-sensor');
     
     this.stompClient = new Client({
-      webSocketFactory: () => socket as WebSocket,
+      webSocketFactory: () => socket as any,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (str: string) => {
+      debug: (str) => {
         console.log('STOMP: ' + str);
       }
     });
 
-    this.stompClient.onConnect = (frame: any) => {
+    this.stompClient.onConnect = (frame) => {
       console.log('Connected: ' + frame);
       this.connectionStatus.next(true);
 
+      // Subscribe to sensor data updates
       this.stompClient?.subscribe('/topic/sensor-data', (message: IMessage) => {
         const sensorData: ClimateSensorData = JSON.parse(message.body);
         this.sensorDataSubject.next(sensorData);
       });
     };
 
-    this.stompClient.onStompError = (frame: any) => {
+    this.stompClient.onStompError = (frame) => {
       console.error('Broker reported error: ' + frame.headers['message']);
       console.error('Additional details: ' + frame.body);
       this.connectionStatus.next(false);

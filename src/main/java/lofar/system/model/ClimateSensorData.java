@@ -2,6 +2,7 @@ package lofar.system.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,8 @@ public class ClimateSensorData {
 	private long sensorId;
 	private double temperature;
 	private double humidity;
+	
+	@Column(name = "sensor_date_time")
 	private LocalDateTime sensorDateTime;
 	
 	public double getTemperature() {

@@ -21,7 +21,7 @@ public class SensorDataParserService {
     public ClimateSensorData parseAndSave(String rawOutput) {
         try {
             // Parse the datetime
-            Pattern datePattern = Pattern.compile("^(\\w{3} \\w{3} \\d{2} \\d{2}:\\d{2}:\\d{2} \\d{4})");
+            Pattern datePattern = Pattern.compile("date = (\\w{3} \\w{3} \\d{2} \\d{2}:\\d{2}:\\d{2} \\d{4})");
             Matcher dateMatcher = datePattern.matcher(rawOutput);
             
             LocalDateTime dateTime = null;
