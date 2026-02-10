@@ -1,7 +1,9 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { ClimateSensorData } from '../../models/climate-sensor-data';
 import { ClimateSensorDataService } from '../../services/climate-sensor-data';
+import { WebSocketService } from '../../services/websocket.service';
 import { DateFilter, DateFilterCriteria } from '../date-filter/date-filter';
 
 @Component({
@@ -10,10 +12,16 @@ import { DateFilter, DateFilterCriteria } from '../date-filter/date-filter';
   templateUrl: './sensor-list.html',
   styleUrl: './sensor-list.css',
 })
-export class SensorList implements OnInit {
+export class SensorList implements OnInit, OnDestroy {
+  private webSocketSubscription: Subscription | null = null;
+  private connectionSubscription: Subscription | null = null;
+  private newRowIds = new Set<number>();
+  
   sensors = signal<ClimateSensorData[]>([]);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+  wsConnected = signal<boolean>(false);
+  lastUpdateTime = signal<string>('Never');
   filterCriteria = signal<DateFilterCriteria>({
     startDate: null,
     endDate: null,
@@ -59,14 +67,75 @@ export class SensorList implements OnInit {
     });
   });
 
-  constructor(private sensorService: ClimateSensorDataService) {}
+  constructor(
+    private sensorService: ClimateSensorDataService,
+    private webSocketService: WebSocketService
+  ) {}
 
   ngOnInit(): void {
     this.loadSensors();
+    this.subscribeToWebSocketUpdates();
+    this.subscribeToConnectionStatus();
+  }
+
+  ngOnDestroy(): void {
+    if (this.webSocketSubscription) {
+      this.webSocketSubscription.unsubscribe();
+    }
+    if (this.connectionSubscription) {
+      this.connectionSubscription.unsubscribe();
+    }
+  }
+
+  private subscribeToConnectionStatus(): void {
+    this.connectionSubscription = this.webSocketService.getConnectionStatus().subscribe({
+      next: (isConnected) => {
+        this.wsConnected.set(isConnected);
+        console.log('WebSocket connection status:', isConnected ? 'CONNECTED' : 'DISCONNECTED');
+      }
+    });
+  }
+
+  private subscribeToWebSocketUpdates(): void {
+    this.webSocketSubscription = this.webSocketService.getSensorDataUpdates().subscribe({
+      next: (newSensorData: ClimateSensorData) => {
+        const currentSensors = this.sensors();
+        // Check if this sensor already exists (avoid duplicates)
+        const exists = currentSensors.some(s => 
+          s.sensorId === newSensorData.sensorId && 
+          new Date(s.sensorDateTime).getTime() === new Date(newSensorData.sensorDateTime).getTime()
+        );
+        
+        if (!exists) {
+          // Add new data to the beginning of the list
+          const updatedSensors = [newSensorData, ...currentSensors];
+          this.sensors.set(updatedSensors);
+          this.lastUpdateTime.set(new Date().toLocaleTimeString());
+          
+          // Mark as new row for highlighting
+          this.newRowIds.add(newSensorData.sensorId);
+          
+          // Remove highlight after 3 seconds
+          setTimeout(() => {
+            this.newRowIds.delete(newSensorData.sensorId);
+          }, 3000);
+          
+          console.log('📥 New sensor data received and added to list:', newSensorData);
+        }
+      },
+      error: (err) => {
+        console.error('Error receiving WebSocket updates:', err);
+      }
+    });
+  }
+
+  isNewRow(sensor: ClimateSensorData): boolean {
+    return this.newRowIds.has(sensor.sensorId);
   }
 
   loadSensors(): void {
     this.loading.set(true);
+    this.newRowIds.clear(); // Clear highlights when loading new data
     this.sensorService.getAll().subscribe({
       next: (data) => {
         this.sensors.set(data);
@@ -82,6 +151,7 @@ export class SensorList implements OnInit {
 
   loadLatest10(): void {
     this.loading.set(true);
+    this.newRowIds.clear(); // Clear highlights when loading new data
     this.sensorService.getLatest10().subscribe({
       next: (data) => {
         this.sensors.set(data);

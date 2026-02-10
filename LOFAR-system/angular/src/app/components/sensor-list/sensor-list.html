@@ -1,6 +1,19 @@
 <div class="sensor-container">
     <h2>Climate Sensor Data</h2>
 
+    <!-- WebSocket Status Indicator -->
+    <div class="ws-status-banner" [class.connected]="wsConnected()" [class.disconnected]="!wsConnected()">
+        <div class="status-content">
+            <span class="status-dot"></span>
+            <span class="status-text">
+                {{ wsConnected() ? '🔴 LIVE - Auto-updating from WebSocket' : '⚠️ Disconnected - Manual refresh only' }}
+            </span>
+            @if (wsConnected() && lastUpdateTime() !== 'Never') {
+                <span class="last-update">Last update: {{ lastUpdateTime() }}</span>
+            }
+        </div>
+    </div>
+
     <app-date-filter (filterChange)="onFilterChange($event)"></app-date-filter>
 
     <div class="button-group">
@@ -18,7 +31,12 @@
 
     @if (!loading() && filteredSensors().length > 0) {
     <div class="results-info">
-        <p>Showing {{ filteredSensors().length }} of {{ sensors().length }} records</p>
+        <p>
+            Showing {{ filteredSensors().length }} of {{ sensors().length }} records
+            @if (filteredSensors().length !== sensors().length) {
+                <span class="filter-note">({{ sensors().length - filteredSensors().length }} hidden by filters)</span>
+            }
+        </p>
     </div>
     <table>
         <thead>
@@ -30,8 +48,8 @@
         </tr>
         </thead>
         <tbody>
-        @for (sensor of filteredSensors(); track sensor.sensorId) {
-            <tr>
+        @for (sensor of filteredSensors(); track sensor.sensorId; let i = $index) {
+            <tr [class.new-row]="isNewRow(sensor)">
             <td>{{ sensor.sensorId }}</td>
             <td>{{ sensor.temperature }}</td>
             <td>{{ sensor.humidity }}</td>
@@ -43,7 +61,11 @@
     }
 
     @if (!loading() && filteredSensors().length === 0 && sensors().length > 0) {
-    <p class="no-results">No sensor data matches the current filter criteria.</p>
+    <p class="no-results">
+        No sensor data matches the current filter criteria.
+        <br>
+        <small>({{ sensors().length }} total records available - try adjusting or clearing filters)</small>
+    </p>
     }
 
     @if (!loading() && sensors().length === 0 && !error()) {

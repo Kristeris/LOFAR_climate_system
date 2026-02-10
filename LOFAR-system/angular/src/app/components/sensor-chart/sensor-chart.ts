@@ -20,6 +20,8 @@ export class SensorChart implements OnInit, OnDestroy {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
   activeDropdown = signal<string | null>(null);
+  wsConnected = signal<boolean>(false);
+  lastUpdateTime = signal<string>('Never');
   filterCriteria = signal<DateFilterCriteria>({
     startDate: null,
     endDate: null,
@@ -92,6 +94,7 @@ export class SensorChart implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadSensors();
     this.subscribeToWebSocketUpdates();
+    this.subscribeToConnectionStatus();
   }
 
   ngOnDestroy(): void {
@@ -102,6 +105,15 @@ export class SensorChart implements OnInit, OnDestroy {
     if (this.isBrowser) {
       document.removeEventListener('click', this.handleClickOutside.bind(this));
     }
+  }
+
+  private subscribeToConnectionStatus(): void {
+    this.webSocketService.getConnectionStatus().subscribe({
+      next: (isConnected) => {
+        this.wsConnected.set(isConnected);
+        console.log('WebSocket connection status:', isConnected ? 'CONNECTED' : 'DISCONNECTED');
+      }
+    });
   }
 
   private subscribeToWebSocketUpdates(): void {
@@ -115,6 +127,8 @@ export class SensorChart implements OnInit, OnDestroy {
         if (!exists) {
           const updatedSensors = [newSensorData, ...currentSensors];
           this.sensors.set(updatedSensors);
+          this.lastUpdateTime.set(new Date().toLocaleTimeString());
+          console.log('📥 New sensor data received - charts will auto-update:', newSensorData);
         }
       },
       error: (err) => {

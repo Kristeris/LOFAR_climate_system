@@ -10,6 +10,81 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* WebSocket Status Banner */
+.ws-status-banner {
+  background: white;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #adb5bd;
+  transition: all 0.3s ease;
+}
+
+.ws-status-banner.connected {
+  border-left-color: #51cf66;
+  background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
+}
+
+.ws-status-banner.disconnected {
+  border-left-color: #ff6b6b;
+  background: linear-gradient(135deg, #fff3bf 0%, #ffe3e3 100%);
+}
+
+.status-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #adb5bd;
+}
+
+.ws-status-banner.connected .status-dot {
+  background-color: #51cf66;
+  animation: pulse 2s infinite;
+}
+
+.ws-status-banner.disconnected .status-dot {
+  background-color: #ff6b6b;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.status-text {
+  font-weight: 600;
+  font-size: 14px;
+  color: #495057;
+}
+
+.ws-status-banner.connected .status-text {
+  color: #2b8a3e;
+}
+
+.ws-status-banner.disconnected .status-text {
+  color: #c92a2a;
+}
+
+.last-update {
+  font-size: 12px;
+  color: #868e96;
+  margin-left: auto;
+}
+
 .button-group {
   display: flex;
   gap: 10px;
@@ -298,5 +373,15 @@ h2 {
   .dropdown-menu {
     right: auto;
     left: 0;
+  }
+
+  .status-content {
+    font-size: 12px;
+  }
+
+  .last-update {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 5px;
   }
 }
