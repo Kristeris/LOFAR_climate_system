@@ -1,0 +1,53 @@
+.admin-container {
+  padding: 30px;
+  max-width: 1300px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #2c3e50;
+}
+
+.admin-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.admin-header h2 {
+  margin: 0 0 6px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a252f;
+}
+
+.admin-subtitle {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 2px dashed #dee2e6;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 12px;
+}
+
+.empty-state p {
+  color: #868e96;
+  font-size: 1rem;
+  margin: 0;
+}

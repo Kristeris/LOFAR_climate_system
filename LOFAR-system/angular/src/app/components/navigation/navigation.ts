@@ -8,21 +8,34 @@ import { CommonModule } from '@angular/common';
   template: `
     <nav class="navigation">
       <div class="nav-container">
-        <h1 class="logo">LOFAR Climate System</h1>
+        <a routerLink="/" class="logo">
+          <span class="logo-icon">📡</span>
+          LOFAR Climate
+        </a>
         <ul class="nav-links">
           <li>
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              🏠 Home
+            </a>
+          </li>
+          <li>
             <a routerLink="/sensors" routerLinkActive="active">
-              Table View
+              📋 Table View
             </a>
           </li>
           <li>
             <a routerLink="/charts" routerLinkActive="active">
-              Charts
+              📈 Charts
             </a>
           </li>
           <li>
             <a routerLink="/ws-test" routerLinkActive="active">
-              🔌 WebSocket Test
+              🔌 WebSocket
+            </a>
+          </li>
+          <li>
+            <a routerLink="/admin" routerLinkActive="active" class="admin-link">
+              ⚙️ Admin
             </a>
           </li>
         </ul>
@@ -31,75 +44,101 @@ import { CommonModule } from '@angular/common';
   `,
   styles: [`
     .navigation {
-      background-color: #2c3e50;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background-color: #1a252f;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
       position: sticky;
       top: 0;
       z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      min-height: 60px;
+      min-height: 62px;
     }
 
     .logo {
       color: white;
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 700;
-      margin: 0;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+      transition: opacity 0.2s;
+    }
+
+    .logo:hover { opacity: 0.85; }
+
+    .logo-icon {
+      font-size: 20px;
     }
 
     .nav-links {
       list-style: none;
       display: flex;
-      gap: 20px;
+      gap: 4px;
       margin: 0;
       padding: 0;
     }
 
     .nav-links a {
-      color: #ecf0f1;
+      color: #9fb3c8;
       text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 7px;
       font-weight: 500;
-      transition: all 0.3s ease;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: block;
     }
 
     .nav-links a:hover {
-      background-color: #34495e;
+      background-color: rgba(255,255,255,0.07);
       color: white;
     }
 
     .nav-links a.active {
-      background-color: #4dabf7;
-      color: white;
+      background-color: rgba(77, 171, 247, 0.15);
+      color: #74c0fc;
+    }
+
+    .nav-links a.admin-link {
+      color: #f8b400;
+    }
+
+    .nav-links a.admin-link:hover {
+      background-color: rgba(248, 180, 0, 0.1);
+      color: #ffd43b;
+    }
+
+    .nav-links a.admin-link.active {
+      background-color: rgba(248, 180, 0, 0.15);
+      color: #ffd43b;
     }
 
     @media (max-width: 768px) {
       .nav-container {
         flex-direction: column;
-        padding: 15px 20px;
-      }
-
-      .logo {
-        font-size: 20px;
-        margin-bottom: 10px;
-      }
-
-      .nav-links {
+        padding: 12px 16px;
         gap: 10px;
       }
 
+      .nav-links {
+        gap: 2px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
       .nav-links a {
-        padding: 8px 16px;
-        font-size: 14px;
+        padding: 7px 12px;
+        font-size: 13px;
       }
     }
   `]

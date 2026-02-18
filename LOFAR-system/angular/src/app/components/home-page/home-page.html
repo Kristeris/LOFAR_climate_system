@@ -1,0 +1,106 @@
+<div class="home-container">
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="grid-lines"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        LOFAR Climate Monitoring System
+      </div>
+      <h1 class="hero-title">
+        Real-Time<br>
+        <span class="accent">Climate Intelligence</span>
+      </h1>
+      <p class="hero-subtitle">
+        Monitor temperature and humidity across LOFAR stations with live WebSocket data streaming, 
+        interactive visualizations, and automated sensor collection.
+      </p>
+      <div class="hero-clock">
+        <div class="clock-time">{{ currentTime() }}</div>
+        <div class="clock-date">{{ currentDate() }}</div>
+      </div>
+      <div class="hero-actions">
+        <a routerLink="/sensors" class="btn btn-primary">View Live Data</a>
+        <a routerLink="/charts" class="btn btn-secondary">Open Charts</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="sensor-ring ring-outer">
+        <div class="ring-label">Humidity</div>
+        <div class="ring-value">💧</div>
+      </div>
+      <div class="sensor-ring ring-middle">
+        <div class="ring-label">Temp</div>
+        <div class="ring-value">🌡️</div>
+      </div>
+      <div class="sensor-ring ring-inner">
+        <div class="ring-value">📡</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats-bar">
+    @for (stat of stats(); track stat.label) {
+      <div class="stat-item">
+        <div class="stat-icon" [style.color]="stat.color">{{ stat.icon }}</div>
+        <div class="stat-info">
+          <div class="stat-value" [style.color]="stat.color">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2>System Modules</h2>
+      <p>Everything you need to monitor and manage LOFAR climate data</p>
+    </div>
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <a [routerLink]="feature.route" class="feature-card">
+          <div class="feature-icon-wrap" [style.background]="feature.color + '20'" [style.border-color]="feature.color + '40'">
+            <span class="feature-icon">{{ feature.icon }}</span>
+          </div>
+          <h3 class="feature-title" [style.color]="feature.color">{{ feature.title }}</h3>
+          <p class="feature-desc">{{ feature.description }}</p>
+          <div class="feature-arrow" [style.color]="feature.color">→</div>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- System Info -->
+  <section class="info-section">
+    <div class="info-card">
+      <div class="info-icon">🐍</div>
+      <div class="info-content">
+        <h3>Automated Data Collection</h3>
+        <p>The Python sensor script runs automatically every 10 minutes via Spring Boot's scheduler, collecting temperature and humidity readings and broadcasting them via WebSocket to all connected clients.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">⚡</div>
+      <div class="info-content">
+        <h3>Real-Time WebSocket Streaming</h3>
+        <p>Built on STOMP over SockJS, every new sensor reading is instantly pushed to all connected browser clients — no polling, no delays. The entire frontend updates live.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🗄️</div>
+      <div class="info-content">
+        <h3>MySQL Persistence</h3>
+        <p>All sensor readings are stored in a MySQL database via Spring Data JPA, enabling historical queries, trend analysis, and data export in CSV format.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
