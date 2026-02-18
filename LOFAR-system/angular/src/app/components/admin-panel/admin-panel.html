@@ -1,1 +1,119 @@
-<p>admin-panel works!</p>
+<div class="admin-container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <h2>⚙️ Admin Panel</h2>
+    <p class="admin-subtitle">Manage WebSocket streaming and sensor data collection</p>
+  </div>
+
+  <!-- Status Banner -->
+  @if (statusMessage()) {
+    <div class="alert-banner" [class.alert-success]="!statusIsError()" [class.alert-error]="statusIsError()">
+      {{ statusMessage() }}
+    </div>
+  }
+
+  <!-- Overview Cards -->
+  <div class="cards-row">
+    <div class="status-card">
+      <div class="card-icon">🔌</div>
+      <div class="card-info">
+        <div class="card-label">WebSocket Connection</div>
+        <div class="card-value" [class.value-green]="wsConnected()" [class.value-red]="!wsConnected()">
+          {{ wsConnected() ? 'Connected' : 'Disconnected' }}
+        </div>
+      </div>
+      <div class="status-dot" [class.dot-green]="wsConnected()" [class.dot-red]="!wsConnected()"></div>
+    </div>
+
+    <div class="status-card">
+      <div class="card-icon">⏱️</div>
+      <div class="card-info">
+        <div class="card-label">Data Scheduler</div>
+        <div class="card-value" [class.value-green]="schedulerEnabled()" [class.value-red]="!schedulerEnabled()">
+          {{ schedulerEnabled() ? 'Running' : 'Stopped' }}
+        </div>
+      </div>
+      <div class="status-dot" [class.dot-green]="schedulerEnabled()" [class.dot-red]="!schedulerEnabled()"></div>
+    </div>
+
+
+  </div>
+
+  <!-- WebSocket Control Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <h3>🛜 WebSocket Scheduler Control</h3>
+      <p class="section-desc">
+        Start or stop the backend scheduler that periodically runs the Python sensor script
+        and broadcasts new readings to all connected clients via WebSocket.
+      </p>
+    </div>
+
+    <div class="control-row">
+      <!-- STOP Button -->
+      <button
+        class="control-btn btn-stop"
+        (click)="stopWebSocket()"
+        [disabled]="!wsRunning() || actionInProgress()">
+        <span class="btn-icon">⏹</span>
+        Stop WebSocket
+        @if (actionInProgress() && !wsRunning()) {
+          <span class="spinner"></span>
+        }
+      </button>
+
+      <!-- START Button -->
+      <button
+        class="control-btn btn-start"
+        (click)="startWebSocket()"
+        [disabled]="wsRunning() || actionInProgress()">
+        <span class="btn-icon">▶</span>
+        Start WebSocket
+        @if (actionInProgress() && wsRunning()) {
+          <span class="spinner"></span>
+        }
+      </button>
+    </div>
+
+    <div class="state-indicator">
+      <span class="state-label">Current state:</span>
+      <span class="state-badge" [class.badge-running]="wsRunning()" [class.badge-stopped]="!wsRunning()">
+        {{ wsRunning() ? '▶ Running' : '⏹ Stopped' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Manual Trigger Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <h3>🐍 Manual Sensor Trigger</h3>
+      <p class="section-desc">
+        Immediately run the Python sensor script outside the regular schedule and push
+        the result to all connected WebSocket clients.
+      </p>
+    </div>
+
+    <button
+      class="control-btn btn-trigger"
+      (click)="triggerManualUpdate()"
+      [disabled]="actionInProgress()">
+      <span class="btn-icon">⚡</span>
+      Trigger Update Now
+      @if (actionInProgress()) {
+        <span class="spinner"></span>
+      }
+    </button>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <h3>ℹ️ How It Works</h3>
+    <ul class="info-list">
+      <li><strong>Stop WebSocket</strong> — halts the scheduler so no new data is collected or broadcast. Existing data in the database is unaffected.</li>
+      <li><strong>Start WebSocket</strong> — resumes the scheduler and reconnects the frontend WebSocket client.</li>
+      <li><strong>Manual Trigger</strong> — runs the Python script immediately and broadcasts the result, regardless of scheduler state.</li>
+    </ul>
+  </div>
+
+</div>

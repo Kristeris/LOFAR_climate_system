@@ -8,16 +8,11 @@ import { CommonModule } from '@angular/common';
   template: `
     <nav class="navigation">
       <div class="nav-container">
-        <a routerLink="/" class="logo">
+        <a routerLink="/sensors" class="logo">
           <span class="logo-icon">📡</span>
           LOFAR Climate
         </a>
         <ul class="nav-links">
-          <li>
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-              🏠 Home
-            </a>
-          </li>
           <li>
             <a routerLink="/sensors" routerLinkActive="active">
               📋 Table View
