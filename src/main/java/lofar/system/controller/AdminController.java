@@ -1,24 +1,30 @@
 package lofar.system.controller;
 
-import lofar.system.service.ScheduledSensorUpdateService;
-import lofar.system.service.WebSocketNotificationService;
-import lofar.system.model.ClimateSensorData;
-import lofar.system.service.SensorDataParserService;
-import lofar.system.service.SensorScriptExecutionService;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import lofar.system.model.ClimateSensorData;
+import lofar.system.service.DynamicSchedulerService;
+import lofar.system.service.SensorDataParserService;
+import lofar.system.service.SensorScriptExecutionService;
+import lofar.system.service.WebSocketNotificationService;
 
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
+    // DynamicSchedulerService handles start/stop/interval at runtime
     @Autowired
-    private ScheduledSensorUpdateService schedulerService;
+    private DynamicSchedulerService schedulerService;
 
     @Autowired
     private SensorScriptExecutionService scriptService;
@@ -31,70 +37,67 @@ public class AdminController {
 
     /**
      * GET /api/admin/scheduler/status
-     * Returns the current scheduler enabled/disabled state.
+     * Returns current scheduler state and interval.
      */
     @GetMapping("/scheduler/status")
     public ResponseEntity<Map<String, Object>> getSchedulerStatus() {
-        boolean enabled = schedulerService.isSchedulerEnabled();
         return ResponseEntity.ok(Map.of(
-            "schedulerEnabled", enabled,
-            "message", enabled ? "Scheduler is running" : "Scheduler is stopped"
+            "schedulerEnabled", schedulerService.isSchedulerEnabled(),
+            "intervalMinutes", schedulerService.getIntervalMinutes(),
+            "message", schedulerService.isSchedulerEnabled() ? "Scheduler is running" : "Scheduler is stopped"
         ));
     }
 
     /**
      * POST /api/admin/scheduler/stop
-     * Disables the automatic sensor data scheduler.
+     * Pauses automatic data collection.
      */
     @PostMapping("/scheduler/stop")
     public ResponseEntity<Map<String, String>> stopScheduler() {
         schedulerService.disableScheduler();
         return ResponseEntity.ok(Map.of(
             "status", "stopped",
-            "message", "Scheduler has been stopped. No new data will be collected automatically."
+            "message", "Scheduler stopped. No new data will be collected automatically."
         ));
     }
 
     /**
      * POST /api/admin/scheduler/start
-     * Re-enables the automatic sensor data scheduler.
+     * Resumes automatic data collection.
      */
     @PostMapping("/scheduler/start")
     public ResponseEntity<Map<String, String>> startScheduler() {
         schedulerService.enableScheduler();
         return ResponseEntity.ok(Map.of(
             "status", "started",
-            "message", "Scheduler has been started. Data will be collected every 10 minutes."
+            "message", "Scheduler started. Data will be collected every " + schedulerService.getIntervalMinutes() + " minute(s)."
         ));
     }
 
+    /**
+     * POST /api/admin/scheduler/interval
+     * Changes how often the sensor script runs.
+     * Body: { "minutes": 5 }
+     */
     @PostMapping("/scheduler/interval")
     public ResponseEntity<Map<String, Object>> setInterval(@RequestBody Map<String, Long> body) {
         long minutes = body.getOrDefault("minutes", 10L);
         if (minutes < 1 || minutes > 1440) {
             return ResponseEntity.badRequest().body(Map.of(
-                "error", "Intervālam jābūt 1-1440 minūšu robežās"
+                "error", "Interval must be between 1 and 1440 minutes."
             ));
         }
         schedulerService.setInterval(minutes);
-            return ResponseEntity.ok(Map.of(
-                "status", "updated",
-                "intervalMinutes", minutes
-            ));
-    }
-
-    @GetMapping("/scheduler/status")
-    public ResponseEntity<Map<String, Object>> getStatus() {
         return ResponseEntity.ok(Map.of(
-            "schedulerEnabled", schedulerService.isSchedulerEnabled(),
-            "intervalMinutes", schedulerService.getIntervalMinutes()
+            "status", "updated",
+            "intervalMinutes", minutes,
+            "message", "Scheduler interval updated to " + minutes + " minute(s)."
         ));
     }
 
     /**
      * GET /api/admin/sensor/trigger
-     * Manually triggers the Python sensor script immediately,
-     * saves the result, and broadcasts it via WebSocket.
+     * Manually runs the Python script once and broadcasts the result.
      */
     @GetMapping("/sensor/trigger")
     public ResponseEntity<?> manualTrigger() {
