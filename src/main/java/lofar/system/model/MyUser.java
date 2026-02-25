@@ -28,7 +28,7 @@ public class MyUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Setter(value = AccessLevel.NONE)
-	private int uId;
+	private long uId;
 	@Size(min = 3, max = 20)
 	@Pattern(regexp = "[a-z0-9]+")
 	@Column(name = "Username")
