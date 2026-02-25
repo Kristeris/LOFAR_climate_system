@@ -1,0 +1,34 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <div class="brand">
+      <span class="brand-icon">📡</span>
+      <span class="brand-name">LOFAR</span>
+    </div>
+
+    @if (errorMsg()) {
+      <div class="error-banner">⚠ {{ errorMsg() }}</div>
+    }
+
+    <input
+      type="text"
+      placeholder="Username"
+      [(ngModel)]="username"
+      (keyup.enter)="onSubmit()"
+      autocomplete="username"
+    />
+
+    <input
+      [type]="showPassword() ? 'text' : 'password'"
+      placeholder="Password"
+      [(ngModel)]="password"
+      (keyup.enter)="onSubmit()"
+      autocomplete="current-password"
+    />
+
+    <button (click)="onSubmit()" [disabled]="loading()">
+      {{ loading() ? 'Signing in…' : 'Sign In' }}
+    </button>
+
+  </div>
+</div>

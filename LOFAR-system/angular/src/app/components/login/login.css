@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&display=swap');
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #080c10;
+  font-family: 'Exo 2', sans-serif;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(10, 16, 24, 0.95);
+  border: 1px solid rgba(0, 180, 255, 0.2);
+  border-radius: 6px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.brand-icon {
+  font-size: 22px;
+}
+
+.brand-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  color: #00c8ff;
+  letter-spacing: 0.2em;
+}
+
+/* Error */
+.error-banner {
+  background: rgba(255, 56, 96, 0.1);
+  border: 1px solid rgba(255, 56, 96, 0.4);
+  border-radius: 4px;
+  padding: 10px 14px;
+  color: #ff6b8a;
+  font-size: 0.85rem;
+}
+
+/* Inputs */
+input {
+  background: rgba(0, 20, 35, 0.8);
+  border: 1px solid rgba(0, 180, 255, 0.2);
+  border-radius: 4px;
+  padding: 12px 14px;
+  color: #c8dde8;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder {
+  color: rgba(100, 140, 160, 0.5);
+}
+
+input:focus {
+  border-color: rgba(0, 200, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.08);
+  color: #e8f4ff;
+}
+
+/* Button */
+button {
+  padding: 13px;
+  background: linear-gradient(135deg, #006fa8, #00b4ff);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 180, 255, 0.35);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

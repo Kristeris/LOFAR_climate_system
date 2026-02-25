@@ -1,0 +1,524 @@
+2026-02-26 00:00:27.412 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-26 00:00:27.420 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-26 00:00:27.420 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2026-02-26 00:00:27.421 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2026-02-26 00:00:27.423 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@76958827
+2026-02-26 00:00:27.424 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@443819d5
+2026-02-26 00:00:27.424 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-02-26 00:00:27.424 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-02-26 00:00:27.438 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:00:27.466 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:00:27.483 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:00:27.484 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:00:28.682 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:00:28.682 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:00:28.683 [http-nio-8080-exec-2] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id AAE097992FB4879A633F6E35A0FFAC93
+2026-02-26 00:00:28.684 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:00:28.685 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:00:40.025 [MessageBroker-2] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2026-02-26 00:01:38.036 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:38.065 [http-nio-8080-exec-9] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:38.067 [http-nio-8080-exec-9] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:38.068 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:38.070 [http-nio-8080-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:38.075 [http-nio-8080-exec-9] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id AAE097992FB4879A633F6E35A0FFAC93
+2026-02-26 00:01:39.699 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:39.699 [http-nio-8080-exec-3] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:39.700 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:39.700 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:39.700 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:39.915 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:39.916 [http-nio-8080-exec-4] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:39.916 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:39.916 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:39.917 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:40.144 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:40.146 [http-nio-8080-exec-10] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:40.146 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:40.147 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:40.147 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:40.356 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:40.360 [http-nio-8080-exec-7] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:40.361 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:40.364 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:40.365 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:40.564 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:40.564 [http-nio-8080-exec-8] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:40.565 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:40.565 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:40.566 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:40.763 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:40.763 [http-nio-8080-exec-1] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:40.764 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:40.764 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:40.764 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:40.946 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:40.947 [http-nio-8080-exec-2] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:40.947 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:40.948 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:40.948 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:41.113 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:41.113 [http-nio-8080-exec-5] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:41.114 [http-nio-8080-exec-5] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:41.114 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:41.114 [http-nio-8080-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:01:41.696 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:01:41.697 [http-nio-8080-exec-6] DEBUG o.s.security.web.csrf.CsrfFilter - Invalid CSRF token found for http://localhost:8080/api/auth/login
+2026-02-26 00:01:41.697 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AccessDeniedHandlerImpl - Responding with 403 status code
+2026-02-26 00:01:41.698 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-02-26 00:01:41.698 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:07:31.327 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-02-26 00:07:31.499 [main] INFO  lofar.system.LofarSystemApplication - Starting LofarSystemApplication using Java 21.0.8 with PID 12768 (C:\Users\karso\Pictures\LOFAR\LOFAR_climate_system\build\classes\java\main started by karso in C:\Users\karso\Pictures\LOFAR\LOFAR_climate_system)
+2026-02-26 00:07:31.501 [main] DEBUG lofar.system.LofarSystemApplication - Running with Spring Boot v4.0.0, Spring v7.0.1
+2026-02-26 00:07:31.505 [main] INFO  lofar.system.LofarSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2026-02-26 00:07:34.989 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-26 00:07:35.256 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 232 ms. Found 3 JPA repository interfaces.
+2026-02-26 00:07:37.309 [main] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-02-26 00:07:37.351 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-02-26 00:07:37.357 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-26 00:07:37.357 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14]
+2026-02-26 00:07:37.540 [main] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 5791 ms
+2026-02-26 00:07:38.029 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-26 00:07:38.197 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 7.1.8.Final
+2026-02-26 00:07:39.583 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-26 00:07:39.677 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-26 00:07:40.427 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2d3eb1ea
+2026-02-26 00:07:40.429 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-26 00:07:40.628 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/lofar_system]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 9.1
+	Default catalog/schema: lofar_system/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-26 00:07:42.567 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-26 00:07:42.603 [main] DEBUG org.hibernate.SQL - 
+    alter table my_user_table 
+       drop 
+       foreign key FK58h9msgyys6ktyo7p6583trpg
+2026-02-26 00:07:42.629 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists climate_sensor_data
+2026-02-26 00:07:42.650 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists my_authority_table_seq
+2026-02-26 00:07:42.680 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists my_user_table_seq
+2026-02-26 00:07:42.694 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists my_authority_table
+2026-02-26 00:07:42.708 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists my_user_table
+2026-02-26 00:07:42.734 [main] DEBUG org.hibernate.SQL - 
+    create table climate_sensor_data (
+        humidity float(53) not null,
+        temperature float(53) not null,
+        sensor_date_time datetime(6),
+        sensor_id bigint not null auto_increment,
+        primary key (sensor_id)
+    ) engine=InnoDB
+2026-02-26 00:07:42.764 [main] DEBUG org.hibernate.SQL - 
+    create table my_authority_table_seq (
+        next_val bigint
+    ) engine=InnoDB
+2026-02-26 00:07:42.780 [main] DEBUG org.hibernate.SQL - 
+    insert into my_authority_table_seq ( next_val ) values ( 1 )
+2026-02-26 00:07:42.792 [main] DEBUG org.hibernate.SQL - 
+    create table my_user_table_seq (
+        next_val bigint
+    ) engine=InnoDB
+2026-02-26 00:07:42.823 [main] DEBUG org.hibernate.SQL - 
+    insert into my_user_table_seq ( next_val ) values ( 1 )
+2026-02-26 00:07:42.828 [main] DEBUG org.hibernate.SQL - 
+    create table my_authority_table (
+        aid bigint not null,
+        title varchar(255) not null,
+        primary key (aid)
+    ) engine=InnoDB
+2026-02-26 00:07:42.857 [main] DEBUG org.hibernate.SQL - 
+    create table my_user_table (
+        aid bigint,
+        uid bigint not null,
+        username varchar(20) not null,
+        password varchar(255) not null,
+        primary key (uid)
+    ) engine=InnoDB
+2026-02-26 00:07:42.883 [main] DEBUG org.hibernate.SQL - 
+    alter table my_user_table 
+       add constraint FK58h9msgyys6ktyo7p6583trpg 
+       foreign key (aid) 
+       references my_authority_table (aid)
+2026-02-26 00:07:42.964 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26 00:07:43.219 [main] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-26 00:07:44.058 [ThreadPoolTaskScheduler-1] INFO  l.s.service.DynamicSchedulerService - Scheduled sensor update triggered (interval: 600000ms)
+2026-02-26 00:07:44.239 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-02-26 00:07:44.241 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-02-26 00:07:44.419 [ThreadPoolTaskScheduler-1] INFO  o.s.b.f.s.DefaultListableBeanFactory - Obtaining singleton bean 'transactionManager' in thread "ThreadPoolTaskScheduler-1" while other thread holds singleton lock for other beans [org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration, org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration, filterChain]
+2026-02-26 00:07:44.419 [ThreadPoolTaskScheduler-1] INFO  o.s.b.f.s.DefaultListableBeanFactory - Obtaining singleton bean 'platformTransactionManagerCustomizers' in thread "ThreadPoolTaskScheduler-1" while other thread holds singleton lock for other beans [org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration$EnableWebMvcConfiguration, org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration, org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration, mvcContentNegotiationManager, filterChain]
+2026-02-26 00:07:44.427 [ThreadPoolTaskScheduler-1] INFO  o.s.b.f.s.DefaultListableBeanFactory - Obtaining singleton bean 'org.springframework.boot.transaction.autoconfigure.TransactionManagerCustomizationAutoConfiguration' in thread "ThreadPoolTaskScheduler-1" while other thread holds singleton lock for other beans [org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration$EnableWebMvcConfiguration, org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration, org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration, mvcContentNegotiationManager, filterChain]
+2026-02-26 00:07:44.429 [ThreadPoolTaskScheduler-1] INFO  o.s.b.f.s.DefaultListableBeanFactory - Obtaining singleton bean 'transactionExecutionListeners' in thread "ThreadPoolTaskScheduler-1" while other thread holds singleton lock for other beans [org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration$EnableWebMvcConfiguration, org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration, org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration, mvcContentNegotiationManager, filterChain]
+2026-02-26 00:07:44.439 [ThreadPoolTaskScheduler-1] INFO  o.s.b.f.s.DefaultListableBeanFactory - Obtaining singleton bean 'spring.transaction-org.springframework.boot.transaction.autoconfigure.TransactionProperties' in thread "ThreadPoolTaskScheduler-1" while other thread holds singleton lock for other beans [org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration$EnableWebMvcConfiguration, org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration, org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration, mvcContentNegotiationManager, org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter, filterChain]
+2026-02-26 00:07:44.468 [main] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-26 00:07:44.557 [ThreadPoolTaskScheduler-1] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:44.720 [ThreadPoolTaskScheduler-1] INFO  l.s.s.WebSocketNotificationService - Sending sensor data update to WebSocket clients: ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44)
+2026-02-26 00:07:44.968 [main] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, CsrfFilter, LogoutFilter, ConcurrentSessionFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2026-02-26 00:07:45.082 [main] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws-sensor/**] in 'stompWebSocketHandlerMapping'
+2026-02-26 00:07:45.184 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.AdminController:
+	
+2026-02-26 00:07:45.186 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.AuthController:
+	
+2026-02-26 00:07:45.187 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.ClimateSensorDataController:
+	
+2026-02-26 00:07:45.188 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.SensorUpdateController:
+	
+2026-02-26 00:07:45.198 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.WebSocketSensorController:
+	{[MESSAGE],[/sensor/request]}: requestLatestData()
+	{[MESSAGE],[/sensor/history]}: requestHistoricalData()
+2026-02-26 00:07:45.199 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	l.s.c.WebSocketStatusController:
+	
+2026-02-26 00:07:45.208 [main] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	o.s.b.w.a.e.BasicErrorController:
+	
+2026-02-26 00:07:45.417 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 18 mappings in 'requestMappingHandlerMapping'
+2026-02-26 00:07:45.459 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-02-26 00:07:45.539 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-02-26 00:07:45.664 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-02-26 00:07:45.880 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2026-02-26 00:07:45.882 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2026-02-26 00:07:45.882 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2026-02-26 00:07:45.882 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@109db924]
+2026-02-26 00:07:45.882 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@109db924]
+2026-02-26 00:07:45.887 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@109db924]]
+2026-02-26 00:07:45.888 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2026-02-26 00:07:45.889 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-02-26 00:07:45.890 [main] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2026-02-26 00:07:45.891 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-02-26 00:07:45.952 [main] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-02-26 00:07:45.967 [main] INFO  lofar.system.LofarSystemApplication - Started LofarSystemApplication in 16.478 seconds (process running for 18.516)
+2026-02-26 00:07:45.969 [MessageBroker-1] INFO  l.s.s.ScheduledSensorUpdateService - Scheduled sensor update triggered
+2026-02-26 00:07:45.988 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:46.003 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:46.011 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:46.016 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:46.041 [main] DEBUG org.hibernate.SQL - 
+    select
+        next_val as id_val 
+    from
+        my_authority_table_seq 
+    for
+        update
+2026-02-26 00:07:46.048 [main] DEBUG org.hibernate.SQL - 
+    update
+        my_authority_table_seq 
+    set
+        next_val= ? 
+    where
+        next_val=?
+2026-02-26 00:07:46.097 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        my_authority_table
+        (title, aid) 
+    values
+        (?, ?)
+2026-02-26 00:07:46.114 [main] DEBUG org.hibernate.SQL - 
+    select
+        next_val as id_val 
+    from
+        my_authority_table_seq 
+    for
+        update
+2026-02-26 00:07:46.117 [main] DEBUG org.hibernate.SQL - 
+    update
+        my_authority_table_seq 
+    set
+        next_val= ? 
+    where
+        next_val=?
+2026-02-26 00:07:46.125 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        my_authority_table
+        (title, aid) 
+    values
+        (?, ?)
+2026-02-26 00:07:46.153 [MessageBroker-1] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        climate_sensor_data
+        (humidity, sensor_date_time, temperature) 
+    values
+        (?, ?, ?)
+2026-02-26 00:07:46.166 [MessageBroker-1] INFO  l.s.s.WebSocketNotificationService - Sending sensor data update to WebSocket clients: ClimateSensorData(sensorId=6, temperature=9.45, humidity=32.92, sensorDateTime=2026-02-26T00:07:46)
+2026-02-26 00:07:46.175 [MessageBroker-1] DEBUG o.s.m.s.b.SimpleBrokerMessageHandler - Processing MESSAGE destination=/topic/sensor-data session=null payload={"temperature":9.45,"humidity":32.92,"sensorDateTime":"2026-02-26T00:07:46","sen...(truncated)
+2026-02-26 00:07:46.183 [MessageBroker-1] INFO  l.s.s.ScheduledSensorUpdateService - Scheduled sensor update successful: ClimateSensorData(sensorId=6, temperature=9.45, humidity=32.92, sensorDateTime=2026-02-26T00:07:46)
+2026-02-26 00:07:46.338 [main] DEBUG org.hibernate.SQL - 
+    select
+        next_val as id_val 
+    from
+        my_user_table_seq 
+    for
+        update
+2026-02-26 00:07:46.338 [main] DEBUG org.hibernate.SQL - 
+    update
+        my_user_table_seq 
+    set
+        next_val= ? 
+    where
+        next_val=?
+2026-02-26 00:07:46.347 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        my_user_table
+        (aid, password, username, uid) 
+    values
+        (?, ?, ?, ?)
+2026-02-26 00:07:46.477 [main] DEBUG org.hibernate.SQL - 
+    select
+        next_val as id_val 
+    from
+        my_user_table_seq 
+    for
+        update
+2026-02-26 00:07:46.478 [main] DEBUG org.hibernate.SQL - 
+    update
+        my_user_table_seq 
+    set
+        next_val= ? 
+    where
+        next_val=?
+2026-02-26 00:07:46.479 [main] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        my_user_table
+        (aid, password, username, uid) 
+    values
+        (?, ?, ?, ?)
+2026-02-26 00:08:41.725 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-26 00:08:41.726 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-26 00:08:41.728 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2026-02-26 00:08:41.729 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2026-02-26 00:08:41.732 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@1985f8e3
+2026-02-26 00:08:41.734 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@10fa270e
+2026-02-26 00:08:41.735 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-02-26 00:08:41.735 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 8 ms
+2026-02-26 00:08:41.757 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:08:41.757 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:08:41.801 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:08:41.801 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:08:41.805 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/auth/me
+2026-02-26 00:08:41.805 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/auth/me
+2026-02-26 00:08:41.815 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-02-26 00:08:41.815 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-02-26 00:08:41.831 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AuthController#getCurrentUser(Principal)
+2026-02-26 00:08:41.831 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AuthController#getCurrentUser(Principal)
+2026-02-26 00:08:41.902 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:41.902 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:41.905 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{error=Not authenticated}]
+2026-02-26 00:08:41.905 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{error=Not authenticated}]
+2026-02-26 00:08:41.970 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 401 UNAUTHORIZED
+2026-02-26 00:08:41.970 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 401 UNAUTHORIZED
+2026-02-26 00:08:42.083 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:08:42.086 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:08:42.087 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/auth/me
+2026-02-26 00:08:42.088 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-02-26 00:08:42.089 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AuthController#getCurrentUser(Principal)
+2026-02-26 00:08:42.091 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:42.094 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{error=Not authenticated}]
+2026-02-26 00:08:42.099 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 401 UNAUTHORIZED
+2026-02-26 00:08:43.155 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/auth/me
+2026-02-26 00:08:43.187 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:08:43.189 [http-nio-8080-exec-2] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 7BAD06C2E960BA7E5A0D8788FBBB4C30
+2026-02-26 00:08:43.190 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/auth/me
+2026-02-26 00:08:43.192 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/auth/me", parameters={}
+2026-02-26 00:08:43.196 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AuthController#getCurrentUser(Principal)
+2026-02-26 00:08:43.198 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:43.199 [http-nio-8080-exec-2] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{error=Not authenticated}]
+2026-02-26 00:08:43.201 [http-nio-8080-exec-2] DEBUG o.s.web.servlet.DispatcherServlet - Completed 401 UNAUTHORIZED
+2026-02-26 00:08:45.871 [MessageBroker-2] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 1, completed tasks = 1]
+2026-02-26 00:08:50.732 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-02-26 00:08:50.734 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-26 00:08:50.734 [http-nio-8080-exec-8] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 7BAD06C2E960BA7E5A0D8788FBBB4C30
+2026-02-26 00:08:50.734 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/auth/login
+2026-02-26 00:08:50.735 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/auth/login", parameters={masked}
+2026-02-26 00:08:50.756 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AuthController#login(String, String, HttpServletRequest)
+2026-02-26 00:08:51.595 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        mu1_0.uid,
+        mu1_0.aid,
+        mu1_0.password,
+        mu1_0.username 
+    from
+        my_user_table mu1_0 
+    where
+        mu1_0.username=?
+2026-02-26 00:08:51.631 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        ma1_0.aid,
+        ma1_0.title,
+        u1_0.aid,
+        u1_0.uid,
+        u1_0.password,
+        u1_0.username 
+    from
+        my_authority_table ma1_0 
+    left join
+        my_user_table u1_0 
+            on ma1_0.aid=u1_0.aid 
+    where
+        ma1_0.aid=?
+2026-02-26 00:08:51.758 [http-nio-8080-exec-8] DEBUG o.s.s.a.d.DaoAuthenticationProvider - Authenticated user
+2026-02-26 00:08:51.778 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:51.779 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{role=ADMIN, username=admins}]
+2026-02-26 00:08:51.783 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:08:51.912 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/sensors
+2026-02-26 00:08:51.923 [http-nio-8080-exec-5] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:08:51.925 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/sensors
+2026-02-26 00:08:51.926 [http-nio-8080-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/sensors", parameters={}
+2026-02-26 00:08:51.928 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.ClimateSensorDataController#getAllSensorData()
+2026-02-26 00:08:51.972 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        csd1_0.sensor_id,
+        csd1_0.humidity,
+        csd1_0.sensor_date_time,
+        csd1_0.temperature 
+    from
+        climate_sensor_data csd1_0
+2026-02-26 00:08:52.018 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:08:52.022 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [[ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44 (truncated)...]
+2026-02-26 00:08:52.032 [http-nio-8080-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:08:52.094 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /ws-sensor/info?t=1772057332081
+2026-02-26 00:08:52.098 [http-nio-8080-exec-7] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:08:52.099 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /ws-sensor/info?t=1772057332081
+2026-02-26 00:08:52.101 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - GET "/ws-sensor/info?t=1772057332081", parameters={masked}
+2026-02-26 00:08:52.108 [http-nio-8080-exec-7] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@3ff83cc8
+2026-02-26 00:08:52.112 [http-nio-8080-exec-7] DEBUG o.s.w.s.s.t.h.DefaultSockJsService - Processing transport request: GET http://localhost:8080/ws-sensor/info?t=1772057332081
+2026-02-26 00:08:52.114 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:08:52.139 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /ws-sensor/933/dcfk0hbq/websocket
+2026-02-26 00:08:52.167 [http-nio-8080-exec-6] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:08:52.168 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /ws-sensor/933/dcfk0hbq/websocket
+2026-02-26 00:08:52.169 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/ws-sensor/933/dcfk0hbq/websocket", parameters={}
+2026-02-26 00:08:52.172 [http-nio-8080-exec-6] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Mapped to org.springframework.web.socket.sockjs.support.SockJsHttpRequestHandler@3ff83cc8
+2026-02-26 00:08:52.183 [http-nio-8080-exec-6] DEBUG o.s.w.s.s.t.h.DefaultSockJsService - Processing transport request: GET http://localhost:8080/ws-sensor/933/dcfk0hbq/websocket
+2026-02-26 00:08:52.262 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 101 SWITCHING_PROTOCOLS
+2026-02-26 00:08:52.296 [http-nio-8080-exec-6] DEBUG o.s.w.s.h.LoggingWebSocketHandlerDecorator - New WebSocketServerSockJsSession[id=dcfk0hbq]
+2026-02-26 00:08:52.340 [clientInboundChannel-2] DEBUG o.s.m.s.b.SimpleBrokerMessageHandler - Processing CONNECT user=admins session=dcfk0hbq
+2026-02-26 00:08:52.354 [clientInboundChannel-5] DEBUG o.s.m.s.b.SimpleBrokerMessageHandler - Processing SUBSCRIBE /topic/sensor-data id=sub-0 session=dcfk0hbq
+2026-02-26 00:09:14.855 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/sensors
+2026-02-26 00:09:14.858 [http-nio-8080-exec-10] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:09:14.861 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/sensors
+2026-02-26 00:09:14.862 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/sensors", parameters={}
+2026-02-26 00:09:14.863 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.ClimateSensorDataController#getAllSensorData()
+2026-02-26 00:09:14.872 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        csd1_0.sensor_id,
+        csd1_0.humidity,
+        csd1_0.sensor_date_time,
+        csd1_0.temperature 
+    from
+        climate_sensor_data csd1_0
+2026-02-26 00:09:14.909 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:09:14.910 [http-nio-8080-exec-10] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [[ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44 (truncated)...]
+2026-02-26 00:09:14.913 [http-nio-8080-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:09:18.219 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/admin/scheduler/status
+2026-02-26 00:09:18.220 [http-nio-8080-exec-3] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:09:18.222 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/admin/scheduler/status
+2026-02-26 00:09:18.222 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/admin/scheduler/status", parameters={}
+2026-02-26 00:09:18.223 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.AdminController#getSchedulerStatus()
+2026-02-26 00:09:18.225 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:09:18.226 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [{intervalMinutes=10, message=Scheduler is running, schedulerEnabled=true}]
+2026-02-26 00:09:18.235 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:09:21.703 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/sensors
+2026-02-26 00:09:21.704 [http-nio-8080-exec-1] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:09:21.705 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/sensors
+2026-02-26 00:09:21.705 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/sensors", parameters={}
+2026-02-26 00:09:21.706 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.ClimateSensorDataController#getAllSensorData()
+2026-02-26 00:09:21.709 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        csd1_0.sensor_id,
+        csd1_0.humidity,
+        csd1_0.sensor_date_time,
+        csd1_0.temperature 
+    from
+        climate_sensor_data csd1_0
+2026-02-26 00:09:21.719 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:09:21.720 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [[ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44 (truncated)...]
+2026-02-26 00:09:21.721 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:10:10.750 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/sensors
+2026-02-26 00:10:10.753 [http-nio-8080-exec-8] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:10:10.757 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/sensors
+2026-02-26 00:10:10.758 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/sensors", parameters={}
+2026-02-26 00:10:10.760 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.ClimateSensorDataController#getAllSensorData()
+2026-02-26 00:10:10.766 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        csd1_0.sensor_id,
+        csd1_0.humidity,
+        csd1_0.sensor_date_time,
+        csd1_0.temperature 
+    from
+        climate_sensor_data csd1_0
+2026-02-26 00:10:10.783 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:10:10.796 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [[ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44 (truncated)...]
+2026-02-26 00:10:10.800 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-02-26 00:12:56.952 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /sensors/update
+2026-02-26 00:12:56.952 [http-nio-8080-exec-7] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:12:56.955 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /sensors/update
+2026-02-26 00:12:56.955 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - GET "/sensors/update", parameters={}
+2026-02-26 00:12:56.955 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.SensorUpdateController#updateSensorData()
+2026-02-26 00:12:57.009 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'text/html', given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8] and supported [text/plain, */*, application/json, application/*+json]
+2026-02-26 00:12:57.011 [http-nio-8080-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing ["Script execution failed with exit code: 1"]
+2026-02-26 00:12:57.013 [http-nio-8080-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 500 INTERNAL_SERVER_ERROR
+2026-02-26 00:13:35.393 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/sensors
+2026-02-26 00:13:35.396 [http-nio-8080-exec-6] DEBUG o.s.s.w.c.HttpSessionSecurityContextRepository - Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=admins, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ADMIN]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ADMIN, FactorGrantedAuthority [authority=FACTOR_PASSWORD, issuedAt=2026-02-25T22:08:51.758283300Z]]]]
+2026-02-26 00:13:35.397 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/sensors
+2026-02-26 00:13:35.397 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/sensors", parameters={}
+2026-02-26 00:13:35.398 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to lofar.system.controller.ClimateSensorDataController#getAllSensorData()
+2026-02-26 00:13:35.402 [http-nio-8080-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        csd1_0.sensor_id,
+        csd1_0.humidity,
+        csd1_0.sensor_date_time,
+        csd1_0.temperature 
+    from
+        climate_sensor_data csd1_0
+2026-02-26 00:13:35.411 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2026-02-26 00:13:35.415 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [[ClimateSensorData(sensorId=1, temperature=34.09, humidity=73.59, sensorDateTime=2026-02-26T00:07:44 (truncated)...]
+2026-02-26 00:13:35.420 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
