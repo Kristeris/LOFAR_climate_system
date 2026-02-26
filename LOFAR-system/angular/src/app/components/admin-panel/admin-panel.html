@@ -37,7 +37,13 @@
       <div class="status-dot" [class.dot-green]="schedulerEnabled()" [class.dot-red]="!schedulerEnabled()"></div>
     </div>
 
-
+    <div class="status-card">
+      <div class="card-icon">🕐</div>
+      <div class="card-info">
+        <div class="card-label">Current Interval</div>
+        <div class="card-value value-blue">{{ intervalMinutes() }} min</div>
+      </div>
+    </div>
   </div>
 
   <!-- WebSocket Control Section -->
@@ -51,7 +57,6 @@
     </div>
 
     <div class="control-row">
-      <!-- STOP Button -->
       <button
         class="control-btn btn-stop"
         (click)="stopWebSocket()"
@@ -63,7 +68,6 @@
         }
       </button>
 
-      <!-- START Button -->
       <button
         class="control-btn btn-start"
         (click)="startWebSocket()"
@@ -81,6 +85,50 @@
       <span class="state-badge" [class.badge-running]="wsRunning()" [class.badge-stopped]="!wsRunning()">
         {{ wsRunning() ? '▶ Running' : '⏹ Stopped' }}
       </span>
+    </div>
+  </div>
+
+  <!-- Interval Control Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <h3>⏰ Data Collection Interval</h3>
+      <p class="section-desc">
+        Change how often the backend runs the Python sensor script and pushes new data
+        to all connected clients. Minimum 1 minute, maximum 1440 minutes (24 hours).
+        Changes take effect immediately — no restart needed.
+      </p>
+    </div>
+
+    <div class="interval-editor">
+      <label class="interval-label">Enter interval (minutes)</label>
+      <div class="interval-text-row">
+        <textarea
+          class="interval-textarea"
+          [(ngModel)]="intervalInput"
+          placeholder="e.g. 10"
+          rows="1"
+        ></textarea>
+        <span class="interval-unit">min</span>
+        <button
+          class="control-btn btn-trigger"
+          (click)="saveInterval()"
+          [disabled]="intervalSaving() || actionInProgress()">
+          <span class="btn-icon">💾</span>
+          Save
+          @if (intervalSaving()) {
+            <span class="spinner"></span>
+          }
+        </button>
+      </div>
+    </div>
+
+    <div class="interval-presets">
+      <span class="preset-label">Quick presets:</span>
+      <button class="preset-btn" (click)="intervalInput = 1">1 min</button>
+      <button class="preset-btn" (click)="intervalInput = 5">5 min</button>
+      <button class="preset-btn" (click)="intervalInput = 10">10 min</button>
+      <button class="preset-btn" (click)="intervalInput = 30">30 min</button>
+      <button class="preset-btn" (click)="intervalInput = 60">1 hour</button>
     </div>
   </div>
 
@@ -112,6 +160,7 @@
     <ul class="info-list">
       <li><strong>Stop WebSocket</strong> — halts the scheduler so no new data is collected or broadcast. Existing data in the database is unaffected.</li>
       <li><strong>Start WebSocket</strong> — resumes the scheduler and reconnects the frontend WebSocket client.</li>
+      <li><strong>Set Interval</strong> — changes how often the scheduler fires. The new interval applies immediately without restarting the server.</li>
       <li><strong>Manual Trigger</strong> — runs the Python script immediately and broadcasts the result, regardless of scheduler state.</li>
     </ul>
   </div>

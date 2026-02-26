@@ -34,12 +34,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.User], title: 'Charts' }
   },
-  {
-    path: 'ws-test',
-    component: WsTestComponent,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'WebSocket Monitor' }
-  },
+ 
 
   // ADMIN only
   {
@@ -48,7 +43,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin], title: 'Admin Panel' }
   },
-
+ {
+    path: 'ws-test',
+    component: WsTestComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin], title: 'WebSocket Monitor' }
+  },
   // Catch-all
   { path: '**', redirectTo: '/sensors' }
 ];
