@@ -246,6 +246,22 @@ export class SensorChart implements OnInit, OnDestroy {
             ])
           }
         }],
+          markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: {
+            color: '#dc2626',
+            type: 'solid',
+            width: 2,
+            opacity: 0.8
+          },
+          label: { show: false },
+          data: [{ yAxis: 30 }]
+        },
+
+
+
+
         grid: { left: '10%', right: '10%', bottom: '20%', containLabel: true }
       });
       this.temperatureChart.resize();

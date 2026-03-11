@@ -11,7 +11,7 @@ import { ClimateSensorData } from '../../models/climate-sensor-data';
   templateUrl: './ws-test.html',
   styleUrl: './ws-test.css'
 })
-export class WsTestComponent implements OnInit, OnDestroy {
+export class WsTest implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   connected = signal<boolean>(false);

@@ -108,7 +108,7 @@ export class SensorList implements OnInit, OnDestroy {
         
         if (!exists) {
           // Add new data to the beginning of the list
-          const updatedSensors = [newSensorData, ...currentSensors];
+          const updatedSensors = [...currentSensors, newSensorData];
           this.sensors.set(updatedSensors);
           this.lastUpdateTime.set(new Date().toLocaleTimeString());
           

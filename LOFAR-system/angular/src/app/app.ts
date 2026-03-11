@@ -1,8 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { Navigation } from './components/navigation/navigation';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { BnNgIdleService } from 'bn-ng-idle';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,14 +17,32 @@ import { filter } from 'rxjs/operators';
   `,
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   showNav = signal(true);
+  private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private bnIdle: BnNgIdleService,
+    private auth: AuthService
+  ) {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: NavigationEnd) => {
-      this.showNav.set(!e.urlAfterRedirects.startsWith('/login'));
+      const url = e.urlAfterRedirects;
+      this.showNav.set(!url.startsWith('/login') && !url.startsWith('/register'));
     });
+  }
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.bnIdle.startWatching(600).subscribe((isTimedOut: boolean) => {
+        if (isTimedOut && this.auth.isLoggedIn()) {
+          this.auth.logout();
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 }

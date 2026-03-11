@@ -1,0 +1,87 @@
+<div class="forum-container">
+
+  <div class="forum-header">
+    <div>
+      <h2>💬 Community Forum</h2>
+      <p class="forum-subtitle">Posts are automatically added to Google Calendar</p>
+    </div>
+    @if (auth.isLoggedIn()) {
+      <button class="btn-new-post" (click)="toggleForm()">
+        {{ showForm() ? '✕ Cancel' : '✏️ New Post' }}
+      </button>
+    }
+  </div>
+
+  <!-- Status messages -->
+  @if (error()) {
+    <div class="alert alert-error">⚠️ {{ error() }}</div>
+  }
+  @if (successMsg()) {
+    <div class="alert alert-success">{{ successMsg() }}</div>
+  }
+
+  <!-- New post form -->
+  @if (showForm()) {
+    <div class="new-post-card">
+      <h3>Create New Post</h3>
+      <input
+        type="text"
+        class="post-input"
+        placeholder="Post title…"
+        [(ngModel)]="newTitle"
+        maxlength="200"
+      />
+      <textarea
+        class="post-textarea"
+        placeholder="Write your post content here…"
+        [(ngModel)]="newContent"
+        rows="6"
+      ></textarea>
+      <div class="form-actions">
+        <span class="calendar-note">📅 A Google Calendar event will be created automatically</span>
+        <button class="btn-submit" (click)="submitPost()" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="spinner-sm"></span> Publishing…
+          } @else {
+            🚀 Publish Post
+          }
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Posts list -->
+  @if (loading()) {
+    <div class="loading-state">Loading posts…</div>
+  } @else if (posts().length === 0) {
+    <div class="empty-state">
+      <p>🗒️ No posts yet. Be the first to share something!</p>
+    </div>
+  } @else {
+    <div class="posts-list">
+      @for (post of posts(); track post.id) {
+        <div class="post-card">
+          <div class="post-header">
+            <div>
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-meta">
+                <span class="post-author">👤 {{ post.authorUsername }}</span>
+                <span class="post-date">🕐 {{ formatDate(post.createdAt) }}</span>
+                @if (post.googleCalendarEventId) {
+                  <span class="calendar-badge" title="Google Calendar Event ID: {{ post.googleCalendarEventId }}">
+                    📅 Calendar
+                  </span>
+                }
+              </div>
+            </div>
+            @if (auth.isAdmin()) {
+              <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+            }
+          </div>
+          <p class="post-content">{{ post.content }}</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>

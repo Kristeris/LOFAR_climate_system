@@ -35,14 +35,20 @@ out/
 
 ### VS Code ###
 .vscode/
-
+    
 ###env###
 config.env
 .env
-node_modules
+node_modules/
 
 package-lock.json
 package.json
 .angular/
+LOFAR-system/angular/node_modules/
 
-.logs/
+# Ignore logs folder
+logs/
+
+#service account
+src/main/resources/service-account.json
+service-account.json

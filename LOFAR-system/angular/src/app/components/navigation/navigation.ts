@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
         <!-- Brand -->
         <a routerLink="/sensors" class="logo">
           <span class="logo-icon">📡</span>
-          LOFAR Climate
+          LOFAR Climate System
         </a>
 
         <!-- Nav links - shown to all authenticated users -->
@@ -28,6 +28,12 @@ import { AuthService } from '../../services/auth.service';
                 📈 Charts
               </a>
             </li>
+
+            <li>
+              <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
+            </li>
+
+
             <!-- Admin-only links -->
             @if (auth.isAdmin()) {
               <li>

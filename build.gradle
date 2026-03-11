@@ -39,6 +39,11 @@ dependencies {
 	// E-mail support
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	//google calendar api client
+	implementation 'com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0'
+	implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+
+
 	// WebSocket dependencies - THIS IS THE KEY ADDITION
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	

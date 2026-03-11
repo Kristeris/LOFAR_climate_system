@@ -1,21 +1,24 @@
 import { Routes } from '@angular/router';
 import { SensorList } from './components/sensor-list/sensor-list';
 import { SensorChart } from './components/sensor-chart/sensor-chart';
-import { WsTestComponent } from './components/ws-test/ws-test';
+import { WsTest } from './components/ws-test/ws-test';
 import { AdminPanel } from './components/admin-panel/admin-panel';
 import { HomePage } from './components/home-page/home-page';
-import { LoginComponent } from './components/login/login';
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { Forum } from './components/forum/forum';
 import { AuthGuard } from './guards/auth.guard';
 import { Role } from './models/role';
 
 export const routes: Routes = [
-  // Public — no guard, no roles needed
-  { path: 'login', component: LoginComponent, data: { title: 'Login' } },
+  // Public
+  { path: 'login',    component: Login,    data: { title: 'Login' } },
+  { path: 'register', component: Register, data: { title: 'Register' } },
 
   // Root redirect
   { path: '', redirectTo: '/sensors', pathMatch: 'full' },
 
-  // Accessible to both USER and ADMIN
+  // Authenticated (USER + ADMIN)
   {
     path: 'home',
     component: HomePage,
@@ -34,7 +37,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.User], title: 'Charts' }
   },
- 
+  {
+    path: 'forum',
+    component: Forum,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.User], title: 'Forum' }
+  },
 
   // ADMIN only
   {
@@ -43,12 +51,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin], title: 'Admin Panel' }
   },
- {
+  {
     path: 'ws-test',
-    component: WsTestComponent,
+    component: WsTest,
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin], title: 'WebSocket Monitor' }
   },
+
   // Catch-all
   { path: '**', redirectTo: '/sensors' }
 ];

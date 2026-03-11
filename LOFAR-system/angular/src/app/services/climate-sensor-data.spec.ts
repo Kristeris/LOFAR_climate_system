@@ -1,13 +1,16 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ClimateSensorDataService } from './climate-sensor-data';
 
-import { ClimateSensorData } from './climate-sensor-data';
-
-describe('ClimateSensorData', () => {
-  let service: ClimateSensorData;
+describe('ClimateSensorDataService', () => {
+  let service: ClimateSensorDataService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ClimateSensorData);
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ClimateSensorDataService]
+    });
+    service = TestBed.inject(ClimateSensorDataService);
   });
 
   it('should be created', () => {

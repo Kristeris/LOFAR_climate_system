@@ -1,0 +1,57 @@
+<div class="register-page">
+  <div class="register-card">
+
+    <div class="brand">
+      <span class="brand-icon">📡</span>
+      <span class="brand-name">LOFAR</span>
+    </div>
+
+    <h2 class="form-title">Create Account</h2>
+
+    @if (errorMsg()) {
+      <div class="error-banner">⚠ {{ errorMsg() }}</div>
+    }
+    @if (successMsg()) {
+      <div class="success-banner">✅ {{ successMsg() }}</div>
+    }
+
+    <input
+      type="text"
+      placeholder="Username (lowercase, digits only)"
+      [(ngModel)]="username"
+      autocomplete="username"
+    />
+
+    <input
+      type="email"
+      placeholder="E-mail address"
+      [(ngModel)]="email"
+      autocomplete="email"
+    />
+
+    <input
+      type="password"
+      placeholder="Password (min 4 characters)"
+      [(ngModel)]="password"
+      autocomplete="new-password"
+    />
+
+    <input
+      type="password"
+      placeholder="Confirm password"
+      [(ngModel)]="confirmPassword"
+      (keyup.enter)="onSubmit()"
+      autocomplete="new-password"
+    />
+
+    <button (click)="onSubmit()" [disabled]="loading()">
+      {{ loading() ? 'Creating account…' : 'Register' }}
+    </button>
+
+    <p class="login-link">
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </p>
+
+  </div>
+</div>

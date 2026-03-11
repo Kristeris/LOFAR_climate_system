@@ -1,16 +1,16 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class LoginComponent {
+export class Login {
   username = '';
   password = '';
   loading = signal(false);
@@ -24,15 +24,15 @@ export class LoginComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // If already logged in, redirect away
     if (this.auth.isLoggedIn()) {
       this.router.navigate(['/sensors']);
     }
-    // Capture returnUrl from query params (set by auth guard)
+  
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/sensors';
   }
 
   onSubmit(): void {
+
     if (!this.username.trim() || !this.password.trim()) {
       this.errorMsg.set('Please enter both username and password.');
       return;
