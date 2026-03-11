@@ -36,6 +36,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	
+	// E-mail support
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	// WebSocket dependencies - THIS IS THE KEY ADDITION
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	

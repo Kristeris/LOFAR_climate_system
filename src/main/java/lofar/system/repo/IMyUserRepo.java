@@ -10,4 +10,7 @@ import lofar.system.model.MyUser;
 @Repository
 public interface IMyUserRepo extends JpaRepository<MyUser, Long> {
     Optional<MyUser> findByUsername(String username);
+    Optional<MyUser> findByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

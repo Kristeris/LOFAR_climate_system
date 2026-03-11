@@ -42,15 +42,18 @@ public class LofarSystemApplication {
             sensorRepo.saveAll(Arrays.asList(s1, s2, s3, s4));
 
             // ========== AUTORIZĀCIJA ==========
-            MyAuthority auth1 = new MyAuthority("USER");
-            authRepo.save(auth1);
-            MyAuthority auth2 = new MyAuthority("ADMIN");
-            authRepo.save(auth2);
+            MyAuthority userRole  = new MyAuthority("USER");
+            MyAuthority adminRole = new MyAuthority("ADMIN");
+            authRepo.save(userRole);
+            authRepo.save(adminRole);
 
-            MyUser u1 = new MyUser("admins", encoder.encode("1234"), auth2); // admin
-            userRepo.save(u1);
-            MyUser u2 = new MyUser("kristers", encoder.encode("4321"), auth1);    // user
-            userRepo.save(u2);
+            // Replace these with real addresses to test e-mail alerts.
+            MyUser admin   = new MyUser("admins",  encoder.encode("1234"),
+                                        "admin@lofar-system.local", adminRole);
+            MyUser regular = new MyUser("kristers", encoder.encode("4321"),
+                                        "lofar0749@gmail.com",  userRole);
+            userRepo.save(admin);
+            userRepo.save(regular);
         };
     }
 }
