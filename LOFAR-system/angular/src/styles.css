@@ -1,1 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================
+   GLOBAL STYLES
+   ========================================= */
+
+/* Reset browser defaults — removes the white
+   gap above the navigation bar */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default list styles globally */
+ul, ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove default anchor styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}

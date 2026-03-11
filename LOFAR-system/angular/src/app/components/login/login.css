@@ -1,98 +1,114 @@
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&display=swap');
+/* =========================================
+   LOGIN PAGE — matches ws-test / admin style
+   ========================================= */
 
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #080c10;
-  font-family: 'Exo 2', sans-serif;
+  background: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 360px;
-  background: rgba(10, 16, 24, 0.95);
-  border: 1px solid rgba(0, 180, 255, 0.2);
-  border-radius: 6px;
-  padding: 36px 32px;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Brand */
+/* ---- Brand ---- */
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 8px;
+  justify-content: center;
 }
 
 .brand-icon {
-  font-size: 22px;
+  font-size: 28px;
 }
 
 .brand-name {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 20px;
-  color: #00c8ff;
-  letter-spacing: 0.2em;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: 0.08em;
 }
 
-/* Error */
+/* ---- Card title area ---- */
+.login-card h2 {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  font-weight: 400;
+  margin: -8px 0 4px;
+}
+
+/* ---- Error banner ---- */
 .error-banner {
-  background: rgba(255, 56, 96, 0.1);
-  border: 1px solid rgba(255, 56, 96, 0.4);
-  border-radius: 4px;
+  background: #ffe3e3;
+  border-left: 4px solid #ff6b6b;
+  border-radius: 6px;
   padding: 10px 14px;
-  color: #ff6b8a;
-  font-size: 0.85rem;
+  color: #c92a2a;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-/* Inputs */
+/* ---- Inputs ---- */
 input {
-  background: rgba(0, 20, 35, 0.8);
-  border: 1px solid rgba(0, 180, 255, 0.2);
-  border-radius: 4px;
+  width: 100%;
   padding: 12px 14px;
-  color: #c8dde8;
-  font-family: 'Exo 2', sans-serif;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
   font-size: 14px;
+  font-family: inherit;
+  color: #2c3e50;
+  background: white;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
 }
 
 input::placeholder {
-  color: rgba(100, 140, 160, 0.5);
+  color: #adb5bd;
 }
 
 input:focus {
-  border-color: rgba(0, 200, 255, 0.6);
-  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.08);
-  color: #e8f4ff;
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.15);
 }
 
-/* Button */
+/* ---- Submit Button ---- */
 button {
+  width: 100%;
   padding: 13px;
-  background: linear-gradient(135deg, #006fa8, #00b4ff);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  border-radius: 4px;
-  color: #fff;
-  font-family: 'Exo 2', sans-serif;
+  border-radius: 6px;
+  color: white;
+  font-family: inherit;
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   cursor: pointer;
   margin-top: 4px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
 }
 
 button:not(:disabled):hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 180, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
 }
 
 button:disabled {

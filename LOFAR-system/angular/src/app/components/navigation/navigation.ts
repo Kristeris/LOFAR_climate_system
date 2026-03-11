@@ -28,14 +28,13 @@ import { AuthService } from '../../services/auth.service';
                 📈 Charts
               </a>
             </li>
-            <li>
-              <a routerLink="/ws-test" routerLinkActive="active">
-                🔌 WebSocket
-              </a>
-            </li>
-
-            <!-- Admin-only link -->
+            <!-- Admin-only links -->
             @if (auth.isAdmin()) {
+              <li>
+                <a routerLink="/ws-test" routerLinkActive="active">
+                  🔌 WebSocket
+                </a>
+              </li>
               <li>
                 <a routerLink="/admin" routerLinkActive="active" class="admin-link">
                   ⚙️ Admin
