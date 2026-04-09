@@ -66,7 +66,7 @@ public class GoogleCalendarService {
             ZonedDateTime end = start.plusHours(1);
 
             Event event = new Event()
-                .setSummary("📋 LOFAR Forum: " + title)
+                .setSummary(" LOFAR Forum: " + title)
                 .setDescription(description != null && description.length() > 500
                     ? description.substring(0, 500) + "…"
                     : description);

@@ -14,6 +14,7 @@ public class ForumPostDTO {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private String timeUtc;
     private String authorUsername;
     private String googleCalendarEventId;
 }
