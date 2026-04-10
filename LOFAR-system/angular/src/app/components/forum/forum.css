@@ -120,14 +120,9 @@
 .form-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-.calendar-note {
-  font-size: 12px;
-  color: #868e96;
 }
 
 .btn-submit {
@@ -240,12 +235,17 @@
 }
 
 .post-content {
-  font-size: 14px;
+  font-size: 13px;
   color: #495057;
   line-height: 1.7;
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
+  font-family: 'Courier New', 'Consolas', monospace;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px 14px;
 }
 
 .btn-delete {
@@ -263,15 +263,6 @@
   opacity: 1;
   transform: scale(1.2);
 }
-
-/* ---- Responsive ---- */
-@media (max-width: 600px) {
-  .forum-header { flex-direction: column; }
-  .btn-new-post { width: 100%; }
-  .form-actions { flex-direction: column; align-items: stretch; }
-  .btn-submit { justify-content: center; }
-}
-
 
 /* ---- Schedule picker ---- */
 .schedule-section {
@@ -353,6 +344,158 @@
   font-style: italic;
 }
 
+/* ════════════════════════════════════════
+   PRESET SWITCHER
+════════════════════════════════════════ */
+.preset-switcher {
+  display: flex;
+  gap: 0;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.preset-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #868e96;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  border-right: 1px solid #dee2e6;
+}
+
+.preset-tab:last-child {
+  border-right: none;
+}
+
+.preset-tab:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.preset-tab.active {
+  background: white;
+  color: #1a252f;
+  box-shadow: inset 0 -2px 0 #4dabf7;
+}
+
+/* ════════════════════════════════════════
+   LOFAR STRUCTURED FORM
+════════════════════════════════════════ */
+.lofar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lofar-section {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lofar-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.lofar-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lofar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.lofar-field--wide {
+  flex: 2;
+  min-width: 240px;
+}
+
+.lofar-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #868e96;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.lofar-field input {
+  padding: 8px 10px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  color: #1a252f;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.lofar-field input:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.12);
+}
+
+/* ---- Live preview box ---- */
+.lofar-preview {
+  border: 1px solid #d0ebff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lofar-preview-label {
+  background: #e7f5ff;
+  color: #1971c2;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 8px 12px;
+  border-bottom: 1px solid #d0ebff;
+}
+
+.lofar-preview-code {
+  margin: 0;
+  padding: 14px;
+  font-size: 12px;
+  font-family: 'Courier New', 'Consolas', monospace;
+  color: #1a252f;
+  background: #f8f9fa;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.7;
+}
+
+/* ---- Responsive ---- */
 @media (max-width: 600px) {
-  .schedule-fields { flex-direction: column; }
+  .forum-header { flex-direction: column; }
+  .btn-new-post { width: 100%; }
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .btn-submit { justify-content: center; }
+  .lofar-field--wide { min-width: 100%; }
+  .preset-tab { font-size: 12px; padding: 8px 10px; }
 }

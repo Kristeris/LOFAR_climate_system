@@ -38,7 +38,7 @@ public class ForumPost {
     private String title;
  
     @NotBlank
-    @Size(max = 500)
+    @Size(max = 10000)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
  

@@ -12,7 +12,6 @@
     }
   </div>
 
-  <!-- Status messages -->
   @if (error()) {
     <div class="alert alert-error">⚠️ {{ error() }}</div>
   }
@@ -20,70 +19,241 @@
     <div class="alert alert-success">{{ successMsg() }}</div>
   }
 
-  <!-- New post form -->
   @if (showForm()) {
-  <div class="new-post-card">
-    <h3>Create New Post</h3>
-    <input
-      type="text"
-      class="post-input"
-      placeholder="Post title…"
-      [(ngModel)]="newTitle"
-      maxlength="200"
-    />
-    <textarea
-      class="post-textarea"
-      placeholder="Write your post content here…"
-      [(ngModel)]="newContent"
-      rows="6"
-    ></textarea>
+    <div class="new-post-card">
+      <h3>Create New Post</h3>
 
-    <div class="schedule-section">
-      <div class="schedule-header">
-        <span>📅</span>
-        <span class="schedule-title">Schedule Calendar Event</span>
+      <!-- ── Preset switcher ── -->
+      <div class="preset-switcher">
+        <button
+          class="preset-tab"
+          [class.active]="activePreset() === 'simple'"
+          (click)="setPreset('simple')">
+          ✏️ Simple post
+        </button>
+        <button
+          class="preset-tab"
+          [class.active]="activePreset() === 'lofar'"
+          (click)="setPreset('lofar')">
+          📡 LOFAR observation
+        </button>
       </div>
-      <div class="schedule-fields">
-        <div class="schedule-field">
-          <label for="schedDate">Date</label>
-          <input
-            type="date"
-            id="schedDate"
-            class="schedule-input"
-            [(ngModel)]="scheduledDate"
-            [min]="todayDate"
-          />
-        </div>
-        <div class="schedule-field">
-          <label for="schedTime">Time</label>
-          <input
-            type="time"
-            id="schedTime"
-            class="schedule-input"
-            [(ngModel)]="scheduledTime"
-          />
-        </div>
-      </div>
-      @if (scheduledDate && scheduledTime) {
-        <div class="schedule-preview">
-          🗓️ Event will appear on <strong>{{ formatScheduledDisplay() }}</strong>
-        </div>
-      } @else {
-        <div class="schedule-hint">Leave blank to use the current date &amp; time</div>
+
+      <!-- Title (shared) -->
+      <input
+        type="text"
+        class="post-input"
+        placeholder="Post title…"
+        [(ngModel)]="newTitle"
+        maxlength="200"
+      />
+
+      <!-- ══════════════════════════════════════
+           SIMPLE MODE
+      ══════════════════════════════════════ -->
+      @if (activePreset() === 'simple') {
+        <textarea
+          class="post-textarea"
+          placeholder="Write your post content here…"
+          [(ngModel)]="newContent"
+          rows="6"
+        ></textarea>
       }
-    </div>
 
-    <div class="form-actions">
-      <button class="btn-submit" (click)="submitPost()" [disabled]="submitting()">
-        @if (submitting()) {
-          <span class="spinner-sm"></span> Publishing…
+      <!-- ══════════════════════════════════════
+           LOFAR OBSERVATION MODE
+      ══════════════════════════════════════ -->
+      @if (activePreset() === 'lofar') {
+        <div class="lofar-form">
+
+          <!-- Target -->
+          <div class="lofar-section">
+            <div class="lofar-section-title">🎯 Target</div>
+            <div class="lofar-row">
+              <div class="lofar-field lofar-field--wide">
+                <label>Target name</label>
+                <input type="text" [(ngModel)]="lofar.targetName" (ngModelChange)="onTargetNameChange()" placeholder="e.g. JUPITER" />
+              </div>
+            </div>
+          </div>
+
+          <!-- LCU — RSP setup -->
+          <div class="lofar-section">
+            <div class="lofar-section-title">🖥️ LCU — RSP setup</div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>swlevel</label>
+                <input type="text" [(ngModel)]="lofar.swlevel" placeholder="3" />
+              </div>
+              <div class="lofar-field">
+                <label>--mode</label>
+                <input type="text" [(ngModel)]="lofar.rspMode" placeholder="3" />
+              </div>
+              <div class="lofar-field">
+                <label>--bitmode</label>
+                <input type="text" [(ngModel)]="lofar.bitmode" placeholder="8" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field lofar-field--wide">
+                <label>--select (RCU range)</label>
+                <input type="text" [(ngModel)]="lofar.rspSelect" placeholder="0:23,26:127,130:191" />
+              </div>
+            </div>
+          </div>
+
+          <!-- LCU — beamctl -->
+          <div class="lofar-section">
+            <div class="lofar-section-title">📡 LCU — beamctl</div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--antennaset</label>
+                <input type="text" [(ngModel)]="lofar.antennaset" placeholder="LBA_OUTER" />
+              </div>
+              <div class="lofar-field">
+                <label>--band</label>
+                <input type="text" [(ngModel)]="lofar.band" placeholder="10_90" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field lofar-field--wide">
+                <label>--rcus</label>
+                <input type="text" [(ngModel)]="lofar.rcus" placeholder="0:23,26:127,130:191" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--beamlets</label>
+                <input type="text" [(ngModel)]="lofar.beamlets" placeholder="0:243" />
+              </div>
+              <div class="lofar-field">
+                <label>--subbands</label>
+                <input type="text" [(ngModel)]="lofar.subbands" placeholder="40:283" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--anadir</label>
+                <input type="text" [(ngModel)]="lofar.anadir" placeholder="0,0,JUPITER" />
+              </div>
+              <div class="lofar-field">
+                <label>--digdir</label>
+                <input type="text" [(ngModel)]="lofar.digdir" placeholder="0,0,JUPITER" />
+              </div>
+            </div>
+          </div>
+
+          <!-- DRU — dump_udp_ow -->
+          <div class="lofar-section">
+            <div class="lofar-section-title">💾 DRU — dump_udp_ow_17</div>
+            <div class="lofar-row">
+              <div class="lofar-field lofar-field--wide">
+                <label>DRU path (cd …)</label>
+                <input type="text" [(ngModel)]="lofar.druPath" placeholder="/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--duration (s)</label>
+                <input type="text" [(ngModel)]="lofar.duration" placeholder="7200" />
+              </div>
+              <div class="lofar-field">
+                <label>--out</label>
+                <input type="text" [(ngModel)]="lofar.outName" placeholder="jupiter" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>Port 1</label>
+                <input type="text" [(ngModel)]="lofar.port1" placeholder="16140" />
+              </div>
+              <div class="lofar-field">
+                <label>Port 2</label>
+                <input type="text" [(ngModel)]="lofar.port2" placeholder="16141" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--Maxfilesize</label>
+                <input type="text" [(ngModel)]="lofar.maxFilesize" placeholder="100e9" />
+              </div>
+              <div class="lofar-field">
+                <label>--timeout</label>
+                <input type="text" [(ngModel)]="lofar.timeout" placeholder="10" />
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>--bufsize</label>
+                <input type="text" [(ngModel)]="lofar.bufsize" placeholder="1e9" />
+              </div>
+              <div class="lofar-field">
+                <label>--sock_bufsize</label>
+                <input type="text" [(ngModel)]="lofar.sockBufsize" placeholder="1e7" />
+              </div>
+              <div class="lofar-field">
+                <label>--skip</label>
+                <input type="text" [(ngModel)]="lofar.skip" placeholder="1" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Live preview -->
+          <div class="lofar-preview">
+            <div class="lofar-preview-label">📋 Generated command preview</div>
+            <pre class="lofar-preview-code">{{ buildLofarContent() }}</pre>
+          </div>
+
+        </div>
+      }
+
+      <!-- Schedule section (shared) -->
+      <div class="schedule-section">
+        <div class="schedule-header">
+          <span>📅</span>
+          <span class="schedule-title">Schedule Calendar Event</span>
+        </div>
+        <div class="schedule-fields">
+          <div class="schedule-field">
+            <label for="schedDate">Date</label>
+            <input
+              type="date"
+              id="schedDate"
+              class="schedule-input"
+              [(ngModel)]="scheduledDate"
+              [min]="todayDate"
+            />
+          </div>
+          <div class="schedule-field">
+            <label for="schedTime">Time</label>
+            <input
+              type="time"
+              id="schedTime"
+              class="schedule-input"
+              [(ngModel)]="scheduledTime"
+            />
+          </div>
+        </div>
+        @if (scheduledDate && scheduledTime) {
+          <div class="schedule-preview">
+            🗓️ Event will appear on <strong>{{ formatScheduledDisplay() }}</strong>
+          </div>
         } @else {
-          🚀 Publish Post
+          <div class="schedule-hint">Leave blank to use the current date &amp; time</div>
         }
-      </button>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-submit" (click)="submitPost()" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="spinner-sm"></span> Publishing…
+          } @else {
+            🚀 Publish Post
+          }
+        </button>
+      </div>
     </div>
-  </div>
-}
+  }
 
   <!-- Posts list -->
   @if (loading()) {
@@ -113,7 +283,7 @@
               <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
             }
           </div>
-          <p class="post-content">{{ post.content }}</p>
+          <pre class="post-content">{{ post.content }}</pre>
         </div>
       }
     </div>
