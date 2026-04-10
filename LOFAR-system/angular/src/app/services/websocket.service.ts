@@ -16,6 +16,7 @@ import { environment } from '../../env/enviroment';
 export class WebSocketService {
   private stompClient: Client | null = null;
   private sensorDataSubject = new Subject<ClimateSensorData>();
+  private nohupDataSubject = new BehaviorSubject<string>('');
   // CHANGED: Use BehaviorSubject instead of Subject for connection status
   // This ensures components get the current status immediately when they subscribe
   private connectionStatus = new BehaviorSubject<boolean>(false);
@@ -48,6 +49,11 @@ export class WebSocketService {
         const sensorData: ClimateSensorData = JSON.parse(message.body);
         this.sensorDataSubject.next(sensorData);
       });
+
+      // Subscribe to nohup logs
+      this.stompClient?.subscribe('/topic/nohup-log', (message: IMessage) => {
+        this.nohupDataSubject.next(message.body);
+      });
     };
 
     this.stompClient.onStompError = (frame) => {
@@ -75,6 +81,10 @@ export class WebSocketService {
     return this.sensorDataSubject.asObservable();
   }
 
+  getNohupUpdates(): Observable<string> {
+    return this.nohupDataSubject.asObservable();
+  }
+
   getConnectionStatus(): Observable<boolean> {
     return this.connectionStatus.asObservable();
   }
@@ -100,6 +110,18 @@ export class WebSocketService {
       });
     } else {
       console.warn('Cannot request history - not connected');
+    }
+  }
+
+  requestFullNohupLog(): void {
+    if (this.stompClient && this.stompClient.connected) {
+      console.log('📤 Requesting full nohup log...');
+      this.stompClient.publish({
+        destination: '/app/nohup/full',
+        body: ''
+      });
+    } else {
+      console.warn('Cannot request nohup log - not connected');
     }
   }
 }

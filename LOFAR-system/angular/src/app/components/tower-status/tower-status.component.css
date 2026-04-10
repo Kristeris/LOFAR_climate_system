@@ -1,0 +1,16 @@
+.status-container {
+    width: 100%;
+    min-height: calc(100vh - 60px); /* Adjust based on your header/nav */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.chart-wrapper {
+    width: 100%;
+    max-width: 900px;
+    height: 700px;
+}

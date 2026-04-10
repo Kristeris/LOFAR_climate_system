@@ -7,8 +7,10 @@ import { HomePage } from './components/home-page/home-page';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { Forum } from './components/forum/forum';
+import { TowerStatusComponent } from './components/tower-status/tower-status.component';
 import { AuthGuard } from './guards/auth.guard';
 import { Role } from './models/role';
+import { NohupMonitorComponent } from './components/nohup-monitor/nohup-monitor.component';
 
 export const routes: Routes = [
   // Public
@@ -38,6 +40,12 @@ export const routes: Routes = [
     data: { roles: [Role.Admin, Role.User], title: 'Charts' }
   },
   {
+    path: 'tower-status',
+    component: TowerStatusComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.User], title: 'Tower Status' }
+  },
+  {
     path: 'forum',
     component: Forum,
     canActivate: [AuthGuard],
@@ -56,6 +64,12 @@ export const routes: Routes = [
     component: WsTest,
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin], title: 'WebSocket Monitor' }
+  },
+  {
+    path: 'nohup',
+    component: NohupMonitorComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin], title: 'Nohup Monitor' }
   },
 
   // Catch-all

@@ -1,0 +1,49 @@
+<div class="nohup-container">
+  <div class="header">
+    <h2>🛰️ Nohup Log Monitor (Live)</h2>
+    <p>Monitoring the raw zstd packet compression pipeline via STOMP WebSockets.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="kpi-card glass">
+      <h4>Total Volume Processed</h4>
+      <div class="kpi-value">{{ totalGB | number:'1.2-2' }} <span class="unit">GB</span></div>
+    </div>
+    
+    <div class="kpi-card glass">
+      <h4>Max Buffer</h4>
+      <div class="kpi-value warning">{{ bufferPercent | number:'1.1-1' }}<span class="unit">% full</span></div>
+    </div>
+    
+    <div class="kpi-card glass" [ngClass]="{'status-good': isGoodStatus, 'status-bad': !isGoodStatus}">
+      <h4>Overall Status</h4>
+      <div class="kpi-value" *ngIf="isGoodStatus">✅ NORMAL</div>
+      <div class="kpi-value" *ngIf="!isGoodStatus">❌ DROPPING ({{ packetsDropped }})</div>
+    </div>
+  </div>
+
+  <div class="chart-container glass">
+    <div class="chart-header">
+      <h4>📉 Packet Missed Rate (%)</h4>
+      <span class="current-rate">{{ missedPercent | number:'1.2-2' }}%</span>
+    </div>
+    <div id="missed-chart" style="width: 100%; height: 250px;"></div>
+  </div>
+
+  <div class="terminal-container glass">
+    <div class="terminal-header">
+      <div class="dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div>/home/weeb_user/lofar/LOFAR_climate_system/nohup.out &mdash; tail -f</div>
+      <div class="auto-scroll-status" [class.active]="autoScroll">
+        {{ autoScroll ? '⬇️ Auto-scrolling' : '⏸️ Scroll locked' }}
+      </div>
+    </div>
+    <div class="terminal-box" #terminalBox (scroll)="onScroll($event)">
+      <pre><span *ngFor="let line of rawLogLines; let i = index">{{ line }}<br></span></pre>
+    </div>
+  </div>
+</div>

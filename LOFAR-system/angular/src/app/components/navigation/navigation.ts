@@ -28,6 +28,16 @@ import { AuthService } from '../../services/auth.service';
                 📈 Charts
               </a>
             </li>
+            <li>
+              <a routerLink="/tower-status" routerLinkActive="active">
+                🗼 Tower Status
+              </a>
+            </li>
+            <li>
+              <a routerLink="/nohup" routerLinkActive="active">
+                🛰️ Nohup Monitor
+              </a>
+            </li>
 
             <li>
               <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
