@@ -22,33 +22,68 @@
 
   <!-- New post form -->
   @if (showForm()) {
-    <div class="new-post-card">
-      <h3>Create New Post</h3>
-      <input
-        type="text"
-        class="post-input"
-        placeholder="Post title…"
-        [(ngModel)]="newTitle"
-        maxlength="200"
-      />
-      <textarea
-        class="post-textarea"
-        placeholder="Write your post content here…"
-        [(ngModel)]="newContent"
-        rows="6"
-      ></textarea>
-      <div class="form-actions">
-        <span class="calendar-note">📅 A Google Calendar event will be created automatically</span>
-        <button class="btn-submit" (click)="submitPost()" [disabled]="submitting()">
-          @if (submitting()) {
-            <span class="spinner-sm"></span> Publishing…
-          } @else {
-            🚀 Publish Post
-          }
-        </button>
+  <div class="new-post-card">
+    <h3>Create New Post</h3>
+    <input
+      type="text"
+      class="post-input"
+      placeholder="Post title…"
+      [(ngModel)]="newTitle"
+      maxlength="200"
+    />
+    <textarea
+      class="post-textarea"
+      placeholder="Write your post content here…"
+      [(ngModel)]="newContent"
+      rows="6"
+    ></textarea>
+
+    <div class="schedule-section">
+      <div class="schedule-header">
+        <span>📅</span>
+        <span class="schedule-title">Schedule Calendar Event</span>
       </div>
+      <div class="schedule-fields">
+        <div class="schedule-field">
+          <label for="schedDate">Date</label>
+          <input
+            type="date"
+            id="schedDate"
+            class="schedule-input"
+            [(ngModel)]="scheduledDate"
+            [min]="todayDate"
+          />
+        </div>
+        <div class="schedule-field">
+          <label for="schedTime">Time</label>
+          <input
+            type="time"
+            id="schedTime"
+            class="schedule-input"
+            [(ngModel)]="scheduledTime"
+          />
+        </div>
+      </div>
+      @if (scheduledDate && scheduledTime) {
+        <div class="schedule-preview">
+          🗓️ Event will appear on <strong>{{ formatScheduledDisplay() }}</strong>
+        </div>
+      } @else {
+        <div class="schedule-hint">Leave blank to use the current date &amp; time</div>
+      }
     </div>
-  }
+
+    <div class="form-actions">
+      <button class="btn-submit" (click)="submitPost()" [disabled]="submitting()">
+        @if (submitting()) {
+          <span class="spinner-sm"></span> Publishing…
+        } @else {
+          🚀 Publish Post
+        }
+      </button>
+    </div>
+  </div>
+}
 
   <!-- Posts list -->
   @if (loading()) {

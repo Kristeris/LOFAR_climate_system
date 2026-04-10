@@ -1,8 +1,9 @@
 package lofar.system.service;
  
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
- 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +29,31 @@ public class ForumService {
     //  Create
     // ---------------------------------------------------------------
  
-    public ForumPostDTO createPost(String title, String content, String username) {
-        MyUser author = userRepo.findByUsername(username)
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
- 
-        ForumPost post = new ForumPost(title, content, author);
- 
-        String calendarEventId = calendarService.createCalendarEvent(
-            title, content, post.getCreatedAt()
-        );
-        post.setGoogleCalendarEventId(calendarEventId);
- 
-        ForumPost saved = forumRepo.save(post);
-        logger.info("Forum post created: '{}' by {} (calendarId={}, timeUtc={})",
-            title, username, calendarEventId, saved.getTimeUtc());
- 
-        emailService.sendForumPostConfirmation(
-            author.getEmail(), author.getUsername(), title, calendarEventId
-        );
- 
-        return toDTO(saved);
-    }
+public ForumPostDTO createPost(String title, String content, String username,
+                               LocalDateTime scheduledDateTime) {
+    MyUser author = userRepo.findByUsername(username)
+        .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+
+    ForumPost post = new ForumPost(title, content, author);
+
+    // Use the user's chosen time; fall back to the post creation time if none given
+    LocalDateTime eventTime = (scheduledDateTime != null) ? scheduledDateTime : post.getCreatedAt();
+
+    String calendarEventId = calendarService.createCalendarEvent(
+        title, content, eventTime
+    );
+    post.setGoogleCalendarEventId(calendarEventId);
+
+    ForumPost saved = forumRepo.save(post);
+    logger.info("Forum post created: '{}' by {} (calendarId={}, eventTime={})",
+        title, username, calendarEventId, eventTime);
+
+    emailService.sendForumPostConfirmation(
+        author.getEmail(), author.getUsername(), title, calendarEventId
+    );
+
+    return toDTO(saved);
+}
  
     // ---------------------------------------------------------------
     //  Read

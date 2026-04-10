@@ -18,17 +18,17 @@ export class Forum implements OnInit {
   error = signal<string | null>(null);
   successMsg = signal<string | null>(null);
 
-  // New-post form
   newTitle = '';
   newContent = '';
   showForm = signal(false);
 
+  scheduledDate = '';
+  scheduledTime = '';
+  todayDate: string = new Date().toISOString().split('T')[0];
+
   private readonly apiBase = 'http://localhost:8080/api/forum';
 
-  constructor(
-    private http: HttpClient,
-    public auth: AuthService
-  ) {}
+  constructor(private http: HttpClient, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -47,6 +47,7 @@ export class Forum implements OnInit {
     this.showForm.set(!this.showForm());
     this.error.set(null);
     this.successMsg.set(null);
+    if (!this.showForm()) this.resetForm();
   }
 
   submitPost(): void {
@@ -58,17 +59,24 @@ export class Forum implements OnInit {
     this.error.set(null);
     this.successMsg.set(null);
 
+    // If user picked a date and time, send it as ISO-8601 string.
+    // Otherwise send null so the backend falls back to right now.
+    let scheduledDateTime: string | null = null;
+    if (this.scheduledDate && this.scheduledTime) {
+      scheduledDateTime = `${this.scheduledDate}T${this.scheduledTime}:00`;
+    }
+
     this.http.post<ForumPost>(this.apiBase, {
       title: this.newTitle.trim(),
-      content: this.newContent.trim()
+      content: this.newContent.trim(),
+      scheduledDateTime
     }).subscribe({
       next: (created) => {
         this.submitting.set(false);
         this.successMsg.set(
           `✅ Post published! Google Calendar event created (ID: ${created.googleCalendarEventId}). A confirmation e-mail has been sent.`
         );
-        this.newTitle = '';
-        this.newContent = '';
+        this.resetForm();
         this.showForm.set(false);
         this.loadPosts();
         setTimeout(() => this.successMsg.set(null), 8000);
@@ -93,5 +101,20 @@ export class Forum implements OnInit {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
+  }
+
+  formatScheduledDisplay(): string {
+    if (!this.scheduledDate || !this.scheduledTime) return '';
+    return new Date(`${this.scheduledDate}T${this.scheduledTime}:00`).toLocaleString('en-GB', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  private resetForm(): void {
+    this.newTitle = '';
+    this.newContent = '';
+    this.scheduledDate = '';
+    this.scheduledTime = '';
   }
 }
