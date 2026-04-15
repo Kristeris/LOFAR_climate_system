@@ -19,6 +19,8 @@ export interface LofarObsFields {
   beamlets: string;
   subbands: string;
   anadir: string;
+  anadirCoords: string;
+  anadirSystem: string;
   digdir: string;
   druPath: string;
   duration: string;
@@ -57,6 +59,8 @@ export class Forum implements OnInit {
   activePreset = signal<PostPreset>('simple');
 
   // ── LOFAR structured fields ────────────────────────────────────
+  druExpanded = true;
+
   lofar: LofarObsFields = {
     targetName:  'JUPITER',
     swlevel:     '3',
@@ -65,10 +69,12 @@ export class Forum implements OnInit {
     bitmode:     '8',
     antennaset:  'LBA_OUTER',
     rcus:        '0:23,26:127,130:191',
-    band:        '10_90',
+    band:        '10',
     beamlets:    '0:243',
     subbands:    '40:283',
     anadir:      '0,0,JUPITER',
+    anadirCoords: '0,0',
+    anadirSystem: 'JUPITER',
     digdir:      '0,0,JUPITER',
     druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
     duration:    '7200',
@@ -97,29 +103,143 @@ export class Forum implements OnInit {
     }
   }
 
+  getBandMin(): number {
+    const mode = parseInt(this.lofar.rspMode, 10);
+    if (mode === 5) return 200;
+    if (mode === 6) return 160;
+    if (mode === 7) return 200;
+    return 0;
+  }
+
+  getBandMax(): number {
+    const mode = parseInt(this.lofar.rspMode, 10);
+    if (mode === 5) return 100;
+    if (mode === 6) return 240;
+    if (mode === 7) return 300;
+    return 100;
+  }
+
+  onModeChange(): void {
+    const bandNum = parseInt(this.lofar.band, 10);
+    if (isNaN(bandNum) || bandNum < this.getBandMin() || bandNum > this.getBandMax()) {
+      this.lofar.band = this.getBandMin().toString();
+    }
+    const mode = parseInt(this.lofar.rspMode, 10);
+    if (mode >= 1 && mode <= 2) this.lofar.antennaset = 'LBL_OUTER';
+    if (mode >= 3 && mode <= 4) this.lofar.antennaset = 'LBH_OUTER';
+    if (mode >= 5) this.lofar.antennaset = 'HBA_OUTER';
+  }
+
+  getBeamletsDefault(): string {
+    if (this.lofar.bitmode === '8') return '0:487';
+    return '0:243';
+  }
+
+  getBeamletsPlaceholder(): string {
+    return this.getBeamletsDefault();
+  }
+
+  getSubbandsDefault(): string {
+    if (this.lofar.bitmode === '8') return '40:527';
+    return '40:283';
+  }
+
+  getSubbandsPlaceholder(): string {
+    return this.getSubbandsDefault();
+  }
+
+  getAntennasetPlaceholder(): string {
+    const mode = parseInt(this.lofar.rspMode, 10);
+    if (mode >= 1 && mode <= 2) return 'LBL_OUTER';
+    if (mode >= 3 && mode <= 4) return 'LBH_OUTER';
+    return 'HBA_OUTER';
+  }
+
+  onBitmodeChange(): void {
+    this.lofar.beamlets = this.getBeamletsDefault();
+    this.lofar.subbands = this.getSubbandsDefault();
+  }
+
   /** Auto-update title when target name changes in LOFAR mode */
-  onTargetNameChange(): void {
+onTargetNameChange(): void {
     if (this.activePreset() === 'lofar') {
       this.newTitle = `LOFAR observation – ${this.lofar.targetName}`;
-      this.lofar.anadir = `0,0,${this.lofar.targetName}`;
-      this.lofar.digdir = `0,0,${this.lofar.targetName}`;
+      this.lofar.anadirCoords = `0,0`;
+      this.lofar.anadirSystem = this.lofar.targetName;
     }
+  }
+
+  isPlanetSystem(): boolean {
+    const sys = this.lofar.anadirSystem;
+    return ['MERCURY', 'VENUS', 'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE', 'PLUTO', 'SUN', 'MOON'].includes(sys);
+  }
+
+  onCoordsChange(): void {
+    const coords = this.lofar.anadirCoords.trim();
+    if (!coords) return;
+    const parts = coords.split(',');
+    if (parts.length !== 2) return;
+    let ra = parseFloat(parts[0]);
+    let dec = parseFloat(parts[1]);
+    let changed = false;
+    if (!isNaN(dec)) {
+      if (dec < -1.570796) { dec = -1.570796; changed = true; }
+      if (dec > 1.570796) { dec = 1.570796; changed = true; }
+    }
+    if (!isNaN(ra)) {
+      if (ra < 0.0) { ra = 0.0; changed = true; }
+      if (ra > 3.141593) { ra = 3.141593; changed = true; }
+    }
+    if (changed) {
+      this.lofar.anadirCoords = `${ra},${dec}`;
+    }
+    this.lofar.digdir = `${this.lofar.anadirCoords},${this.lofar.anadirSystem}`;
+  }
+
+  isCoordinateSystem(): boolean {
+    const sys = this.lofar.anadirSystem;
+    return ['J2000', 'ITRF', 'B1950', 'AZELGEO', 'GALACTIC', 'ECLIPTIC'].includes(sys);
+  }
+
+  validateAnadirCoords(): string | null {
+    if (this.isPlanetSystem()) return null;
+    const coords = this.lofar.anadirCoords.trim();
+    const parts = coords.split(',');
+    if (parts.length !== 2) return 'Use format: RA,Dec (e.g., 0.5,-0.3)';
+    const ra = parseFloat(parts[0]);
+    const dec = parseFloat(parts[1]);
+    if (isNaN(ra) || isNaN(dec)) return 'Invalid numbers';
+    if (ra < 0 || ra > 3.141593) return 'RA must be 0 to 180 degrees (0 to 3.141593 rad)';
+    if (dec < -1.570796 || dec > 1.570796) return 'Dec must be -90 to 90 degrees (-1.570796 to 1.570796 rad)';
+    return null;
+  }
+
+  onAnadirSystemChange(): void {
+    if (this.isPlanetSystem()) {
+      this.lofar.anadirCoords = '0,0';
+    }
+    this.lofar.digdir = `${this.lofar.anadirCoords},${this.lofar.anadirSystem}`;
   }
 
   buildLofarContent(): string {
     const f = this.lofar;
-    return `LCU
+    let content = `LCU
 swlevel ${f.swlevel}
 rspctl --mode=${f.rspMode} --select=${f.rspSelect}
 rspctl --rcu
 rspctl --bitmode=${f.bitmode}
-nohup beamctl --antennaset=${f.antennaset} --rcus=${f.rcus} --band=${f.band} --beamlets=${f.beamlets} --subbands=${f.subbands} --anadir=${f.anadir} --digdir=${f.digdir}&
+nohup beamctl --antennaset=${f.antennaset} --rcus=${f.rcus} --band=${f.band} --beamlets=${f.beamlets} --subbands=${f.subbands} --anadir=${f.anadirCoords},${f.anadirSystem} digdir=${f.digdir}&`;
+
+    if (this.druExpanded) {
+      content += `
 
 DRU screen
 cd ${f.druPath}
-source ~/.profile
 nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port1} --out ${f.outName} --check --Maxfilesize ${f.maxFilesize} --timeout ${f.timeout} --dropped_kernel --bufsize ${f.bufsize} --sock_bufsize ${f.sockBufsize} --skip ${f.skip} --verbose &
 nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --out ${f.outName} --check --Maxfilesize ${f.maxFilesize} --timeout ${f.timeout} --dropped_kernel --bufsize ${f.bufsize} --sock_bufsize ${f.sockBufsize} --skip ${f.skip} --verbose &`;
+    }
+
+    return content;
   }
 
   loadPosts(): void {
@@ -145,6 +265,31 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
 
     if (!this.newTitle.trim() || !contentToSend.trim()) {
       this.error.set('Title and content are required.');
+      return;
+    }
+
+    const bandNum = parseInt(this.lofar.band, 10);
+    const mode = parseInt(this.lofar.rspMode, 10);
+    let minBand = 0, maxBand = 100;
+    if (mode === 6) { minBand = 160; maxBand = 240; }
+    else if (mode === 7) { minBand = 200; maxBand = 300; }
+    if (isNaN(bandNum) || bandNum < minBand || bandNum > maxBand) {
+      this.error.set(`--band must be between ${minBand} and ${maxBand} for mode ${mode}.`);
+      return;
+    }
+
+    if (this.isCoordinateSystem()) {
+      const coordError = this.validateAnadirCoords();
+      if (coordError) {
+        this.error.set(coordError);
+        return;
+      }
+    }
+
+    const sys = this.lofar.anadirSystem;
+    const coordSystems = ['J2000', 'ITRF', 'B1950', 'AZELGEO', 'GALACTIC', 'ECLIPTIC'];
+    if (coordSystems.includes(sys) && !this.validateAnadirCoords()) {
+      this.error.set('--anadir must be in range -90° to 90° and 0° to 180°.');
       return;
     }
 
@@ -216,10 +361,12 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       bitmode:     '8',
       antennaset:  'LBA_OUTER',
       rcus:        '0:23,26:127,130:191',
-      band:        '10_90',
+      band:        '10',
       beamlets:    '0:243',
       subbands:    '40:283',
       anadir:      '0,0,JUPITER',
+    anadirCoords: '0,0',
+    anadirSystem: 'JUPITER',
       digdir:      '0,0,JUPITER',
       druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
       duration:    '7200',
