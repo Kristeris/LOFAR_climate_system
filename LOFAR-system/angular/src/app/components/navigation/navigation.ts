@@ -18,43 +18,38 @@ import { AuthService } from '../../services/auth.service';
         <!-- Nav links - shown to all authenticated users -->
         @if (auth.isLoggedIn()) {
           <ul class="nav-links">
-            <li>
-              <a routerLink="/sensors" routerLinkActive="active">
-                📋 Table View
-              </a>
-            </li>
-            <li>
-              <a routerLink="/charts" routerLinkActive="active">
-                📈 Charts
-              </a>
-            </li>
-            <li>
-              <a routerLink="/tower-status" routerLinkActive="active">
-                🗼 Tower Status
-              </a>
-            </li>
-            <li>
-              <a routerLink="/nohup" routerLinkActive="active">
-                🛰️ Nohup Monitor
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
-            </li>
-
-
-            <!-- Admin-only links -->
             @if (auth.isAdmin()) {
-              <li>
-                <a routerLink="/ws-test" routerLinkActive="active">
-                  🔌 WebSocket
-                </a>
-              </li>
               <li>
                 <a routerLink="/admin" routerLinkActive="active" class="admin-link">
                   ⚙️ Admin
                 </a>
+              </li>
+              <li>
+                <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
+              </li>
+            } @else {
+              <li>
+                <a routerLink="/sensors" routerLinkActive="active">
+                  📋 Table View
+                </a>
+              </li>
+              <li>
+                <a routerLink="/charts" routerLinkActive="active">
+                  📈 Charts
+                </a>
+              </li>
+              <li>
+                <a routerLink="/tower-status" routerLinkActive="active">
+                  🗼 Tower Status
+                </a>
+              </li>
+              <li>
+                <a routerLink="/nohup" routerLinkActive="active">
+                  🛰️ Monitor
+                </a>
+              </li>
+              <li>
+                <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
               </li>
             }
           </ul>

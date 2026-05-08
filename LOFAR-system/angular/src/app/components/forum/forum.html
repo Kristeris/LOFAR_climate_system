@@ -86,7 +86,7 @@
                 <input type="text" [(ngModel)]="lofar.swlevel" placeholder="3" />
               </div>
               <div class="lofar-field">
-                <label>--mode</label>
+                <label>mode</label>
                 <select [(ngModel)]="lofar.rspMode" (change)="onModeChange()">
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -98,7 +98,7 @@
                 </select>
               </div>
               <div class="lofar-field">
-                <label>--bitmode</label>
+                <label>bitmode</label>
                 <select [(ngModel)]="lofar.bitmode" (change)="onBitmodeChange()">
                   <option value="16">16</option>
                   <option value="8">8</option>
@@ -107,7 +107,7 @@
             </div>
             <div class="lofar-row">
               <div class="lofar-field lofar-field--wide">
-                <label>--select (RCU range)</label>
+                <label>select (RCU range)</label>
                 <input type="text" [(ngModel)]="lofar.rspSelect" placeholder="0:23,26:127,130:191" />
               </div>
             </div>
@@ -118,27 +118,34 @@
             <div class="lofar-section-title">📡 LCU — beamctl</div>
             <div class="lofar-row">
               <div class="lofar-field">
-                <label>--antennaset</label>
+                <label>antennaset</label>
                 <input type="text" [(ngModel)]="lofar.antennaset" [placeholder]="getAntennasetPlaceholder()" />
               </div>
               <div class="lofar-field">
-                <label>--band</label>
+                <label>band</label>
                 <input type="number" [(ngModel)]="lofar.band" [min]="getBandMin()" [max]="getBandMax()" [placeholder]="getBandMin() + '-' + getBandMax()" />
+              </div>
+              <div class="lofar-field">
+                <label>clock</label>
+                <select [(ngModel)]="lofar.clock">
+                  <option value="160">160</option>
+                  <option value="200">200</option>
+                </select>
               </div>
             </div>
             <div class="lofar-row">
               <div class="lofar-field lofar-field--wide">
-                <label>--rcus</label>
+                <label>rcus</label>
                 <input type="text" [(ngModel)]="lofar.rcus" placeholder="0:23,26:127,130:191" />
               </div>
             </div>
             <div class="lofar-row">
               <div class="lofar-field">
-                <label>--beamlets</label>
+                <label>beamlets</label>
                 <input type="text" [(ngModel)]="lofar.beamlets" [placeholder]="getBeamletsPlaceholder()" />
               </div>
               <div class="lofar-field">
-                <label>--subbands</label>
+                <label>subbands</label>
                 <input type="text" [(ngModel)]="lofar.subbands" [placeholder]="getSubbandsPlaceholder()" />
               </div>
             </div>
@@ -189,11 +196,11 @@
               </div>
               <div class="lofar-row">
                 <div class="lofar-field">
-                  <label>--duration (s)</label>
-                  <input type="text" [(ngModel)]="lofar.duration" placeholder="7200" />
+                  <label>duration (s)</label>
+                  <input type="number" [(ngModel)]="lofar.duration" placeholder="3600" min="0" max="3600" />
                 </div>
                 <div class="lofar-field">
-                  <label>--out</label>
+                  <label>out</label>
                   <input type="text" [(ngModel)]="lofar.outName" placeholder="jupiter" />
                 </div>
               </div>
@@ -209,25 +216,25 @@
               </div>
               <div class="lofar-row">
                 <div class="lofar-field">
-                  <label>--Maxfilesize</label>
+                  <label>Maxfilesize</label>
                   <input type="text" [(ngModel)]="lofar.maxFilesize" placeholder="100e9" />
                 </div>
                 <div class="lofar-field">
-                  <label>--timeout</label>
+                  <label>timeout</label>
                   <input type="text" [(ngModel)]="lofar.timeout" placeholder="10" />
                 </div>
               </div>
               <div class="lofar-row">
                 <div class="lofar-field">
-                  <label>--bufsize</label>
+                  <label>bufsize</label>
                   <input type="text" [(ngModel)]="lofar.bufsize" placeholder="1e9" />
                 </div>
                 <div class="lofar-field">
-                  <label>--sock_bufsize</label>
+                  <label>sock_bufsize</label>
                   <input type="text" [(ngModel)]="lofar.sockBufsize" placeholder="1e7" />
                 </div>
                 <div class="lofar-field">
-                  <label>--skip</label>
+                  <label>skip</label>
                   <input type="text" [(ngModel)]="lofar.skip" placeholder="1" />
                 </div>
               </div>

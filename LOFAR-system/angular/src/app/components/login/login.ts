@@ -42,9 +42,13 @@ export class Login {
     this.errorMsg.set(null);
 
     this.auth.login(this.username.trim(), this.password.trim()).subscribe({
-      next: () => {
+      next: (user) => {
         this.loading.set(false);
-        this.router.navigate([this.returnUrl]);
+        if (user.role === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate([this.returnUrl]);
+        }
       },
       error: (err) => {
         this.loading.set(false);

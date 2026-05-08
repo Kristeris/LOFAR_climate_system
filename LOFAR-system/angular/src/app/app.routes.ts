@@ -69,7 +69,7 @@ export const routes: Routes = [
     path: 'nohup',
     component: NohupMonitorComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin], title: 'Nohup Monitor' }
+    data: { roles: [Role.Admin, Role.User], title: 'Nohup Monitor' }
   },
 
   // Catch-all

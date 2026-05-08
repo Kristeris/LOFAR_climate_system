@@ -18,6 +18,7 @@ export interface LofarObsFields {
   band: string;
   beamlets: string;
   subbands: string;
+  clock: string;
   anadir: string;
   anadirCoords: string;
   anadirSystem: string;
@@ -67,17 +68,18 @@ export class Forum implements OnInit {
     rspMode:     '3',
     rspSelect:   '0:23,26:127,130:191',
     bitmode:     '8',
-    antennaset:  'LBA_OUTER',
-    rcus:        '0:23,26:127,130:191',
-    band:        '10',
-    beamlets:    '0:243',
-    subbands:    '40:283',
-    anadir:      '0,0,JUPITER',
-    anadirCoords: '0,0',
-    anadirSystem: 'JUPITER',
-    digdir:      '0,0,JUPITER',
-    druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
-    duration:    '7200',
+antennaset:  'LBA_OUTER',
+      rcus:        '0:23,26:127,130:191',
+      band:        '10',
+      beamlets:    '0:243',
+      subbands:    '40:283',
+      clock:       '200',
+      anadir:      '0,0,JUPITER',
+      anadirCoords: '0,0',
+      anadirSystem: 'JUPITER',
+      digdir:      '0,0,JUPITER',
+      druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
+    duration:    '3600',
     port1:       '16140',
     port2:       '16141',
     outName:     'jupiter',
@@ -246,7 +248,13 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
     this.loading.set(true);
     this.error.set(null);
     this.http.get<ForumPost[]>(this.apiBase).subscribe({
-      next: (data) => { this.posts.set(data); this.loading.set(false); },
+      next: (data) => {
+        this.posts.set(data);
+        this.loading.set(false);
+        if (data.length === 0 && !this.showForm()) {
+          this.showForm.set(true);
+        }
+      },
       error: () => { this.error.set('Failed to load forum posts.'); this.loading.set(false); }
     });
   }
@@ -268,13 +276,33 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       return;
     }
 
+    if (this.activePreset() === 'lofar') {
+      const missingFields: string[] = [];
+
+      if (!this.lofar.targetName?.trim()) missingFields.push('target name');
+      if (!this.lofar.swlevel?.trim()) missingFields.push('swlevel');
+      if (!this.lofar.rspMode?.trim()) missingFields.push('rspMode');
+      if (!this.lofar.rspSelect?.trim()) missingFields.push('rspSelect');
+      if (!this.lofar.bitmode?.trim()) missingFields.push('bitmode');
+      if (!this.lofar.antennaset?.trim()) missingFields.push('antennaset');
+      if (!this.lofar.band?.toString().trim()) missingFields.push('band');
+      if (!this.lofar.rcus?.trim()) missingFields.push('rcus');
+      if (!this.lofar.beamlets?.trim()) missingFields.push('beamlets');
+      if (!this.lofar.subbands?.trim()) missingFields.push('subbands');
+
+      if (missingFields.length > 0) {
+        this.error.set(`Missing required fields: ${missingFields.join(', ')}`);
+        return;
+      }
+    }
+
     const bandNum = parseInt(this.lofar.band, 10);
     const mode = parseInt(this.lofar.rspMode, 10);
     let minBand = 0, maxBand = 100;
     if (mode === 6) { minBand = 160; maxBand = 240; }
     else if (mode === 7) { minBand = 200; maxBand = 300; }
     if (isNaN(bandNum) || bandNum < minBand || bandNum > maxBand) {
-      this.error.set(`--band must be between ${minBand} and ${maxBand} for mode ${mode}.`);
+      this.error.set(`Band must be between ${minBand} and ${maxBand} for mode ${mode}.`);
       return;
     }
 
@@ -361,15 +389,16 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       bitmode:     '8',
       antennaset:  'LBA_OUTER',
       rcus:        '0:23,26:127,130:191',
-      band:        '10',
+band:        '10',
       beamlets:    '0:243',
       subbands:    '40:283',
+      clock:       '200',
       anadir:      '0,0,JUPITER',
-    anadirCoords: '0,0',
-    anadirSystem: 'JUPITER',
+      anadirCoords: '0,0',
+      anadirSystem: 'JUPITER',
       digdir:      '0,0,JUPITER',
       druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
-      duration:    '7200',
+      duration:    '3600',
       port1:       '16140',
       port2:       '16141',
       outName:     'jupiter',
