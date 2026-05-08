@@ -66,7 +66,7 @@ export const routes: Routes = [
     data: { roles: [Role.Admin], title: 'WebSocket Monitor' }
   },
   {
-    path: 'nohup',
+    path: 'monitoring',
     component: NohupMonitorComponent,
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.User], title: 'Nohup Monitor' }

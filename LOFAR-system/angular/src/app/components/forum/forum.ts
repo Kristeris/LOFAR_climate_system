@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ForumPost } from '../../models/forumpost';
+import { calculateBeamletsFromForum } from '../../services/sub-band.js';
 
 export type PostPreset = 'simple' | 'lofar';
 
@@ -16,11 +17,12 @@ export interface LofarObsFields {
   antennaset: string;
   rcus: string;
   band: string;
-  beamlets: string;
   subbands: string;
   clock: string;
+  beamlets: string;
   anadir: string;
-  anadirCoords: string;
+  anadirX: string;
+  anadirY: string;
   anadirSystem: string;
   digdir: string;
   druPath: string;
@@ -63,32 +65,33 @@ export class Forum implements OnInit {
   druExpanded = true;
 
   lofar: LofarObsFields = {
-    targetName:  'JUPITER',
-    swlevel:     '3',
-    rspMode:     '3',
-    rspSelect:   '0:23,26:127,130:191',
-    bitmode:     '8',
-antennaset:  'LBA_OUTER',
+      targetName:  'JUPITER',
+      swlevel:     '3',
+      rspMode:     '3',
+      rspSelect:   '0:23,26:127,130:191',
+      bitmode:     '8',
+      antennaset:  'LBA_OUTER',
       rcus:        '0:23,26:127,130:191',
       band:        '10',
-      beamlets:    '0:243',
       subbands:    '40:283',
+      beamlets:    '0:243',
       clock:       '200',
       anadir:      '0,0,JUPITER',
-      anadirCoords: '0,0',
+      anadirX:      '0',
+      anadirY:      '0',
       anadirSystem: 'JUPITER',
       digdir:      '0,0,JUPITER',
       druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
-    duration:    '3600',
-    port1:       '16140',
-    port2:       '16141',
-    outName:     'jupiter',
-    maxFilesize: '100e9',
-    timeout:     '10',
-    bufsize:     '1e9',
-    sockBufsize: '1e7',
-    skip:        '1',
-  };
+      duration:    '3600',
+      port1:       '16140',
+      port2:       '16141',
+      outName:     'jupiter',
+      maxFilesize: '100e9',
+      timeout:     '10',
+      bufsize:     '1e9',
+      sockBufsize: '1e7',
+      skip:        '1',
+    };
 
   private readonly apiBase = 'http://localhost:8080/api/forum';
 
@@ -96,12 +99,27 @@ antennaset:  'LBA_OUTER',
 
   ngOnInit(): void {
     this.loadPosts();
+    this.recalculateBeamlets();
   }
 
   setPreset(preset: PostPreset): void {
     this.activePreset.set(preset);
     if (preset === 'lofar' && !this.newTitle.trim()) {
       this.newTitle = `LOFAR observation – ${this.lofar.targetName}`;
+    }
+    if (preset === 'lofar') {
+      this.recalculateBeamlets();
+    }
+  }
+
+  private recalculateBeamlets(): void {
+    const beamlets = calculateBeamletsFromForum(
+      this.lofar.rspMode,
+      this.lofar.subbands,
+      this.lofar.clock
+    );
+    if (beamlets) {
+      this.lofar.beamlets = beamlets;
     }
   }
 
@@ -130,6 +148,7 @@ antennaset:  'LBA_OUTER',
     if (mode >= 1 && mode <= 2) this.lofar.antennaset = 'LBL_OUTER';
     if (mode >= 3 && mode <= 4) this.lofar.antennaset = 'LBH_OUTER';
     if (mode >= 5) this.lofar.antennaset = 'HBA_OUTER';
+    this.recalculateBeamlets();
   }
 
   getBeamletsDefault(): string {
@@ -158,15 +177,24 @@ antennaset:  'LBA_OUTER',
   }
 
   onBitmodeChange(): void {
-    this.lofar.beamlets = this.getBeamletsDefault();
     this.lofar.subbands = this.getSubbandsDefault();
+    this.recalculateBeamlets();
+  }
+
+  onClockChange(): void {
+    this.recalculateBeamlets();
+  }
+
+  onSubbandsChange(): void {
+    this.recalculateBeamlets();
   }
 
   /** Auto-update title when target name changes in LOFAR mode */
 onTargetNameChange(): void {
     if (this.activePreset() === 'lofar') {
       this.newTitle = `LOFAR observation – ${this.lofar.targetName}`;
-      this.lofar.anadirCoords = `0,0`;
+      this.lofar.anadirX = '0';
+      this.lofar.anadirY = '0';
       this.lofar.anadirSystem = this.lofar.targetName;
     }
   }
@@ -177,13 +205,15 @@ onTargetNameChange(): void {
   }
 
   onCoordsChange(): void {
-    const coords = this.lofar.anadirCoords.trim();
-    if (!coords) return;
-    const parts = coords.split(',');
-    if (parts.length !== 2) return;
-    let ra = parseFloat(parts[0]);
-    let dec = parseFloat(parts[1]);
+    const xStr = this.lofar.anadirX?.trim() || '';
+    const yStr = this.lofar.anadirY?.trim() || '';
+    
+    if (!xStr || !yStr) return;
+    
+    let ra = parseFloat(xStr);
+    let dec = parseFloat(yStr);
     let changed = false;
+    
     if (!isNaN(dec)) {
       if (dec < -1.570796) { dec = -1.570796; changed = true; }
       if (dec > 1.570796) { dec = 1.570796; changed = true; }
@@ -193,9 +223,10 @@ onTargetNameChange(): void {
       if (ra > 3.141593) { ra = 3.141593; changed = true; }
     }
     if (changed) {
-      this.lofar.anadirCoords = `${ra},${dec}`;
+      this.lofar.anadirX = ra.toString();
+      this.lofar.anadirY = dec.toString();
     }
-    this.lofar.digdir = `${this.lofar.anadirCoords},${this.lofar.anadirSystem}`;
+    this.lofar.digdir = `${this.lofar.anadirX},${this.lofar.anadirY},${this.lofar.anadirSystem}`;
   }
 
   isCoordinateSystem(): boolean {
@@ -205,22 +236,22 @@ onTargetNameChange(): void {
 
   validateAnadirCoords(): string | null {
     if (this.isPlanetSystem()) return null;
-    const coords = this.lofar.anadirCoords.trim();
-    const parts = coords.split(',');
-    if (parts.length !== 2) return 'Use format: RA,Dec (e.g., 0.5,-0.3)';
-    const ra = parseFloat(parts[0]);
-    const dec = parseFloat(parts[1]);
-    if (isNaN(ra) || isNaN(dec)) return 'Invalid numbers';
-    if (ra < 0 || ra > 3.141593) return 'RA must be 0 to 180 degrees (0 to 3.141593 rad)';
-    if (dec < -1.570796 || dec > 1.570796) return 'Dec must be -90 to 90 degrees (-1.570796 to 1.570796 rad)';
+    const x = this.lofar.anadirX?.trim() || '';
+    const y = this.lofar.anadirY?.trim() || '';
+    const ra = parseFloat(x);
+    const dec = parseFloat(y);
+    if (isNaN(ra) || isNaN(dec)) return 'Invalid coordinates';
+    if (ra < 0 || ra > 3.141593) return 'X must be 0 to 180 degrees (0 to 3.141593 rad)';
+    if (dec < -1.570796 || dec > 1.570796) return 'Y must be -90 to 90 degrees (-1.570796 to 1.570796 rad)';
     return null;
   }
 
   onAnadirSystemChange(): void {
     if (this.isPlanetSystem()) {
-      this.lofar.anadirCoords = '0,0';
+      this.lofar.anadirX = '0';
+      this.lofar.anadirY = '0';
     }
-    this.lofar.digdir = `${this.lofar.anadirCoords},${this.lofar.anadirSystem}`;
+    this.lofar.digdir = `${this.lofar.anadirX},${this.lofar.anadirY},${this.lofar.anadirSystem}`;
   }
 
   buildLofarContent(): string {
@@ -230,7 +261,7 @@ swlevel ${f.swlevel}
 rspctl --mode=${f.rspMode} --select=${f.rspSelect}
 rspctl --rcu
 rspctl --bitmode=${f.bitmode}
-nohup beamctl --antennaset=${f.antennaset} --rcus=${f.rcus} --band=${f.band} --beamlets=${f.beamlets} --subbands=${f.subbands} --anadir=${f.anadirCoords},${f.anadirSystem} digdir=${f.digdir}&`;
+nohup beamctl --antennaset=${f.antennaset} --rcus=${f.rcus} --band=${f.band} --beamlets=${f.beamlets} --subbands=${f.subbands} --anadir=${f.anadirX},${f.anadirY},${f.anadirSystem} digdir=${f.digdir}&`;
 
     if (this.druExpanded) {
       content += `
@@ -287,7 +318,6 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       if (!this.lofar.antennaset?.trim()) missingFields.push('antennaset');
       if (!this.lofar.band?.toString().trim()) missingFields.push('band');
       if (!this.lofar.rcus?.trim()) missingFields.push('rcus');
-      if (!this.lofar.beamlets?.trim()) missingFields.push('beamlets');
       if (!this.lofar.subbands?.trim()) missingFields.push('subbands');
 
       if (missingFields.length > 0) {
@@ -389,12 +419,13 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       bitmode:     '8',
       antennaset:  'LBA_OUTER',
       rcus:        '0:23,26:127,130:191',
-band:        '10',
-      beamlets:    '0:243',
+      band:        '10',
       subbands:    '40:283',
+      beamlets:    '0:243',
       clock:       '200',
       anadir:      '0,0,JUPITER',
-      anadirCoords: '0,0',
+      anadirX:     '0',
+      anadirY:     '0',
       anadirSystem: 'JUPITER',
       digdir:      '0,0,JUPITER',
       druPath:     '/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter',
@@ -408,5 +439,6 @@ band:        '10',
       sockBufsize: '1e7',
       skip:        '1',
     };
+    this.recalculateBeamlets();
   }
 }

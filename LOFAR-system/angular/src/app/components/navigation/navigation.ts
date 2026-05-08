@@ -44,7 +44,7 @@ import { AuthService } from '../../services/auth.service';
                 </a>
               </li>
               <li>
-                <a routerLink="/nohup" routerLinkActive="active">
+                <a routerLink="/monitoring" routerLinkActive="active">
                   🛰️ Monitor
                 </a>
               </li>

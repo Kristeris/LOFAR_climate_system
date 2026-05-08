@@ -17,7 +17,7 @@ export class Login {
   errorMsg = signal<string | null>(null);
   showPassword = signal(false);
 
-  private returnUrl = '/sensors';
+  private returnUrl = '/monitoring';
 
   constructor(
     private auth: AuthService,
@@ -25,10 +25,10 @@ export class Login {
     private route: ActivatedRoute
   ) {
     if (this.auth.isLoggedIn()) {
-      this.router.navigate(['/sensors']);
+      this.router.navigate(['/monitoring']);
     }
   
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/sensors';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/monitoring';
   }
 
   onSubmit(): void {

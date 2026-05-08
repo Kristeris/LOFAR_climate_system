@@ -127,7 +127,7 @@
               </div>
               <div class="lofar-field">
                 <label>clock</label>
-                <select [(ngModel)]="lofar.clock">
+                <select [(ngModel)]="lofar.clock" (change)="onClockChange()">
                   <option value="160">160</option>
                   <option value="200">200</option>
                 </select>
@@ -141,18 +141,23 @@
             </div>
             <div class="lofar-row">
               <div class="lofar-field">
-                <label>beamlets</label>
-                <input type="text" [(ngModel)]="lofar.beamlets" [placeholder]="getBeamletsPlaceholder()" />
-              </div>
-              <div class="lofar-field">
                 <label>subbands</label>
-                <input type="text" [(ngModel)]="lofar.subbands" [placeholder]="getSubbandsPlaceholder()" />
+                <input type="text" [(ngModel)]="lofar.subbands" (ngModelChange)="onSubbandsChange()" [placeholder]="getSubbandsPlaceholder()" />
               </div>
             </div>
             <div class="lofar-row">
               <div class="lofar-field">
-                <label>anadir</label>
-                <input type="text" [(ngModel)]="lofar.anadirCoords" (ngModelChange)="onCoordsChange()" placeholder="RA: 0.0–3.141593, Dec: −1.570796–1.570796" [readonly]="isPlanetSystem()" />
+                <label>Coordinates</label>
+              </div>
+            </div>
+            <div class="lofar-row">
+              <div class="lofar-field">
+                <label>X</label>
+                <input type="text" [(ngModel)]="lofar.anadirX" (ngModelChange)="onCoordsChange()" placeholder="0.0–3.141593" [readonly]="isPlanetSystem()" />
+              </div>
+              <div class="lofar-field">
+                <label>Y</label>
+                <input type="text" [(ngModel)]="lofar.anadirY" (ngModelChange)="onCoordsChange()" placeholder="−1.570796–1.570796" [readonly]="isPlanetSystem()" />
               </div>
               <div class="lofar-field">
                 <label>&nbsp;</label>
@@ -173,10 +178,6 @@
                   <option value="SUN">SUN</option>
                   <option value="MOON">MOON</option>
                 </select>
-              </div>
-              <div class="lofar-field">
-                <label>digdir</label>
-                <input type="text" [(ngModel)]="lofar.digdir" placeholder="0,0,JUPITER" />
               </div>
             </div>
           </div>
