@@ -401,6 +401,105 @@
   color: #1864ab;
 }
 
+/* ---- User Hours Table ---- */
+.user-hours-refresh {
+  margin-bottom: 16px;
+}
+
+.user-hours-loading,
+.user-hours-empty {
+  padding: 20px;
+  text-align: center;
+  color: #868e96;
+  font-size: 14px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.user-hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.user-hours-table th,
+.user-hours-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.user-hours-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.user-hours-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.hours-value {
+  font-weight: 700;
+  color: #4dabf7;
+}
+
+/* ---- Dropdown Details ---- */
+.dropdown-details {
+  margin-bottom: 20px;
+}
+
+.dropdown-summary {
+  background: white;
+  border-radius: 10px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #34495e;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+
+.dropdown-summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-summary::before {
+  content: '▶';
+  font-size: 12px;
+  transition: transform 0.25s ease;
+}
+
+.dropdown-details[open] .dropdown-summary::before {
+  transform: rotate(90deg);
+}
+
+.dropdown-summary:hover {
+  background: #f8f9fa;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.dropdown-details[open] .dropdown-summary {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dropdown-details .section-card {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: -2px;
+  padding-top: 20px;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
   .admin-container {

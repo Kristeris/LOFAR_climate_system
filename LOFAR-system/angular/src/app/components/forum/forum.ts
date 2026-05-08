@@ -35,6 +35,25 @@ export interface LofarObsFields {
   bufsize: string;
   sockBufsize: string;
   skip: string;
+  lumpEnabled: boolean;
+  lumpPort: string;
+  lumpClockSpeed: string;
+  lumpBeamletsPerLane: string;
+  lumpDatadir: string;
+  lumpDataType: string;
+  lumpStationName: string;
+  lumpWriterType: string;
+  lumpPhysicalBeamletArray: string;
+  lumpRcuMode: string;
+  lumpEpoch: string;
+  lumpDuration: string;
+  lumpSubbandArray: string;
+  lumpFilenameBase: string;
+  lumpSourcename: string;
+  lumpRightAscension: string;
+  lumpDeclination: string;
+  lumpStartDate: string;
+  lumpRecorderNumCores: string;
 }
 
 @Component({
@@ -63,8 +82,9 @@ export class Forum implements OnInit {
 
   // ── LOFAR structured fields ────────────────────────────────────
   druExpanded = true;
+  lumpExpanded = true;
 
-  lofar: LofarObsFields = {
+lofar: LofarObsFields = {
       targetName:  'JUPITER',
       swlevel:     '3',
       rspMode:     '3',
@@ -91,6 +111,25 @@ export class Forum implements OnInit {
       bufsize:     '1e9',
       sockBufsize: '1e7',
       skip:        '1',
+      lumpEnabled:   false,
+      lumpPort:      '16140',
+      lumpClockSpeed: '200',
+      lumpBeamletsPerLane: '122',
+      lumpDatadir:     './',
+      lumpDataType:   'L_intComplex16_t',
+      lumpStationName: 'LV614',
+      lumpWriterType:  'LuMP1',
+      lumpPhysicalBeamletArray: '[0:122]',
+      lumpRcuMode:     '5',
+      lumpEpoch:      'J2000',
+      lumpDuration:    '600',
+      lumpSubbandArray: '[23:145]',
+      lumpFilenameBase: 'J0332+5434',
+      lumpSourcename:  'J0332+5434',
+      lumpRightAscension: '0.92934187',
+      lumpDeclination: '0.95257923',
+      lumpStartDate:   '2025-08-27T11:05:00Z',
+      lumpRecorderNumCores: '2',
     };
 
   private readonly apiBase = 'http://localhost:8080/api/forum';
@@ -272,6 +311,39 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port1} --ou
 nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --out ${f.outName} --check --Maxfilesize ${f.maxFilesize} --timeout ${f.timeout} --dropped_kernel --bufsize ${f.bufsize} --sock_bufsize ${f.sockBufsize} --skip ${f.skip} --verbose &`;
     }
 
+    if (f.lumpEnabled) {
+      const beamletStart = parseInt(f.lumpPhysicalBeamletArray.replace(/[\[\]:]/g, '').split(':')[0] || '0', 10);
+      const subbandStart = parseInt(f.lumpSubbandArray.replace(/[\[\]:]/g, '').split(':')[0] || '0', 10);
+      const beamletsPerLane = parseInt(f.lumpBeamletsPerLane, 10) || 122;
+      const basePort = parseInt(f.lumpPort, 10) || 16140;
+
+      const lane1Beamlet = `${beamletStart}:${beamletStart + beamletsPerLane}`;
+      const lane1Subband = `${subbandStart}:${subbandStart + beamletsPerLane}`;
+      const lane2Beamlet = `${beamletStart + beamletsPerLane}:${beamletStart + beamletsPerLane * 2}`;
+      const lane2Subband = `${subbandStart + beamletsPerLane}:${subbandStart + beamletsPerLane * 2}`;
+      const lane3Beamlet = `${beamletStart + beamletsPerLane * 2}:${beamletStart + beamletsPerLane * 3}`;
+      const lane3Subband = `${subbandStart + beamletsPerLane * 2}:${subbandStart + beamletsPerLane * 3}`;
+      const lane4Beamlet = `${beamletStart + beamletsPerLane * 3}:${beamletStart + beamletsPerLane * 4}`;
+      const lane4Subband = `${subbandStart + beamletsPerLane * 3}:${subbandStart + beamletsPerLane * 4}`;
+
+      const rcuModeArray = `[${f.lumpRcuMode}]*${beamletsPerLane}`;
+      const epochArray = `[${f.lumpEpoch}]*${beamletsPerLane}`;
+      const sourcenameArray = `[${f.lumpSourcename}]*${beamletsPerLane}`;
+      const raArray = `[${f.lumpRightAscension}]*${beamletsPerLane}`;
+      const decArray = `[${f.lumpDeclination}]*${beamletsPerLane}`;
+
+      const baseFile = f.lumpFilenameBase;
+      const lumpBase = `Basic_LuMP_Recorder.py --clock_speed=${f.lumpClockSpeed} --beamlets_per_lane=${f.lumpBeamletsPerLane} --datadir=${f.lumpDatadir} --data_type_in=${f.lumpDataType} --station_name=${f.lumpStationName} --writer_type=${f.lumpWriterType}`;
+
+      content += `
+
+LuMP recorders
+${lumpBase} --port=${basePort} --physical_beamlet_array=[${lane1Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane1Subband}] --filename_base=${baseFile}_1 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
+${lumpBase} --port=${basePort + 1} --physical_beamlet_array=[${lane2Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane2Subband}] --filename_base=${baseFile}_2 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
+${lumpBase} --port=${basePort + 2} --physical_beamlet_array=[${lane3Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane3Subband}] --filename_base=${baseFile}_3 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
+${lumpBase} --port=${basePort + 3} --physical_beamlet_array=[${lane4Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane4Subband}] --filename_base=${baseFile}_4 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &`;
+    }
+
     return content;
   }
 
@@ -383,8 +455,9 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
   }
 
   deletePost(id: number): void {
-    if (!confirm('Are you sure you want to delete this post?')) return;
-    this.http.delete(`${this.apiBase}/${id}`).subscribe({
+    const reason = prompt('Delete reason (optional - will be logged):');
+    if (reason === null) return;
+    this.http.delete(`${this.apiBase}/${id}`, { params: { reason: reason || '' } }).subscribe({
       next: () => this.loadPosts(),
       error: () => this.error.set('Failed to delete post.')
     });
@@ -411,7 +484,7 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
     this.scheduledDate = '';
     this.scheduledTime = '';
     this.activePreset.set('simple');
-    this.lofar = {
+this.lofar = {
       targetName:  'JUPITER',
       swlevel:     '3',
       rspMode:     '3',
@@ -438,6 +511,25 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
       bufsize:     '1e9',
       sockBufsize: '1e7',
       skip:        '1',
+      lumpEnabled:   false,
+      lumpPort:      '16140',
+      lumpClockSpeed: '200',
+      lumpBeamletsPerLane: '122',
+      lumpDatadir:     './',
+      lumpDataType:   'L_intComplex16_t',
+      lumpStationName: 'LV614',
+      lumpWriterType:  'LuMP1',
+      lumpPhysicalBeamletArray: '[0:122]',
+      lumpRcuMode:     '5',
+      lumpEpoch:      'J2000',
+      lumpDuration:    '600',
+      lumpSubbandArray: '[23:145]',
+      lumpFilenameBase: 'J0332+5434',
+      lumpSourcename:  'J0332+5434',
+      lumpRightAscension: '0.92934187',
+      lumpDeclination: '0.95257923',
+      lumpStartDate:   '2025-08-27T11:05:00Z',
+      lumpRecorderNumCores: '2',
     };
     this.recalculateBeamlets();
   }

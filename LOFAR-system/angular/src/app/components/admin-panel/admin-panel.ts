@@ -4,6 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { WebSocketService } from '../../services/websocket.service';
 
+interface UserHourInfo {
+  username: string;
+  yearMonth: string;
+  totalSeconds: number;
+  totalHours: number;
+}
+
 @Component({
   selector: 'app-admin-panel',
   imports: [CommonModule, FormsModule],
@@ -24,6 +31,10 @@ export class AdminPanel implements OnInit {
   intervalInput   = 10;
   intervalSaving  = signal<boolean>(false);
 
+  /** User hours tracking */
+  userHours = signal<UserHourInfo[]>([]);
+  loadingUserHours = signal<boolean>(false);
+
   private readonly apiBase = 'http://localhost:8080/api/admin';
 
   constructor(
@@ -36,6 +47,20 @@ export class AdminPanel implements OnInit {
       this.wsConnected.set(connected);
     });
     this.fetchSchedulerStatus();
+    this.fetchUserHours();
+  }
+
+  fetchUserHours(): void {
+    this.loadingUserHours.set(true);
+    this.http.get<UserHourInfo[]>(`${this.apiBase}/stats/month/current`).subscribe({
+      next: (data) => {
+        this.userHours.set(data);
+        this.loadingUserHours.set(false);
+      },
+      error: () => {
+        this.loadingUserHours.set(false);
+      }
+    });
   }
 
   private fetchSchedulerStatus(): void {

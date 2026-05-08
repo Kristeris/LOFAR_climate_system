@@ -88,6 +88,59 @@
     </div>
   </div>
 
+  <!-- User Hours Dropdown -->
+  <details class="dropdown-details">
+    <summary class="dropdown-summary">⏳ User Hours (current month)</summary>
+
+  <!-- User Hours Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <!-- <h3>⏳ User Hours</h3> -->
+      <p class="section-desc">
+        Shows how many observation hours each user has accumulated this month.
+        Hours are credited when users create forum posts.
+      </p>
+    </div>
+
+    <div class="user-hours-refresh">
+      <button class="control-btn btn-trigger" (click)="fetchUserHours()">
+        <span class="btn-icon">🔄</span>
+        Refresh
+      </button>
+    </div>
+
+    @if (loadingUserHours()) {
+      <div class="user-hours-loading">Loading...</div>
+    } @else if (userHours().length === 0) {
+      <div class="user-hours-empty">No user hours recorded for this month.</div>
+    } @else {
+      <table class="user-hours-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Month</th>
+            <th>Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of userHours(); track user.username) {
+            <tr>
+              <td>{{ user.username }}</td>
+              <td>{{ user.yearMonth }}</td>
+              <td class="hours-value">{{ user.totalHours }}h</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  </details>
+
+  <!-- Advanced Settings Dropdown -->
+  <details class="dropdown-details">
+    <summary class="dropdown-summary">⚙️ Advanced Settings</summary>
+
   <!-- Interval Control Section -->
   <div class="section-card">
     <div class="section-header">
@@ -154,15 +207,6 @@
     </button>
   </div>
 
-  <!-- Info Section -->
-  <div class="info-section">
-    <h3>ℹ️ How It Works</h3>
-    <ul class="info-list">
-      <li><strong>Stop WebSocket</strong> — halts the scheduler so no new data is collected or broadcast. Existing data in the database is unaffected.</li>
-      <li><strong>Start WebSocket</strong> — resumes the scheduler and reconnects the frontend WebSocket client.</li>
-      <li><strong>Set Interval</strong> — changes how often the scheduler fires. The new interval applies immediately without restarting the server.</li>
-      <li><strong>Manual Trigger</strong> — runs the Python script immediately and broadcasts the result, regardless of scheduler state.</li>
-    </ul>
-  </div>
+  </details>
 
 </div>
