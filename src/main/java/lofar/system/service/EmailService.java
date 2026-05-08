@@ -146,6 +146,53 @@ public class EmailService {
             logger.error("Failed to send time-change notification to {}: {}", toEmail, e.getMessage(), e);
         }
     }
+
+
+    /**
+     * Sent to the user whose post creation was rejected because their requested
+     * time window overlaps with an already-booked observation.
+     */
+    public void sendConflictRejectionEmail(
+            String toEmail,
+            String username,
+            String requestedTitle,
+            LocalDateTime requestedStart,
+            LocalDateTime requestedEnd,
+            LocalDateTime conflictStart,
+            LocalDateTime conflictEnd,
+            String conflictOwner) {
+ 
+        if (toEmail == null || toEmail.isBlank()) {
+            logger.warn("Conflict rejection e-mail skipped — no e-mail for '{}'", username);
+            return;
+        }
+        try {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setFrom(fromAddress);
+            msg.setTo(toEmail);
+            msg.setSubject("LOFAR Observation Rejected — Time Slot Conflict");
+            msg.setText(
+                "Hello " + username + ",\n\n" +
+                "Unfortunately your observation request could not be accepted\n" +
+                "because the requested time slot is already taken by another user.\n\n" +
+                "Your request\n" +
+                "  Title : " + (requestedTitle != null ? requestedTitle : "—") + "\n" +
+                "  Start : " + requestedStart.format(DISPLAY_FMT) + "\n" +
+                "  End   : " + requestedEnd.format(DISPLAY_FMT) + "\n\n" +
+                "Conflicting observation\n" +
+                "  Booked by : " + conflictOwner + "\n" +
+                "  Start     : " + conflictStart.format(DISPLAY_FMT) + "\n" +
+                "  End       : " + conflictEnd.format(DISPLAY_FMT) + "\n\n" +
+                "Please choose a different time slot and try again:\n" +
+                "http://localhost:4200/forum\n\n" +
+                "— LOFAR Climate System"
+            );
+            mailSender.send(msg);
+            logger.info("Conflict rejection e-mail sent to {} for '{}'", toEmail, requestedTitle);
+        } catch (Exception e) {
+            logger.error("Failed to send conflict rejection e-mail to {}: {}", toEmail, e.getMessage(), e);
+        }
+    }
  
     // ---------------------------------------------------------------
     //  Welcome / Registration

@@ -24,22 +24,12 @@ public class ForumService {
     @Autowired private IMyUserRepo           userRepo;
     @Autowired private GoogleCalendarService calendarService;
     @Autowired private EmailService          emailService;
-    @Autowired private UserStatsService      userStatsService;   // ← NEW
+    @Autowired private UserStatsService      userStatsService;
  
     // ---------------------------------------------------------------
     //  Create
     // ---------------------------------------------------------------
  
-    /**
-     * Creates a new forum / observation post.
-     *
-     * 1. Look up author.
-     * 2. Conflict-check: reject if time window overlaps an existing post.
-     * 3. Create Google Calendar event (with correct duration and creator name).
-     * 4. Persist post.
-     * 5. Record hours in user stats.
-     * 6. Send confirmation e-mail.
-     */
     public ForumPostDTO createPost(
             String title,
             String content,
@@ -59,17 +49,16 @@ public class ForumService {
         int safeDuration = (durationSeconds != null && durationSeconds > 0 && durationSeconds <= 3600)
                            ? durationSeconds : 3600;
         post.setDurationSeconds(safeDuration);
- 
         post.setAnadirX(anadirX);
         post.setAnadirY(anadirY);
         post.setAnadirSystem(anadirSystem);
  
-        // ── Conflict check ──────────────────────────────────────────
         LocalDateTime newStart = post.effectiveStartTime();
         LocalDateTime newEnd   = post.effectiveEndTime();
-        checkForConflict(newStart, newEnd, null);
  
-        // ── Google Calendar ─────────────────────────────────────────
+        // Conflict check — e-mails the rejected user if slot is taken
+        checkForConflict(newStart, newEnd, null, author, title);
+ 
         String calendarEventId = calendarService.createCalendarEvent(
             title, content, newStart, safeDuration, username
         );
@@ -79,10 +68,8 @@ public class ForumService {
         logger.info("Forum post created: '{}' by {} (calendarId={}, start={}, duration={}s)",
             title, username, calendarEventId, newStart, safeDuration);
  
-        // ── Track user observation hours ────────────────────────────
         userStatsService.recordObservation(author, safeDuration);
  
-        // ── Confirmation e-mail ─────────────────────────────────────
         emailService.sendForumPostConfirmation(
             author.getEmail(), author.getUsername(), title, calendarEventId
         );
@@ -90,19 +77,15 @@ public class ForumService {
         return toDTO(saved);
     }
  
-    /** Backwards-compatible overload (no anadir / duration). */
     public ForumPostDTO createPost(String title, String content, String username,
                                    LocalDateTime scheduledDateTime) {
         return createPost(title, content, username, scheduledDateTime, null, null, null, null);
     }
  
     // ---------------------------------------------------------------
-    //  Read — role-scoped
+    //  Read
     // ---------------------------------------------------------------
  
-    /**
-     * Admin sees all posts; regular users see only their own.
-     */
     public List<ForumPostDTO> getPostsForUser(String username, boolean isAdmin) {
         List<ForumPost> posts = isAdmin
             ? forumRepo.findAllByOrderByCreatedAtDesc()
@@ -121,35 +104,19 @@ public class ForumService {
         return toDTO(post);
     }
  
-    
-    //     public List<ForumPostDTO> getPostsByUser(String username) {
-    //     logger.info("getPostsByUser called with username: '{}'", username);
-    //     List<ForumPost> posts = forumRepo.findPostsByAuthorUsername(username);
-    //     logger.info("Found {} posts for user '{}'", posts.size(), username);
-    //     return posts.stream().map(this::toDTO).collect(Collectors.toList());
-    // }
-    
-    
-    
-    
-    
     // ---------------------------------------------------------------
-    //  Delete — removes Google Calendar event too
+    //  Delete
     // ---------------------------------------------------------------
  
-    /**
-     * Deletes a forum post and its Google Calendar event.
-     * The deletion reason is logged server-side but NOT sent to the user.
-     */
     public void deletePost(Long id, String reason) {
         ForumPost post = forumRepo.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Post not found: " + id));
  
-        String calId = post.getGoogleCalendarEventId();
         logger.info("Deleting post {} ('{}') — reason: '{}', calendarId: {}",
-            id, post.getTitle(), reason != null ? reason : "not provided", calId);
+            id, post.getTitle(), reason != null ? reason : "not provided",
+            post.getGoogleCalendarEventId());
  
-        calendarService.deleteCalendarEvent(calId);
+        calendarService.deleteCalendarEvent(post.getGoogleCalendarEventId());
         forumRepo.deleteById(id);
         logger.info("Post {} deleted successfully", id);
     }
@@ -159,15 +126,9 @@ public class ForumService {
     }
  
     // ---------------------------------------------------------------
-    //  Admin: change scheduled time
+    //  Admin: reschedule
     // ---------------------------------------------------------------
  
-    /**
-     * Admin reschedules an existing post.
-     * - Conflict-checks (excluding itself).
-     * - Updates Google Calendar event.
-     * - Notifies the post author via e-mail.
-     */
     public ForumPostDTO adminUpdateTime(Long id, LocalDateTime newStart, int durationSeconds) {
         ForumPost post = forumRepo.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Post not found: " + id));
@@ -175,7 +136,8 @@ public class ForumService {
         int safeDuration = Math.max(1, Math.min(durationSeconds, 3600));
         LocalDateTime newEnd = newStart.plusSeconds(safeDuration);
  
-        checkForConflict(newStart, newEnd, id);
+        // null author = no rejection e-mail on admin reschedule
+        checkForConflict(newStart, newEnd, id, null, null);
  
         calendarService.updateCalendarEventTime(
             post.getGoogleCalendarEventId(), newStart, safeDuration
@@ -200,17 +162,57 @@ public class ForumService {
     }
  
     // ---------------------------------------------------------------
-    //  Conflict check
+    //  Conflict check — sends rejection e-mail to the declined user
     // ---------------------------------------------------------------
  
-    private void checkForConflict(LocalDateTime newStart, LocalDateTime newEnd, Long excludeId) {
+    /**
+     * Throws IllegalStateException if [newStart, newEnd) overlaps any existing post.
+     *
+     * When a real user is being rejected (rejectedUser != null), an e-mail is
+     * sent to them BEFORE throwing so they immediately know what happened and
+     * which time window was already taken.
+     */
+    private void checkForConflict(
+            LocalDateTime newStart,
+            LocalDateTime newEnd,
+            Long excludeId,
+            MyUser rejectedUser,
+            String requestedTitle) {
+ 
         LocalDateTime rangeStart = newStart.minusHours(1);
         List<ForumPost> candidates = forumRepo.findPostsNear(rangeStart, newEnd, excludeId);
  
         for (ForumPost p : candidates) {
             LocalDateTime pStart = p.effectiveStartTime();
             LocalDateTime pEnd   = p.effectiveEndTime();
+ 
             if (pStart.isBefore(newEnd) && pEnd.isAfter(newStart)) {
+                String conflictingOwner = p.getAuthor() != null
+                    ? p.getAuthor().getUsername() : "another user";
+ 
+                logger.warn(
+                    "Conflict: '{}' requested [{} – {}] but '{}' already holds [{} – {}]",
+                    rejectedUser != null ? rejectedUser.getUsername() : "admin",
+                    newStart, newEnd, conflictingOwner, pStart, pEnd
+                );
+ 
+                // E-mail the user whose request is being rejected
+                if (rejectedUser != null
+                        && rejectedUser.getEmail() != null
+                        && !rejectedUser.getEmail().isBlank()) {
+ 
+                    emailService.sendConflictRejectionEmail(
+                        rejectedUser.getEmail(),
+                        rejectedUser.getUsername(),
+                        requestedTitle,
+                        newStart,
+                        newEnd,
+                        pStart,
+                        pEnd,
+                        conflictingOwner
+                    );
+                }
+ 
                 throw new IllegalStateException(
                     "Time slot conflict: another observation is already scheduled between "
                     + pStart + " and " + pEnd + "."
@@ -229,13 +231,9 @@ public class ForumService {
         LocalDateTime end   = p.effectiveEndTime();
  
         String status;
-        if (end.isBefore(now)) {
-            status = "PAST";
-        } else if (start.isAfter(now)) {
-            status = "FUTURE";
-        } else {
-            status = "CURRENT";
-        }
+        if (end.isBefore(now))    status = "PAST";
+        else if (start.isAfter(now)) status = "FUTURE";
+        else                         status = "CURRENT";
  
         return new ForumPostDTO(
             p.getId(),
