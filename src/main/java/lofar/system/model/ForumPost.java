@@ -53,6 +53,41 @@ public class ForumPost {
     @Column(name = "time_utc", nullable = false)
     private String timeUtc;
  
+    /**
+     * The scheduled observation start time chosen by the user.
+     * Used for Google Calendar event creation and conflict detection.
+     * NULL means "use createdAt".
+     */
+    @Column(name = "scheduled_date_time")
+    private LocalDateTime scheduledDateTime;
+ 
+    /**
+     * Observation duration in seconds (max 3600 = 1 hour).
+     * Used to set the Google Calendar event end time.
+     */
+    @Column(name = "duration_seconds")
+    private Integer durationSeconds;
+ 
+    /**
+     * ANADIR direction X component (RA in radians for coordinate systems,
+     * or 0 for planet/body systems).
+     */
+    @Column(name = "anadir_x")
+    private Double anadirX;
+ 
+    /**
+     * ANADIR direction Y component (Dec in radians for coordinate systems,
+     * or 0 for planet/body systems).
+     */
+    @Column(name = "anadir_y")
+    private Double anadirY;
+ 
+    /**
+     * ANADIR coordinate system (e.g. J2000, JUPITER, SUN …)
+     */
+    @Column(name = "anadir_system", length = 20)
+    private String anadirSystem;
+ 
     /** Google Calendar event ID — populated after successful calendar creation */
     @Column(name = "google_calendar_event_id")
     private String googleCalendarEventId;
@@ -60,6 +95,10 @@ public class ForumPost {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_uid", nullable = false)
     private MyUser author;
+ 
+    // ---------------------------------------------------------------
+    //  Constructors
+    // ---------------------------------------------------------------
  
     public ForumPost(String title, String content, MyUser author) {
         this.title   = title;
@@ -84,17 +123,31 @@ public class ForumPost {
     }
  
     // ---------------------------------------------------------------
-    //  Helper
+    //  Computed helpers
     // ---------------------------------------------------------------
  
     /**
-     * Converts a LocalDateTime (treated as UTC) to an ISO-8601 UTC string,
-     * e.g. "2026-04-09T14:35:00Z".
-     *
-     * If your JVM runs in a non-UTC timezone and createdAt stores local time,
-     * replace ZoneOffset.UTC with ZoneId.systemDefault() in the conversion.
+     * Returns the effective start time for calendar/conflict purposes.
+     * Prefers scheduledDateTime; falls back to createdAt.
      */
+    public LocalDateTime effectiveStartTime() {
+        return scheduledDateTime != null ? scheduledDateTime : createdAt;
+    }
+ 
+    /**
+     * Returns the effective end time = start + durationSeconds (or +1 hour default).
+     */
+    public LocalDateTime effectiveEndTime() {
+        int secs = (durationSeconds != null && durationSeconds > 0 && durationSeconds <= 3600)
+                   ? durationSeconds : 3600;
+        return effectiveStartTime().plusSeconds(secs);
+    }
+ 
+    // ---------------------------------------------------------------
+    //  Helper
+    // ---------------------------------------------------------------
+ 
     private static String buildUtcString(LocalDateTime ldt) {
-        return ldt.toInstant(ZoneOffset.UTC).toString();  // "2026-04-09T14:35:00Z"
+        return ldt.toInstant(ZoneOffset.UTC).toString();
     }
 }
