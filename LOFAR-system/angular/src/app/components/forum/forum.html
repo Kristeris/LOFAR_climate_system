@@ -428,7 +428,11 @@
               <h3 class="post-title">{{ post.title }}</h3>
               <div class="post-meta">
                 <span class="post-author">👤 {{ post.authorUsername }}</span>
-                <span class="post-date">🕐 {{ formatDate(post.createdAt) }}</span>
+                @if (post.scheduledDateTime) {
+                  <span class="post-date">📅 {{ formatDate(post.scheduledDateTime) }}</span>
+                } @else {
+                  <span class="post-date">🕐 {{ formatDate(post.createdAt) }}</span>
+                }
                 @if (post.googleCalendarEventId) {
                   <span class="calendar-badge" title="Google Calendar Event ID: {{ post.googleCalendarEventId }}">
                     📅 Calendar
@@ -437,9 +441,27 @@
               </div>
             </div>
             @if (auth.isAdmin()) {
-              <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+              <div class="admin-actions">
+                <button class="btn-edit-time" (click)="startEditTime(post)" title="Edit scheduled time">✏️</button>
+                <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+              </div>
             }
           </div>
+
+          @if (editingTimeId === post.id) {
+            <div class="edit-time-form">
+              <label>New scheduled time:</label>
+              <div class="edit-time-inputs">
+                <input type="date" [(ngModel)]="editingTimeDate" />
+                <input type="time" [(ngModel)]="editingTimeHour" />
+              </div>
+              <div class="edit-time-actions">
+                <button class="btn-save" (click)="saveTime(post.id)">Save</button>
+                <button class="btn-cancel" (click)="cancelEditTime()">Cancel</button>
+              </div>
+            </div>
+          }
+
           <pre class="post-content">{{ post.content }}</pre>
         </div>
       }

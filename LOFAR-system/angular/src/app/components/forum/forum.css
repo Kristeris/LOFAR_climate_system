@@ -248,6 +248,12 @@
   padding: 12px 14px;
 }
 
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit-time,
 .btn-delete {
   background: none;
   border: none;
@@ -259,9 +265,82 @@
   flex-shrink: 0;
 }
 
+.btn-edit-time:hover,
 .btn-delete:hover {
   opacity: 1;
   transform: scale(1.2);
+}
+
+.edit-time-form {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-time-form label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #856404;
+}
+
+.edit-time-inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.edit-time-inputs input {
+  padding: 8px 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  outline: none;
+}
+
+.edit-time-inputs input:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+}
+
+.edit-time-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-save,
+.btn-cancel {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save {
+  background: #51cf66;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #40c057;
+}
+
+.btn-cancel {
+  background: #dee2e6;
+  color: #495057;
+}
+
+.btn-cancel:hover {
+  background: #ced4da;
 }
 
 /* ---- Schedule picker ---- */

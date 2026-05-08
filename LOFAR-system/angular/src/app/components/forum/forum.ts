@@ -463,6 +463,45 @@ ${lumpBase} --port=${basePort + 3} --physical_beamlet_array=[${lane4Beamlet}] --
     });
   }
 
+  editingTimeId: number | null = null;
+  editingTimeDate = '';
+  editingTimeHour = '';
+
+  startEditTime(post: ForumPost): void {
+    this.editingTimeId = post.id;
+    if (post.scheduledDateTime) {
+      const dt = new Date(post.scheduledDateTime);
+      this.editingTimeDate = dt.toISOString().split('T')[0];
+      this.editingTimeHour = dt.toTimeString().slice(0, 5);
+    } else {
+      this.editingTimeDate = '';
+      this.editingTimeHour = '';
+    }
+  }
+
+  cancelEditTime(): void {
+    this.editingTimeId = null;
+    this.editingTimeDate = '';
+    this.editingTimeHour = '';
+  }
+
+  saveTime(id: number): void {
+    if (!this.editingTimeDate || !this.editingTimeHour) {
+      this.error.set('Date and time are required.');
+      return;
+    }
+    const scheduledDateTime = `${this.editingTimeDate}T${this.editingTimeHour}:00`;
+    this.http.put<ForumPost>(`${this.apiBase}/${id}/time`, { scheduledDateTime }).subscribe({
+      next: () => {
+        this.successMsg.set('Scheduled time updated successfully.');
+        this.cancelEditTime();
+        this.loadPosts();
+        setTimeout(() => this.successMsg.set(null), 5000);
+      },
+      error: (err) => this.error.set(err.error?.error ?? 'Failed to update time.')
+    });
+  }
+
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
