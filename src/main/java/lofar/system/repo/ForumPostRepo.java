@@ -36,22 +36,21 @@ public interface ForumPostRepo extends JpaRepository<ForumPost, Long> {
      *
      * We exclude a given post ID so an admin "edit" doesn't conflict with itself.
      */
-    @Query("""
-        SELECT COUNT(p) > 0 FROM ForumPost p
-        WHERE (:excludeId IS NULL OR p.id <> :excludeId)
-          AND (
-                COALESCE(p.scheduledDateTime, p.createdAt) < :newEnd
-            AND (
-                  COALESCE(p.scheduledDateTime, p.createdAt)
-                  + (COALESCE(p.durationSeconds, 3600) / 86400.0)
-                ) > :newStart
-          )
-        """)
-    boolean existsConflict(
-        @Param("newStart") LocalDateTime newStart,
-        @Param("newEnd")   LocalDateTime newEnd,
-        @Param("excludeId") Long excludeId
-    );
+@Query(value = """
+    SELECT COUNT(*) > 0
+    FROM forum_post p
+    WHERE (:excludeId IS NULL OR p.id <> :excludeId)
+      AND COALESCE(p.scheduled_date_time, p.created_at) < :newEnd
+      AND DATE_ADD(
+            COALESCE(p.scheduled_date_time, p.created_at),
+            INTERVAL COALESCE(p.duration_seconds, 3600) SECOND
+          ) > :newStart
+    """, nativeQuery = true)
+boolean existsOverlapping(
+    @Param("excludeId") Long excludeId,
+    @Param("newStart") LocalDateTime newStart,
+    @Param("newEnd") LocalDateTime newEnd
+);
  
     /**
      * Simpler, database-portable conflict check (works with MySQL which

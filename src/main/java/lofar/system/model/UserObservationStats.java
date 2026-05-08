@@ -14,7 +14,7 @@ import lombok.*;
 @Entity
 @Table(
     name = "user_observation_stats",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "year_month"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "obs_year_month"})
 )
 @Getter
 @Setter
@@ -35,7 +35,7 @@ public class UserObservationStats {
      * Year+month key, e.g. "2026-05".
      * Using a plain String keeps things simple and avoids composite key complexity.
      */
-    @Column(name = "year_month", nullable = false, length = 7)
+    @Column(name = "obs_year_month", nullable = false, length = 7)
     private String yearMonth;
  
     /** Total observation time in seconds accumulated this month */
