@@ -39,25 +39,24 @@ export class NohupMonitorComponent implements OnInit, OnDestroy, AfterViewInit, 
     }, 500);
   }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
+  // Restore whatever the service already accumulated
+  this.rawLogLines = [...this.wsService.getAccumulatedNohupLines()];
+  this.parseLogForKPIs(this.rawLogLines.join('\n'));
 
-    // Request full log on page load
+  // Request full log only if we have nothing yet
+  if (this.rawLogLines.length === 0) {
     this.wsService.requestFullNohupLog();
+  }
 
-    this.wsSubscription = this.wsService.getNohupUpdates().subscribe(logBlock => {
-      console.log('📥 Nohup log received, length:', logBlock?.length);
-      if (!logBlock) return;
-      
-      const lines = logBlock.split('\n');
-      this.rawLogLines.push(...lines);
-      
-      if (this.rawLogLines.length > 500) {
-        this.rawLogLines = this.rawLogLines.slice(this.rawLogLines.length - 500);
-      }
-      
-      this.parseLogForKPIs(logBlock);
-      this.cdr.detectChanges();
-    });
+  this.wsSubscription = this.wsService.getNohupUpdates().subscribe(logBlock => {
+    if (!logBlock) return;
+    // Sync with service's accumulated lines
+    this.rawLogLines = [...this.wsService.getAccumulatedNohupLines()];
+    this.parseLogForKPIs(logBlock);
+    this.cdr.detectChanges();
+  });
+
   }
 
   ngAfterViewChecked() {

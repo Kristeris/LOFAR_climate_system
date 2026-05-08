@@ -17,6 +17,7 @@ export class WebSocketService {
   private stompClient: Client | null = null;
   private sensorDataSubject = new Subject<ClimateSensorData>();
   private nohupDataSubject = new BehaviorSubject<string>('');
+  private accumulatedNohupLines: string[] = [];
   // CHANGED: Use BehaviorSubject instead of Subject for connection status
   // This ensures components get the current status immediately when they subscribe
   private connectionStatus = new BehaviorSubject<boolean>(false);
@@ -51,10 +52,19 @@ export class WebSocketService {
       });
 
       // Subscribe to nohup logs
-      this.stompClient?.subscribe('/topic/nohup-log', (message: IMessage) => {
-        this.nohupDataSubject.next(message.body);
-      });
-    };
+      // In the onConnect callback, replace the nohup subscription:
+    this.stompClient?.subscribe('/topic/nohup-log', (message: IMessage) => {
+      const block = message.body;
+      if (!block) return;
+      const lines = block.split('\n');
+      this.accumulatedNohupLines.push(...lines);
+      // Keep last 500 lines
+      if (this.accumulatedNohupLines.length > 500) {
+        this.accumulatedNohupLines = this.accumulatedNohupLines.slice(-500);
+      }
+      this.nohupDataSubject.next(block); // still emit for KPI parsing
+    });
+    }
 
     this.stompClient.onStompError = (frame) => {
       console.error('Broker reported error: ' + frame.headers['message']);
@@ -85,6 +95,11 @@ export class WebSocketService {
     return this.nohupDataSubject.asObservable();
   }
 
+  getAccumulatedNohupLines(): string[] {
+  return this.accumulatedNohupLines;
+  }
+  
+  
   getConnectionStatus(): Observable<boolean> {
     return this.connectionStatus.asObservable();
   }

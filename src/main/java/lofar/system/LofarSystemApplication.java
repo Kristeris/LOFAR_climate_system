@@ -49,7 +49,7 @@ public class LofarSystemApplication {
 
             // Replace these with real addresses to test e-mail alerts.
             MyUser admin   = new MyUser("admins",  encoder.encode("1234"),
-                                        "admin@lofar-system.local", adminRole);
+                                        "chatboxnewultra@gmail.com", adminRole);
             MyUser regular = new MyUser("kristers", encoder.encode("4321"),
                                         "lofar0749@gmail.com",  userRole);
             userRepo.save(admin);

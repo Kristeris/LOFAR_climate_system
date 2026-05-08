@@ -48,8 +48,8 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @RequestParam String username,
-            @RequestParam String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             HttpServletRequest request) {
 
         try {

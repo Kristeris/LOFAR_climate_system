@@ -2203,3 +2203,180 @@ closing starlink_16140.radio.2026-03-07T17:36:18.000_0000.zst
 compression: 93175272720 -> 34437024375  reduced to 36.959 %
 MYDEBUG consumer(), line 1324  calling pthread_exit()
 regular exit of dump_udp_ow_17.c with MYDEBUG
+SKIP: init 2: 1 for nsock=1
+SKIP: still to skip 1 packets in socket 0
+start compression pipe
+
+creating starlink_16140.radio.2026-04-16T00:15:18.000_0000.zst
+total  0.931 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 9.699e-08
+
+port 16140 :  213261 exp   19.347654 % missed    0.000000 % dropped   0.931 GB
+                           100.000000 % good
+      block:  213261 exp   19.347707 % missed    0.000000 % dropped
+                           100.000000 % good
+total  1.862 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 5.097e-08
+
+port 16140 :  341073 exp   12.097410 % missed    0.000000 % dropped   1.862 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  2.793 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 3.457e-08
+
+port 16140 :  554334 exp   15.642194 % missed    0.000000 % dropped   2.793 GB
+                           100.000000 % good
+      block:  213261 exp   21.311698 % missed    0.000000 % dropped
+                           100.000000 % good
+total  3.724 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 2.615e-08
+
+port 16140 :  682146 exp   12.711355 % missed    0.000000 % dropped   3.724 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  4.655 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 2.103e-08
+
+port 16140 :  895407 exp   19.251581 % missed    0.000000 % dropped   4.655 GB
+                           100.000000 % good
+      block:  213261 exp   40.171654 % missed    0.000000 % dropped
+                           100.000000 % good
+SKIP: init 2: 1 for nsock=1
+SKIP: still to skip 1 packets in socket 0
+start compression pipe
+
+creating starlink_16140.radio.2026-04-16T14:35:09.000_0000.zst
+total  0.931 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 9.699e-08
+
+port 16140 :  213261 exp   35.625360 % missed    0.000000 % dropped   0.931 GB
+                           100.000000 % good
+      block:  213261 exp   35.625487 % missed    0.000000 % dropped
+                           100.000000 % good
+total  1.862 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 5.097e-08
+
+port 16140 :  341073 exp   22.275290 % missed    0.000000 % dropped   1.862 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  2.793 GB  max buff 547680/1000001536 (0.0 % full)  mean frac 3.457e-08
+
+port 16140 :  554334 exp   21.515368 % missed    0.000000 % dropped   2.793 GB
+                           100.000000 % good
+      block:  213261 exp   20.300465 % missed    0.000000 % dropped
+                           100.000000 % good
+SKIP: init 2: 1 for nsock=1
+SKIP: still to skip 1 packets in socket 0
+start compression pipe
+
+creating starlink_16140.radio.2026-04-16T14:55:05.000_0000.zst
+total  0.931 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 9.699e-08
+
+port 16140 :  213261 exp   23.045470 % missed    0.000000 % dropped   0.931 GB
+                           100.000000 % good
+      block:  213261 exp   23.045828 % missed    0.000000 % dropped
+                           100.000000 % good
+total  1.862 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 5.097e-08
+
+port 16140 :  341073 exp   14.409525 % missed    0.000000 % dropped   1.862 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  2.793 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 3.457e-08
+
+port 16140 :  554334 exp   16.556805 % missed    0.000000 % dropped   2.793 GB
+                           100.000000 % good
+      block:  213261 exp   19.991102 % missed    0.000000 % dropped
+                           100.000000 % good
+total  3.724 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 2.615e-08
+
+port 16140 :  682146 exp   13.454598 % missed    0.000000 % dropped   3.724 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  4.655 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 2.103e-08
+
+port 16140 :  895407 exp   15.230727 % missed    0.000000 % dropped   4.655 GB
+                           100.000000 % good
+      block:  213261 exp   20.912365 % missed    0.000000 % dropped
+                           100.000000 % good
+total  5.586 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 1.759e-08
+
+port 16140 : 1023219 exp   13.328232 % missed    0.000000 % dropped   5.586 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  6.517 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 1.511e-08
+
+port 16140 : 1236480 exp   16.686966 % missed    0.000000 % dropped   6.517 GB
+                           100.000000 % good
+      block:  213261 exp   32.802281 % missed    0.000000 % dropped
+                           100.000000 % good
+total  7.448 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 1.325e-08
+
+port 16140 : 1364292 exp   15.123669 % missed    0.000000 % dropped   7.448 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total  8.379 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 1.179e-08
+
+port 16140 : 1577553 exp   16.301639 % missed    0.000000 % dropped   8.379 GB
+                           100.000000 % good
+      block:  213261 exp   23.837723 % missed    0.000000 % dropped
+                           100.000000 % good
+total  9.310 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 1.063e-08
+
+port 16140 : 1705365 exp   15.079880 % missed    0.000000 % dropped   9.310 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total 10.241 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 9.670e-09
+
+port 16140 : 1918626 exp   17.543023 % missed    0.000000 % dropped  10.241 GB
+                           100.000000 % good
+      block:  213261 exp   37.240103 % missed    0.000000 % dropped
+                           100.000000 % good
+total 11.172 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 8.872e-09
+
+port 16140 : 2046438 exp   16.447359 % missed    0.000000 % dropped  11.172 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total 12.103 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 8.195e-09
+
+port 16140 : 2259699 exp   17.608761 % missed    0.000000 % dropped  12.103 GB
+                           100.000000 % good
+      block:  213261 exp   28.753921 % missed    0.000000 % dropped
+                           100.000000 % good
+total 13.034 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 7.614e-09
+
+port 16140 : 2387511 exp   16.666101 % missed    0.000000 % dropped  13.034 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total 13.965 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 7.110e-09
+
+port 16140 : 2600772 exp   17.553903 % missed    0.000000 % dropped  13.965 GB
+                           100.000000 % good
+      block:  213261 exp   27.493238 % missed    0.000000 % dropped
+                           100.000000 % good
+total 14.896 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 6.668e-09
+
+port 16140 : 2728584 exp   16.731645 % missed    0.000000 % dropped  14.896 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total 15.827 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 6.279e-09
+
+port 16140 : 2941845 exp   18.533539 % missed    0.000000 % dropped  15.827 GB
+                           100.000000 % good
+      block:  213261 exp   41.588281 % missed    0.000000 % dropped
+                           100.000000 % good
+total 16.758 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 5.932e-09
+
+port 16140 : 3069657 exp   17.761854 % missed    0.000000 % dropped  16.758 GB
+                           100.000000 % good
+      block:  127812 exp    0.000000 % missed    0.000000 % dropped
+                           100.000000 % good
+total 17.689 GB  max buff 312960/1000001536 (0.0 % full)  mean frac 5.621e-09
+
+port 16140 : 3282918 exp   19.260274 % missed    0.000000 % dropped  17.689 GB
+                           100.000000 % good
+      block:  213261 exp   40.828539 % missed    0.000000 % dropped
+                           100.000000 % good
