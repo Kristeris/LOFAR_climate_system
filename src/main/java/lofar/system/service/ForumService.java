@@ -121,6 +121,18 @@ public class ForumService {
         return toDTO(post);
     }
  
+    
+    //     public List<ForumPostDTO> getPostsByUser(String username) {
+    //     logger.info("getPostsByUser called with username: '{}'", username);
+    //     List<ForumPost> posts = forumRepo.findPostsByAuthorUsername(username);
+    //     logger.info("Found {} posts for user '{}'", posts.size(), username);
+    //     return posts.stream().map(this::toDTO).collect(Collectors.toList());
+    // }
+    
+    
+    
+    
+    
     // ---------------------------------------------------------------
     //  Delete — removes Google Calendar event too
     // ---------------------------------------------------------------

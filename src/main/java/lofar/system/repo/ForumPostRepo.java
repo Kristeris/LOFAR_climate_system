@@ -2,12 +2,14 @@ package lofar.system.repo;
  
 import java.time.LocalDateTime;
 import java.util.List;
- 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
- 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import lofar.system.model.ForumPost;
  
 @Repository
@@ -19,6 +21,12 @@ public interface ForumPostRepo extends JpaRepository<ForumPost, Long> {
     /** Posts by a specific author, newest first */
     List<ForumPost> findByAuthorUsernameOrderByCreatedAtDesc(String username);
  
+    
+    
+    @Query("SELECT p FROM ForumPost p WHERE p.author.username = :username ORDER BY p.createdAt DESC")
+    List<ForumPost> findPostsByAuthorUsername(@Param("username") String username);
+    
+    
     /**
      * Conflict detection: does any existing post's scheduled window overlap
      * with [newStart, newEnd)?

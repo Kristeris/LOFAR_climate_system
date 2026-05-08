@@ -4,13 +4,15 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
- 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
- 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import lofar.system.model.ForumPostDTO;
 import lofar.system.service.ForumService;
  
@@ -53,6 +55,54 @@ public class ForumController {
         return ResponseEntity.ok(posts);
     }
  
+
+
+//     @GetMapping
+// public ResponseEntity<List<ForumPostDTO>> getAllPosts(Authentication authentication) {
+//     if (authentication == null) {
+//         return ResponseEntity.status(401).build();
+//     }
+
+//     logger.info("User '{}' authorities: {}", authentication.getName(), authentication.getAuthorities());
+
+//     boolean isAdmin = authentication.getAuthorities().stream()
+//             .map(GrantedAuthority::getAuthority)
+//             .anyMatch(auth -> auth.equals("ADMIN") || auth.equals("ROLE_ADMIN"));
+
+//     logger.info("isAdmin = {} for user '{}'", isAdmin, authentication.getName());
+
+//     List<ForumPostDTO> posts = forumService.getPostsForUser(authentication.getName(), isAdmin);
+//     return ResponseEntity.ok(posts);
+// }
+
+
+
+            //my old version
+    //     @GetMapping
+    // public ResponseEntity<List<ForumPostDTO>> getAllPosts(Authentication authentication) {
+    //     if (authentication == null) {
+    //         return ResponseEntity.status(401).build();
+    //     }
+        
+    //     logger.info("User '{}' authorities: {}", authentication.getName(), authentication.getAuthorities());
+        
+    //     boolean isAdmin = authentication.getAuthorities().stream()
+    //             .anyMatch(auth -> {
+    //                 String authStr = auth.getAuthority();
+    //                 return authStr.equals("ADMIN") || authStr.equals("ROLE_ADMIN");
+    //             });
+        
+    //     logger.info("isAdmin = {} for user '{}'", isAdmin, authentication.getName());
+        
+    //     if (isAdmin) {
+    //         return ResponseEntity.ok(forumService.getAllPosts());
+    //     }
+    //     return ResponseEntity.ok(forumService.getPostsByUser(authentication.getName()));
+    // }
+
+
+
+
     // ---------------------------------------------------------------
     //  GET single
     // ---------------------------------------------------------------
