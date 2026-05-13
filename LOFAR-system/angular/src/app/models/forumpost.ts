@@ -6,4 +6,6 @@ export interface ForumPost {
   authorUsername: string;
   googleCalendarEventId: string | null;
   scheduledDateTime: string | null;
+  durationSeconds?: number;
+  status?: string;
 }

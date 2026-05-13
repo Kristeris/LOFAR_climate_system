@@ -416,53 +416,178 @@
     <div class="empty-state">
       <p>🗒️ No posts yet. Be the first to share something!</p>
     </div>
+  } @else if (filteredPosts().length === 0) {
+    <div class="empty-state">
+      <p>🔍 No posts match the current filter.</p>
+    </div>
   } @else {
-    <div class="posts-list">
-      @for (post of posts(); track post.id) {
-        <div class="post-card">
-          <div class="post-header">
-            <div>
-              <h3 class="post-title">{{ post.title }}</h3>
-              <div class="post-meta">
-                <span class="post-author">👤 {{ post.authorUsername }}</span>
-                @if (post.scheduledDateTime) {
-                  <span class="post-date">📅 {{ formatDate(post.scheduledDateTime) }}</span>
-                } @else {
-                  <span class="post-date">🕐 {{ formatDate(post.createdAt) }}</span>
-                }
-                @if (post.googleCalendarEventId) {
-                  <span class="calendar-badge" title="Google Calendar Event ID: {{ post.googleCalendarEventId }}">
-                    📅 Calendar
-                  </span>
-                }
-              </div>
-            </div>
-            @if (auth.isAdmin()) {
-              <div class="admin-actions">
-                <button class="btn-edit-time" (click)="startEditTime(post)" title="Edit scheduled time">✏️</button>
-                <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
-              </div>
+    @if (auth.isAdmin()) {
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">User:</label>
+          <select class="filter-select" [value]="filterUser()" (change)="filterUser.set(($any($event.target).value))">
+            <option value="all">All Users</option>
+            @for (user of uniqueUsers(); track user) {
+              <option [value]="user">{{ user }}</option>
             }
-          </div>
-
-          @if (editingTimeId === post.id) {
-            <div class="edit-time-form">
-              <label>New scheduled time:</label>
-              <div class="edit-time-inputs">
-                <input type="date" [(ngModel)]="editingTimeDate" />
-                <input type="time" [(ngModel)]="editingTimeHour" />
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowCurrent()" (change)="filterShowCurrent.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--current"></span> Current
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowFuture()" (change)="filterShowFuture.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--future"></span> Future
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowPast()" (change)="filterShowPast.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--past"></span> Past
+          </label>
+        </div>
+      </div>
+    }
+    @if (currentPosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--current">🟢 Current</div>
+        <div class="posts-list">
+          @for (post of currentPosts(); track post.id) {
+            <div class="post-card">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
               </div>
-              <div class="edit-time-actions">
-                <button class="btn-save" (click)="saveTime(post.id)">Save</button>
-                <button class="btn-cancel" (click)="cancelEditTime()">Cancel</button>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
               </div>
+              @if (auth.isAdmin()) {
+                <div class="admin-author">👤 {{ post.authorUsername }}</div>
+                @if (canAdminEdit(post)) {
+                  <div class="admin-actions">
+                    <button class="btn-edit-time" (click)="startEditTime(post)" title="Edit scheduled time">✏️</button>
+                    <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+                  </div>
+                }
+                <details class="admin-commands">
+                  <summary class="admin-commands-summary">📋 View Commands</summary>
+                  <pre class="admin-commands-content">{{ post.content }}</pre>
+                </details>
+              }
+              @if (editingTimeId === post.id) {
+                <div class="edit-time-form">
+                  <label>New scheduled time:</label>
+                  <div class="edit-time-inputs">
+                    <input type="date" [(ngModel)]="editingTimeDate" />
+                    <input type="time" [(ngModel)]="editingTimeHour" />
+                  </div>
+                  <div class="edit-time-actions">
+                    <button class="btn-save" (click)="saveTime(post.id)">Save</button>
+                    <button class="btn-cancel" (click)="cancelEditTime()">Cancel</button>
+                  </div>
+                </div>
+              }
             </div>
           }
-
-          <pre class="post-content">{{ post.content }}</pre>
         </div>
-      }
-    </div>
+      </div>
+    }
+
+    @if (futurePosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--future">🔵 Future</div>
+        <div class="posts-list">
+          @for (post of futurePosts(); track post.id) {
+            <div class="post-card">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+              </div>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
+              </div>
+              @if (auth.isAdmin()) {
+                <div class="admin-author">👤 {{ post.authorUsername }}</div>
+                @if (canAdminEdit(post)) {
+                  <div class="admin-actions">
+                    <button class="btn-edit-time" (click)="startEditTime(post)" title="Edit scheduled time">✏️</button>
+                    <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+                  </div>
+                }
+                <details class="admin-commands">
+                  <summary class="admin-commands-summary">📋 View Commands</summary>
+                  <pre class="admin-commands-content">{{ post.content }}</pre>
+                </details>
+              }
+              @if (editingTimeId === post.id) {
+                <div class="edit-time-form">
+                  <label>New scheduled time:</label>
+                  <div class="edit-time-inputs">
+                    <input type="date" [(ngModel)]="editingTimeDate" />
+                    <input type="time" [(ngModel)]="editingTimeHour" />
+                  </div>
+                  <div class="edit-time-actions">
+                    <button class="btn-save" (click)="saveTime(post.id)">Save</button>
+                    <button class="btn-cancel" (click)="cancelEditTime()">Cancel</button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (pastPosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--past">⚪ Past</div>
+        <div class="posts-list">
+          @for (post of pastPosts(); track post.id) {
+            <div class="post-card">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+              </div>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
+              </div>
+              @if (auth.isAdmin()) {
+                <div class="admin-author">👤 {{ post.authorUsername }}</div>
+                @if (canAdminEdit(post)) {
+                  <div class="admin-actions">
+                    <button class="btn-edit-time" (click)="startEditTime(post)" title="Edit scheduled time">✏️</button>
+                    <button class="btn-delete" (click)="deletePost(post.id)" title="Delete post">🗑️</button>
+                  </div>
+                }
+                <details class="admin-commands">
+                  <summary class="admin-commands-summary">📋 View Commands</summary>
+                  <pre class="admin-commands-content">{{ post.content }}</pre>
+                </details>
+              }
+              @if (editingTimeId === post.id) {
+                <div class="edit-time-form">
+                  <label>New scheduled time:</label>
+                  <div class="edit-time-inputs">
+                    <input type="date" [(ngModel)]="editingTimeDate" />
+                    <input type="time" [(ngModel)]="editingTimeHour" />
+                  </div>
+                  <div class="edit-time-actions">
+                    <button class="btn-save" (click)="saveTime(post.id)">Save</button>
+                    <button class="btn-cancel" (click)="cancelEditTime()">Cancel</button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
   }
 
 </div>

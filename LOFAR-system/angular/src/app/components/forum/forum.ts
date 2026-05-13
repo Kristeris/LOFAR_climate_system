@@ -145,6 +145,28 @@ lofar: LofarObsFields = {
       ],
     };
 
+  filterUser   = signal<string>('all');
+  filterShowCurrent = signal(true);
+  filterShowFuture  = signal(true);
+  filterShowPast    = signal(true);
+
+  uniqueUsers  = computed(() => [...new Set(this.posts().map(p => p.authorUsername))].sort());
+
+  filteredPosts = computed(() => {
+    return this.posts().filter(p => {
+      const userMatch = this.filterUser() === 'all' || p.authorUsername === this.filterUser();
+      const statusMatch =
+        (p.status === 'CURRENT' && this.filterShowCurrent()) ||
+        (p.status === 'FUTURE'  && this.filterShowFuture()) ||
+        (p.status === 'PAST'    && this.filterShowPast());
+      return userMatch && statusMatch;
+    });
+  });
+
+  currentPosts = computed(() => this.filteredPosts().filter(p => p.status === 'CURRENT'));
+  futurePosts  = computed(() => this.filteredPosts().filter(p => p.status === 'FUTURE'));
+  pastPosts    = computed(() => this.filteredPosts().filter(p => p.status === 'PAST'));
+
   private readonly apiBase = 'http://localhost:8080/api/forum';
 
   constructor(private http: HttpClient, public auth: AuthService) {}
@@ -497,6 +519,20 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
 
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('en-GB', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  canAdminEdit(post: ForumPost): boolean {
+    if (!post.scheduledDateTime) return false;
+    return new Date(post.scheduledDateTime).getTime() - Date.now() > 60000;
+  }
+
+  formatEndDate(post: ForumPost): string {
+    if (!post.scheduledDateTime || !post.durationSeconds) return '—';
+    const end = new Date(new Date(post.scheduledDateTime).getTime() + post.durationSeconds * 1000);
+    return end.toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
