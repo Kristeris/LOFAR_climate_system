@@ -1,2 +1,28 @@
 <div class="home-container">
+  <div class="home-header">
+    <h2>Welcome, {{ auth.currentUser()?.username }}</h2>
+    <p class="home-subtitle">Your observation posts</p>
+  </div>
+
+  @if (loading()) {
+    <div class="home-loading">Loading…</div>
+  } @else if (posts().length === 0) {
+    <div class="home-empty">You haven't made any observation posts yet.</div>
+  } @else {
+    <div class="posts-grid">
+      @for (post of posts(); track post.id) {
+        <div class="post-box">
+          <h3 class="post-title">{{ post.title }}</h3>
+          <div class="post-dates">
+            <span class="post-date-label">Start:</span>
+            <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+          </div>
+          <div class="post-dates">
+            <span class="post-date-label">End:</span>
+            <span class="post-date-value">{{ formatEndDate(post) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>
