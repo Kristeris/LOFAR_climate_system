@@ -3,7 +3,7 @@ import { SensorList } from './components/sensor-list/sensor-list';
 import { SensorChart } from './components/sensor-chart/sensor-chart';
 import { WsTest } from './components/ws-test/ws-test';
 import { AdminPanel } from './components/admin-panel/admin-panel';
-import { HomePage } from './components/home-page/home-page';
+
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { Forum } from './components/forum/forum';
@@ -21,12 +21,6 @@ export const routes: Routes = [
   { path: '', redirectTo: '/sensors', pathMatch: 'full' },
 
   // Authenticated (USER + ADMIN)
-  {
-    path: 'home',
-    component: HomePage,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'Home' }
-  },
   {
     path: 'sensors',
     component: SensorList,

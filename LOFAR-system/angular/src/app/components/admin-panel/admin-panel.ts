@@ -9,6 +9,7 @@ interface UserHourInfo {
   yearMonth: string;
   totalSeconds: number;
   totalHours: number;
+  eventCount: number;
 }
 
 @Component({
@@ -147,6 +148,28 @@ export class AdminPanel implements OnInit {
         this.intervalSaving.set(false);
       }
     });
+  }
+
+  downloadUserTxt(user: UserHourInfo): void {
+    const content = [
+      `User: ${user.username}`,
+      `Month: ${user.yearMonth}`,
+      `Total Hours: ${user.totalHours}h`,
+      `Total Seconds: ${user.totalSeconds}s`,
+      `Total Events: ${user.eventCount}`,
+      ``,
+      `--- Breakdown ---`,
+      `Event Hours: ${user.totalHours} hours`,
+      `Number of Events: ${user.eventCount}`,
+    ].join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${user.username}_${user.yearMonth}_stats.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   private showStatus(msg: string, isError: boolean): void {

@@ -447,6 +447,23 @@
   color: #4dabf7;
 }
 
+.events-value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.btn-download {
+  background: #845ef7;
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+.btn-download:not(:disabled):hover {
+  background: #7048e8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(112, 72, 232, 0.4);
+}
+
 /* ---- Dropdown Details ---- */
 .dropdown-details {
   margin-bottom: 20px;

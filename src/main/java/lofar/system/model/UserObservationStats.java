@@ -41,15 +41,25 @@ public class UserObservationStats {
     /** Total observation time in seconds accumulated this month */
     @Column(name = "total_seconds", nullable = false)
     private long totalSeconds = 0L;
- 
+
+    /** Number of observation events this month */
+    @Column(name = "event_count", nullable = false)
+    private int eventCount = 0;
+
     public UserObservationStats(MyUser user, String yearMonth) {
         this.user      = user;
         this.yearMonth = yearMonth;
     }
- 
+
     /** Convenience: add duration and return this (for fluent use in service) */
     public UserObservationStats addSeconds(long seconds) {
         this.totalSeconds += seconds;
+        return this;
+    }
+
+    /** Increment event count */
+    public UserObservationStats incrementEventCount() {
+        this.eventCount++;
         return this;
     }
  

@@ -51,6 +51,7 @@ public class UserStatsService {
             .orElseGet(() -> new UserObservationStats(author, month));
  
         stats.addSeconds(durationSeconds);
+        stats.incrementEventCount();
         statsRepo.save(stats);
  
         logger.info("Recorded {}s observation for '{}' in {} (total: {}s)",
@@ -71,10 +72,11 @@ public class UserStatsService {
                 s.getUser().getUsername(),
                 s.getYearMonth(),
                 s.getTotalSeconds(),
-                s.totalHours()))
+                s.totalHours(),
+                s.getEventCount()))
             .collect(Collectors.toList());
     }
- 
+
     /**
      * Returns stats for ALL users for the given month (e.g. "2026-05").
      */
@@ -85,7 +87,8 @@ public class UserStatsService {
                 s.getUser().getUsername(),
                 s.getYearMonth(),
                 s.getTotalSeconds(),
-                s.totalHours()))
+                s.totalHours(),
+                s.getEventCount()))
             .collect(Collectors.toList());
     }
  
@@ -98,13 +101,16 @@ public class UserStatsService {
         public final String yearMonth;
         public final long   totalSeconds;
         public final double totalHours;
- 
+        public final int    eventCount;
+
         public UserMonthlyStats(String username, String yearMonth,
-                                long totalSeconds, double totalHours) {
+                                long totalSeconds, double totalHours,
+                                int eventCount) {
             this.username     = username;
             this.yearMonth    = yearMonth;
             this.totalSeconds = totalSeconds;
             this.totalHours   = totalHours;
+            this.eventCount   = eventCount;
         }
     }
 }

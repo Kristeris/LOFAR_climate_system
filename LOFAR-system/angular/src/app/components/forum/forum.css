@@ -570,6 +570,54 @@
   -moz-appearance: textfield;
 }
 
+/* ---- LuMP recorder details (native <details>) ---- */
+.lofar-details {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lofar-summary {
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #dee2e6;
+  user-select: none;
+}
+
+.lofar-summary::-webkit-details-marker {
+  display: none;
+}
+
+.lofar-summary::before {
+  content: '▶';
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.lofar-details[open] > .lofar-summary::before {
+  transform: rotate(90deg);
+}
+
+.lofar-summary:hover {
+  background: #f0f0f0;
+}
+
+.lofar-details .lofar-section-content {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 /* ---- Live preview box ---- */
 .lofar-preview {
   border: 1px solid #d0ebff;

@@ -21,7 +21,7 @@ import { AuthService } from '../../services/auth.service';
             @if (auth.isAdmin()) {
               <li>
                 <a routerLink="/admin" routerLinkActive="active" class="admin-link">
-                  ⚙️ Admin
+                   Home
                 </a>
               </li>
               <li>

@@ -244,116 +244,113 @@
             }
           </div>
 
-          <!-- LuMP — Basic_LuMP_Recorder -->
-          <div class="lofar-section">
-            <div class="lofar-section-title" (click)="lumpExpanded = !lumpExpanded" style="cursor: pointer;">
-              <span>📀 LuMP — Basic_LuMP_Recorder</span>
-              <span>{{ lumpExpanded ? '▼' : '▶' }}</span>
-            </div>
-            @if (lumpExpanded) {
+          <!-- LuMP — 4 Basic_LuMP_Recorder instances -->
+          @for (rec of lofar.lumpRecorders; track $index) {
+            <details class="lofar-details">
+              <summary class="lofar-summary">
+                📀 Recorder {{ $index + 1 }} (port {{ rec.port }})
+              </summary>
               <div class="lofar-section-content">
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Enable to generate 4 Basic_LuMP_Recorder commands (one per lane)">Enable LuMP</label>
-                    <input type="checkbox" [(ngModel)]="lofar.lumpEnabled" title="Enable to generate 4 Basic_LuMP_Recorder commands (one per lane)" />
-                  </div>
-                </div>
-                <div class="lofar-row">
-                  <div class="lofar-field">
-                    <label title="Base UDP port number (4 recorders use base, base+1, base+2, base+3)">Base Port</label>
-                    <input type="text" [(ngModel)]="lofar.lumpPort" placeholder="16140" title="Base UDP port number (4 recorders use base, base+1, base+2, base+3)" />
+                    <label>Enable</label>
+                    <input type="checkbox" [(ngModel)]="rec.enabled" />
                   </div>
                   <div class="lofar-field">
-                    <label title="Station clock speed in MHz">Clock Speed</label>
-                    <select [(ngModel)]="lofar.lumpClockSpeed" title="Station clock speed in MHz">
+                    <label>UDP Port</label>
+                    <input type="text" [(ngModel)]="rec.port" placeholder="16140" />
+                  </div>
+                  <div class="lofar-field">
+                    <label>Clock Speed</label>
+                    <select [(ngModel)]="rec.clockSpeed">
                       <option value="160">160</option>
                       <option value="200">200</option>
                     </select>
                   </div>
                   <div class="lofar-field">
-                    <label title="Number of beamlets per RSP lane (default 61, here typically 122)">Beamlets/Lane</label>
-                    <input type="text" [(ngModel)]="lofar.lumpBeamletsPerLane" placeholder="122" title="Number of beamlets per RSP lane (default 61, here typically 122)" />
+                    <label>Beamlets/Lane</label>
+                    <input type="text" [(ngModel)]="rec.beamletsPerLane" placeholder="122" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field lofar-field--wide">
-                    <label title="Directory path for recording output">Data Dir</label>
-                    <input type="text" [(ngModel)]="lofar.lumpDatadir" placeholder="./" title="Directory path for recording output" />
+                    <label>Data Dir</label>
+                    <input type="text" [(ngModel)]="rec.datadir" placeholder="./" />
                   </div>
                   <div class="lofar-field">
-                    <label title="Input data type: L_intComplex16_t (8-bit), L_intComplex32_t (16-bit), etc.">Data Type</label>
-                    <input type="text" [(ngModel)]="lofar.lumpDataType" placeholder="L_intComplex16_t" title="Input data type: L_intComplex16_t (8-bit), L_intComplex32_t (16-bit), etc." />
-                  </div>
-                </div>
-                <div class="lofar-row">
-                  <div class="lofar-field">
-                    <label title="LOFAR station name (e.g., DE601, LV614, SE607)">Station Name</label>
-                    <input type="text" [(ngModel)]="lofar.lumpStationName" placeholder="LV614" title="LOFAR station name (e.g., DE601, LV614, SE607)" />
-                  </div>
-                  <div class="lofar-field">
-                    <label title="Output format: LuMP1 (single file), LuMP0, FFT0, PFB0, POWER_FFT0, RAW, VDIF0">Writer Type</label>
-                    <input type="text" [(ngModel)]="lofar.lumpWriterType" placeholder="LuMP1" title="Output format: LuMP1 (single file), LuMP0, FFT0, PFB0, POWER_FFT0, RAW, VDIF0" />
+                    <label>Data Type</label>
+                    <input type="text" [(ngModel)]="rec.dataType" placeholder="L_intComplex16_t" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Python array of physical beamlets (e.g., [0:122] uses beamlets 0-121)">Physical Beamlet Array</label>
-                    <input type="text" [(ngModel)]="lofar.lumpPhysicalBeamletArray" placeholder="[0:122]" title="Python array of physical beamlets (e.g., [0:122] uses beamlets 0-121)" />
+                    <label>Station Name</label>
+                    <input type="text" [(ngModel)]="rec.stationName" placeholder="LV614" />
                   </div>
                   <div class="lofar-field">
-                    <label title="RCU mode for each beamlet (use [5]*122 for all same mode)">RCU Mode</label>
-                    <input type="text" [(ngModel)]="lofar.lumpRcuMode" placeholder="5" title="RCU mode for each beamlet (use [5]*122 for all same mode)" />
-                  </div>
-                  <div class="lofar-field">
-                    <label title="Coordinate epoch: J2000, AZELGEO, JUPITER, MOON, etc.">Epoch</label>
-                    <input type="text" [(ngModel)]="lofar.lumpEpoch" placeholder="J2000" title="Coordinate epoch: J2000, AZELGEO, JUPITER, MOON, etc." />
+                    <label>Writer Type</label>
+                    <input type="text" [(ngModel)]="rec.writerType" placeholder="LuMP1" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Measurement duration in seconds from start_date">Duration (s)</label>
-                    <input type="text" [(ngModel)]="lofar.lumpDuration" placeholder="600" title="Measurement duration in seconds from start_date" />
+                    <label>Physical Beamlet Array</label>
+                    <input type="text" [(ngModel)]="rec.physicalBeamletArray" placeholder="[0:122]" />
                   </div>
                   <div class="lofar-field">
-                    <label title="Python array of subbands corresponding to beamlets">Subband Array</label>
-                    <input type="text" [(ngModel)]="lofar.lumpSubbandArray" placeholder="[23:145]" title="Python array of subbands corresponding to beamlets" />
+                    <label>RCU Mode</label>
+                    <input type="text" [(ngModel)]="rec.rcuMode" placeholder="5" />
+                  </div>
+                  <div class="lofar-field">
+                    <label>Epoch</label>
+                    <input type="text" [(ngModel)]="rec.epoch" placeholder="J2000" />
+                  </div>
+                </div>
+                <div class="lofar-row">
+                  <div class="lofar-field">
+                    <label>Duration (s)</label>
+                    <input type="text" [(ngModel)]="rec.duration" placeholder="600" />
+                  </div>
+                  <div class="lofar-field">
+                    <label>Subband Array</label>
+                    <input type="text" [(ngModel)]="rec.subbandArray" placeholder="[23:145]" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field lofar-field--wide">
-                    <label title="Base filename extended by writer ID number (e.g., J0332+5434.01, J0332+5434.02)">Filename Base</label>
-                    <input type="text" [(ngModel)]="lofar.lumpFilenameBase" placeholder="J0332+5434" title="Base filename extended by writer ID number (e.g., J0332+5434.01, J0332+5434.02)" />
+                    <label>Filename Base</label>
+                    <input type="text" [(ngModel)]="rec.filenameBase" placeholder="J0332+5434_1" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Source name (e.g., Cas A, J0332+5434, JUPITER)">Sourcename</label>
-                    <input type="text" [(ngModel)]="lofar.lumpSourcename" placeholder="J0332+5434" title="Source name (e.g., Cas A, J0332+5434, JUPITER)" />
+                    <label>Sourcename</label>
+                    <input type="text" [(ngModel)]="rec.sourcename" placeholder="J0332+5434" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Right ascension in radians (must match Epoch coordinate system)">Right Ascension (rad)</label>
-                    <input type="text" [(ngModel)]="lofar.lumpRightAscension" placeholder="0.92934187" title="Right ascension in radians (must match Epoch coordinate system)" />
+                    <label>RA (rad)</label>
+                    <input type="text" [(ngModel)]="rec.rightAscension" placeholder="0.92934187" />
                   </div>
                   <div class="lofar-field">
-                    <label title="Declination in radians (must match Epoch coordinate system)">Declination (rad)</label>
-                    <input type="text" [(ngModel)]="lofar.lumpDeclination" placeholder="0.95257923" title="Declination in radians (must match Epoch coordinate system)" />
+                    <label>Dec (rad)</label>
+                    <input type="text" [(ngModel)]="rec.declination" placeholder="0.95257923" />
                   </div>
                 </div>
                 <div class="lofar-row">
                   <div class="lofar-field">
-                    <label title="Start time in UTC ISO format (YYYY-MM-DDTHH:MM:SSZ) or Unix timestamp">Start Date</label>
-                    <input type="text" [(ngModel)]="lofar.lumpStartDate" placeholder="2025-08-27T11:05:00Z" title="Start time in UTC ISO format (YYYY-MM-DDTHH:MM:SSZ) or Unix timestamp" />
+                    <label>Start Date</label>
+                    <input type="text" [(ngModel)]="rec.startDate" placeholder="2025-08-27T11:05:00Z" />
                   </div>
                   <div class="lofar-field">
-                    <label title="Number of CPU cores for LuMP recording (0=auto-detect all cores)">Num Cores</label>
-                    <input type="text" [(ngModel)]="lofar.lumpRecorderNumCores" placeholder="2" title="Number of CPU cores for LuMP recording (0=auto-detect all cores)" />
+                    <label>Num Cores</label>
+                    <input type="text" [(ngModel)]="rec.recorderNumCores" placeholder="2" />
                   </div>
                 </div>
               </div>
-            }
-          </div>
+            </details>
+          }
 
           <!-- Live preview -->
           <div class="lofar-preview">

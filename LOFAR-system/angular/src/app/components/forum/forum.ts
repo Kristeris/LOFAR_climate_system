@@ -8,6 +8,28 @@ import { calculateBeamletsFromForum } from '../../services/sub-band.js';
 
 export type PostPreset = 'simple' | 'lofar';
 
+export interface LuMPRecorderConfig {
+  enabled: boolean;
+  port: string;
+  clockSpeed: string;
+  beamletsPerLane: string;
+  datadir: string;
+  dataType: string;
+  stationName: string;
+  writerType: string;
+  physicalBeamletArray: string;
+  rcuMode: string;
+  epoch: string;
+  duration: string;
+  subbandArray: string;
+  filenameBase: string;
+  sourcename: string;
+  rightAscension: string;
+  declination: string;
+  startDate: string;
+  recorderNumCores: string;
+}
+
 export interface LofarObsFields {
   targetName: string;
   swlevel: string;
@@ -35,25 +57,31 @@ export interface LofarObsFields {
   bufsize: string;
   sockBufsize: string;
   skip: string;
-  lumpEnabled: boolean;
-  lumpPort: string;
-  lumpClockSpeed: string;
-  lumpBeamletsPerLane: string;
-  lumpDatadir: string;
-  lumpDataType: string;
-  lumpStationName: string;
-  lumpWriterType: string;
-  lumpPhysicalBeamletArray: string;
-  lumpRcuMode: string;
-  lumpEpoch: string;
-  lumpDuration: string;
-  lumpSubbandArray: string;
-  lumpFilenameBase: string;
-  lumpSourcename: string;
-  lumpRightAscension: string;
-  lumpDeclination: string;
-  lumpStartDate: string;
-  lumpRecorderNumCores: string;
+  lumpRecorders: LuMPRecorderConfig[];
+}
+
+function defaultLuMPRecorder(port: string, beamletArray: string, subbandArray: string, filenameBase: string): LuMPRecorderConfig {
+  return {
+    enabled: false,
+    port,
+    clockSpeed: '200',
+    beamletsPerLane: '122',
+    datadir: './',
+    dataType: 'L_intComplex16_t',
+    stationName: 'LV614',
+    writerType: 'LuMP1',
+    physicalBeamletArray: beamletArray,
+    rcuMode: '5',
+    epoch: 'J2000',
+    duration: '600',
+    subbandArray,
+    filenameBase,
+    sourcename: 'J0332+5434',
+    rightAscension: '0.92934187',
+    declination: '0.95257923',
+    startDate: '2025-08-27T11:05:00Z',
+    recorderNumCores: '2',
+  };
 }
 
 @Component({
@@ -82,8 +110,6 @@ export class Forum implements OnInit {
 
   // ── LOFAR structured fields ────────────────────────────────────
   druExpanded = true;
-  lumpExpanded = true;
-
 lofar: LofarObsFields = {
       targetName:  'JUPITER',
       swlevel:     '3',
@@ -111,25 +137,12 @@ lofar: LofarObsFields = {
       bufsize:     '1e9',
       sockBufsize: '1e7',
       skip:        '1',
-      lumpEnabled:   false,
-      lumpPort:      '16140',
-      lumpClockSpeed: '200',
-      lumpBeamletsPerLane: '122',
-      lumpDatadir:     './',
-      lumpDataType:   'L_intComplex16_t',
-      lumpStationName: 'LV614',
-      lumpWriterType:  'LuMP1',
-      lumpPhysicalBeamletArray: '[0:122]',
-      lumpRcuMode:     '5',
-      lumpEpoch:      'J2000',
-      lumpDuration:    '600',
-      lumpSubbandArray: '[23:145]',
-      lumpFilenameBase: 'J0332+5434',
-      lumpSourcename:  'J0332+5434',
-      lumpRightAscension: '0.92934187',
-      lumpDeclination: '0.95257923',
-      lumpStartDate:   '2025-08-27T11:05:00Z',
-      lumpRecorderNumCores: '2',
+      lumpRecorders: [
+        defaultLuMPRecorder('16140', '[0:122]', '[23:145]', 'J0332+5434_1'),
+        defaultLuMPRecorder('16141', '[122:244]', '[145:267]', 'J0332+5434_2'),
+        defaultLuMPRecorder('16142', '[244:366]', '[267:389]', 'J0332+5434_3'),
+        defaultLuMPRecorder('16143', '[366:488]', '[389:511]', 'J0332+5434_4'),
+      ],
     };
 
   private readonly apiBase = 'http://localhost:8080/api/forum';
@@ -311,37 +324,17 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port1} --ou
 nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --out ${f.outName} --check --Maxfilesize ${f.maxFilesize} --timeout ${f.timeout} --dropped_kernel --bufsize ${f.bufsize} --sock_bufsize ${f.sockBufsize} --skip ${f.skip} --verbose &`;
     }
 
-    if (f.lumpEnabled) {
-      const beamletStart = parseInt(f.lumpPhysicalBeamletArray.replace(/[\[\]:]/g, '').split(':')[0] || '0', 10);
-      const subbandStart = parseInt(f.lumpSubbandArray.replace(/[\[\]:]/g, '').split(':')[0] || '0', 10);
-      const beamletsPerLane = parseInt(f.lumpBeamletsPerLane, 10) || 122;
-      const basePort = parseInt(f.lumpPort, 10) || 16140;
-
-      const lane1Beamlet = `${beamletStart}:${beamletStart + beamletsPerLane}`;
-      const lane1Subband = `${subbandStart}:${subbandStart + beamletsPerLane}`;
-      const lane2Beamlet = `${beamletStart + beamletsPerLane}:${beamletStart + beamletsPerLane * 2}`;
-      const lane2Subband = `${subbandStart + beamletsPerLane}:${subbandStart + beamletsPerLane * 2}`;
-      const lane3Beamlet = `${beamletStart + beamletsPerLane * 2}:${beamletStart + beamletsPerLane * 3}`;
-      const lane3Subband = `${subbandStart + beamletsPerLane * 2}:${subbandStart + beamletsPerLane * 3}`;
-      const lane4Beamlet = `${beamletStart + beamletsPerLane * 3}:${beamletStart + beamletsPerLane * 4}`;
-      const lane4Subband = `${subbandStart + beamletsPerLane * 3}:${subbandStart + beamletsPerLane * 4}`;
-
-      const rcuModeArray = `[${f.lumpRcuMode}]*${beamletsPerLane}`;
-      const epochArray = `[${f.lumpEpoch}]*${beamletsPerLane}`;
-      const sourcenameArray = `[${f.lumpSourcename}]*${beamletsPerLane}`;
-      const raArray = `[${f.lumpRightAscension}]*${beamletsPerLane}`;
-      const decArray = `[${f.lumpDeclination}]*${beamletsPerLane}`;
-
-      const baseFile = f.lumpFilenameBase;
-      const lumpBase = `Basic_LuMP_Recorder.py --clock_speed=${f.lumpClockSpeed} --beamlets_per_lane=${f.lumpBeamletsPerLane} --datadir=${f.lumpDatadir} --data_type_in=${f.lumpDataType} --station_name=${f.lumpStationName} --writer_type=${f.lumpWriterType}`;
-
-      content += `
-
-LuMP recorders
-${lumpBase} --port=${basePort} --physical_beamlet_array=[${lane1Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane1Subband}] --filename_base=${baseFile}_1 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
-${lumpBase} --port=${basePort + 1} --physical_beamlet_array=[${lane2Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane2Subband}] --filename_base=${baseFile}_2 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
-${lumpBase} --port=${basePort + 2} --physical_beamlet_array=[${lane3Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane3Subband}] --filename_base=${baseFile}_3 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &
-${lumpBase} --port=${basePort + 3} --physical_beamlet_array=[${lane4Beamlet}] --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --subband_array=[${lane4Subband}] --filename_base=${baseFile}_4 --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${f.lumpStartDate} --recorder_num_cores=${f.lumpRecorderNumCores} &`;
+    const enabledRecorders = f.lumpRecorders.filter(r => r.enabled);
+    if (enabledRecorders.length > 0) {
+      content += `\n\nLuMP recorders\n`;
+      for (const rec of enabledRecorders) {
+        const rcuModeArray = `[${rec.rcuMode}]*${rec.beamletsPerLane}`;
+        const epochArray = `[${rec.epoch}]*${rec.beamletsPerLane}`;
+        const sourcenameArray = `[${rec.sourcename}]*${rec.beamletsPerLane}`;
+        const raArray = `[${rec.rightAscension}]*${rec.beamletsPerLane}`;
+        const decArray = `[${rec.declination}]*${rec.beamletsPerLane}`;
+        content += `Basic_LuMP_Recorder.py --port=${rec.port} --clock_speed=${rec.clockSpeed} --beamlets_per_lane=${rec.beamletsPerLane} --datadir=${rec.datadir} --data_type_in=${rec.dataType} --station_name=${rec.stationName} --writer_type=${rec.writerType} --physical_beamlet_array=${rec.physicalBeamletArray} --rcumode_array=${rcuModeArray} --epoch_array=${epochArray} --verbose --duration=${rec.duration} --subband_array=${rec.subbandArray} --filename_base=${rec.filenameBase} --sourcename_array=${sourcenameArray} --rightascension_array=${raArray} --declination_array=${decArray} --start_date=${rec.startDate} --recorder_num_cores=${rec.recorderNumCores} &\n`;
+      }
     }
 
     return content;
@@ -550,25 +543,12 @@ this.lofar = {
       bufsize:     '1e9',
       sockBufsize: '1e7',
       skip:        '1',
-      lumpEnabled:   false,
-      lumpPort:      '16140',
-      lumpClockSpeed: '200',
-      lumpBeamletsPerLane: '122',
-      lumpDatadir:     './',
-      lumpDataType:   'L_intComplex16_t',
-      lumpStationName: 'LV614',
-      lumpWriterType:  'LuMP1',
-      lumpPhysicalBeamletArray: '[0:122]',
-      lumpRcuMode:     '5',
-      lumpEpoch:      'J2000',
-      lumpDuration:    '600',
-      lumpSubbandArray: '[23:145]',
-      lumpFilenameBase: 'J0332+5434',
-      lumpSourcename:  'J0332+5434',
-      lumpRightAscension: '0.92934187',
-      lumpDeclination: '0.95257923',
-      lumpStartDate:   '2025-08-27T11:05:00Z',
-      lumpRecorderNumCores: '2',
+      lumpRecorders: [
+        defaultLuMPRecorder('16140', '[0:122]', '[23:145]', 'J0332+5434_1'),
+        defaultLuMPRecorder('16141', '[122:244]', '[145:267]', 'J0332+5434_2'),
+        defaultLuMPRecorder('16142', '[244:366]', '[267:389]', 'J0332+5434_3'),
+        defaultLuMPRecorder('16143', '[366:488]', '[389:511]', 'J0332+5434_4'),
+      ],
     };
     this.recalculateBeamlets();
   }
