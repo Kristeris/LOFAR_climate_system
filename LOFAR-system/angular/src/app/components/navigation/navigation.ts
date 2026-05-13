@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
     <nav class="navigation">
       <div class="nav-container">
         <!-- Brand -->
-        <a routerLink="/sensors" class="logo">
+        <a [routerLink]="auth.isAdmin() ? '/admin' : '/home'" class="logo">
           <span class="logo-icon">📡</span>
           LOFAR Climate System
         </a>
@@ -25,9 +25,12 @@ import { AuthService } from '../../services/auth.service';
                 </a>
               </li>
               <li>
-                <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
+                <a routerLink="/forum" routerLinkActive="active">🎛️ Observation Control</a>
               </li>
             } @else {
+              <li>
+                <a routerLink="/home" routerLinkActive="active">🏠 Home</a>
+              </li>
               <li>
                 <a routerLink="/sensors" routerLinkActive="active">
                   📋 Table View
@@ -49,7 +52,7 @@ import { AuthService } from '../../services/auth.service';
                 </a>
               </li>
               <li>
-                <a routerLink="/forum" routerLinkActive="active">💬 Forum</a>
+                <a routerLink="/forum" routerLinkActive="active">🎛️ Observation Control</a>
               </li>
             }
           </ul>

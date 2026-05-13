@@ -11,6 +11,7 @@ import { TowerStatusComponent } from './components/tower-status/tower-status.com
 import { AuthGuard } from './guards/auth.guard';
 import { Role } from './models/role';
 import { NohupMonitorComponent } from './components/nohup-monitor/nohup-monitor.component';
+import { HomePage } from './components/home-page/home-page';
 
 export const routes: Routes = [
   // Public
@@ -18,7 +19,14 @@ export const routes: Routes = [
   { path: 'register', component: Register, data: { title: 'Register' } },
 
   // Root redirect
-  { path: '', redirectTo: '/sensors', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // Home
+  {
+    path: 'home',
+    component: HomePage,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.User], title: 'Home' }
+  },
 
   // Authenticated (USER + ADMIN)
   {
@@ -67,5 +75,5 @@ export const routes: Routes = [
   },
 
   // Catch-all
-  { path: '**', redirectTo: '/sensors' }
+  { path: '**', redirectTo: '/home' }
 ];

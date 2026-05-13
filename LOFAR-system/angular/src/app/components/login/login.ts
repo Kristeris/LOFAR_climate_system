@@ -17,7 +17,7 @@ export class Login {
   errorMsg = signal<string | null>(null);
   showPassword = signal(false);
 
-  private returnUrl = '/monitoring';
+  private returnUrl = '/home';
 
   constructor(
     private auth: AuthService,
@@ -25,10 +25,10 @@ export class Login {
     private route: ActivatedRoute
   ) {
     if (this.auth.isLoggedIn()) {
-      this.router.navigate(['/monitoring']);
+      this.router.navigate(['/home']);
     }
   
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/monitoring';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
   }
 
   onSubmit(): void {
@@ -47,7 +47,7 @@ export class Login {
         if (user.role === 'ADMIN') {
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate([this.returnUrl]);
+          this.router.navigate(['/home']);
         }
       },
       error: (err) => {
