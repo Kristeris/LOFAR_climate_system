@@ -1,5 +1,7 @@
 package lofar.system.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lofar.system.service.MyUserDetailsService;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -92,6 +92,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/sensors/**").authenticated()
                 .requestMatchers("/api/forum/**").authenticated()
                 .requestMatchers("/ws-sensor/**").authenticated()
+                .requestMatchers("/api/simbad/**").authenticated()
 
                 .anyRequest().authenticated()
             )

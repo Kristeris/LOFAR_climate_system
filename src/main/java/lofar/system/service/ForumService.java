@@ -12,9 +12,16 @@ import org.springframework.stereotype.Service;
 import lofar.system.model.ForumPost;
 import lofar.system.model.ForumPostDTO;
 import lofar.system.model.MyUser;
+import lofar.system.repo.EventOutcomeRepo;
+import lofar.system.repo.ForumCommentRepo;
 import lofar.system.repo.ForumPostRepo;
 import lofar.system.repo.IMyUserRepo;
  
+/**
+ * toDTO() mapper now also populates:
+ *   - outcomeStatus  (null / "SUCCESS" / "FAILURE" / "UNKNOWN")
+ *   - commentCount   (number of comments on the post)
+ */
 @Service
 public class ForumService {
  
@@ -25,20 +32,18 @@ public class ForumService {
     @Autowired private GoogleCalendarService calendarService;
     @Autowired private EmailService          emailService;
     @Autowired private UserStatsService      userStatsService;
+
+    @Autowired private EventOutcomeRepo      eventOutcomeRepo;
+    @Autowired private ForumCommentRepo      forumCommentRepo;
  
     // ---------------------------------------------------------------
     //  Create
     // ---------------------------------------------------------------
  
     public ForumPostDTO createPost(
-            String title,
-            String content,
-            String username,
-            LocalDateTime scheduledDateTime,
-            Integer durationSeconds,
-            Double anadirX,
-            Double anadirY,
-            String anadirSystem) {
+            String title, String content, String username,
+            LocalDateTime scheduledDateTime, Integer durationSeconds,
+            Double anadirX, Double anadirY, String anadirSystem) {
  
         MyUser author = userRepo.findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
@@ -56,7 +61,6 @@ public class ForumService {
         LocalDateTime newStart = post.effectiveStartTime();
         LocalDateTime newEnd   = post.effectiveEndTime();
  
-        // Conflict check — e-mails the rejected user if slot is taken
         checkForConflict(newStart, newEnd, null, author, title);
  
         String calendarEventId = calendarService.createCalendarEvent(
@@ -121,9 +125,7 @@ public class ForumService {
         logger.info("Post {} deleted successfully", id);
     }
  
-    public void deletePost(Long id) {
-        deletePost(id, null);
-    }
+    public void deletePost(Long id) { deletePost(id, null); }
  
     // ---------------------------------------------------------------
     //  Admin: reschedule
@@ -136,7 +138,6 @@ public class ForumService {
         int safeDuration = Math.max(1, Math.min(durationSeconds, 3600));
         LocalDateTime newEnd = newStart.plusSeconds(safeDuration);
  
-        // null author = no rejection e-mail on admin reschedule
         checkForConflict(newStart, newEnd, id, null, null);
  
         calendarService.updateCalendarEventTime(
@@ -162,23 +163,11 @@ public class ForumService {
     }
  
     // ---------------------------------------------------------------
-    //  Conflict check — sends rejection e-mail to the declined user
+    //  Conflict check
     // ---------------------------------------------------------------
  
-    /**
-     * Throws IllegalStateException if [newStart, newEnd) overlaps any existing post.
-     *
-     * When a real user is being rejected (rejectedUser != null), an e-mail is
-     * sent to them BEFORE throwing so they immediately know what happened and
-     * which time window was already taken.
-     */
-    private void checkForConflict(
-            LocalDateTime newStart,
-            LocalDateTime newEnd,
-            Long excludeId,
-            MyUser rejectedUser,
-            String requestedTitle) {
- 
+    private void checkForConflict(LocalDateTime newStart, LocalDateTime newEnd,
+                                   Long excludeId, MyUser rejectedUser, String requestedTitle) {
         LocalDateTime rangeStart = newStart.minusHours(1);
         List<ForumPost> candidates = forumRepo.findPostsNear(rangeStart, newEnd, excludeId);
  
@@ -190,39 +179,28 @@ public class ForumService {
                 String conflictingOwner = p.getAuthor() != null
                     ? p.getAuthor().getUsername() : "another user";
  
-                logger.warn(
-                    "Conflict: '{}' requested [{} – {}] but '{}' already holds [{} – {}]",
+                logger.warn("Conflict: '{}' requested [{} – {}] but '{}' already holds [{} – {}]",
                     rejectedUser != null ? rejectedUser.getUsername() : "admin",
-                    newStart, newEnd, conflictingOwner, pStart, pEnd
-                );
+                    newStart, newEnd, conflictingOwner, pStart, pEnd);
  
-                // E-mail the user whose request is being rejected
                 if (rejectedUser != null
                         && rejectedUser.getEmail() != null
                         && !rejectedUser.getEmail().isBlank()) {
- 
                     emailService.sendConflictRejectionEmail(
-                        rejectedUser.getEmail(),
-                        rejectedUser.getUsername(),
-                        requestedTitle,
-                        newStart,
-                        newEnd,
-                        pStart,
-                        pEnd,
-                        conflictingOwner
+                        rejectedUser.getEmail(), rejectedUser.getUsername(),
+                        requestedTitle, newStart, newEnd, pStart, pEnd, conflictingOwner
                     );
                 }
  
                 throw new IllegalStateException(
                     "Time slot conflict: another observation is already scheduled between "
-                    + pStart + " and " + pEnd + "."
-                );
+                    + pStart + " and " + pEnd + ".");
             }
         }
     }
  
     // ---------------------------------------------------------------
-    //  Mapper
+    //  Mapper  ← UPDATED: adds outcomeStatus + commentCount
     // ---------------------------------------------------------------
  
     private ForumPostDTO toDTO(ForumPost p) {
@@ -231,11 +209,19 @@ public class ForumService {
         LocalDateTime end   = p.effectiveEndTime();
  
         String status;
-        if (end.isBefore(now))    status = "PAST";
+        if (end.isBefore(now))       status = "PAST";
         else if (start.isAfter(now)) status = "FUTURE";
-        else                         status = "CURRENT";
+        else                          status = "CURRENT";
  
-        return new ForumPostDTO(
+        // populate outcome and comment count
+        String outcomeStatus = eventOutcomeRepo.findByPostId(p.getId())
+            .map(o -> o.getStatus().name())
+            .orElse(null);
+ 
+        int commentCount = (int) forumCommentRepo.countByPostId(p.getId());
+        
+ 
+        ForumPostDTO dto = new ForumPostDTO(
             p.getId(),
             p.getTitle(),
             p.getContent(),
@@ -248,7 +234,10 @@ public class ForumService {
             p.getAnadirX(),
             p.getAnadirY(),
             p.getAnadirSystem(),
-            status
+            status,
+            outcomeStatus,
+            commentCount
         );
+        return dto;
     }
 }
