@@ -9,25 +9,73 @@
   } @else if (posts().length === 0) {
     <div class="home-empty">You haven't made any observation posts yet.</div>
   } @else {
-    <div class="posts-grid">
-      @for (post of posts(); track post.id) {
-        <div class="post-box"
-             [class.post-clickable]="true"
-             [class.post-success]="post.status === 'PAST' && post.outcomeStatus === 'SUCCESS'"
-             [class.post-failure]="post.status === 'PAST' && post.outcomeStatus === 'FAILURE'"
-             (click)="openModal(post)">
-          <h3 class="post-title">{{ post.title }}</h3>
-          <div class="post-dates">
-            <span class="post-date-label">Start:</span>
-            <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
-          </div>
-          <div class="post-dates">
-            <span class="post-date-label">End:</span>
-            <span class="post-date-value">{{ formatEndDate(post) }}</span>
-          </div>
+
+    @if (currentPosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--current">🟢 Current</div>
+        <div class="posts-grid">
+          @for (post of currentPosts(); track post.id) {
+            <div class="post-box post-clickable" (click)="openModal(post)">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+              </div>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
+              </div>
+            </div>
+          }
         </div>
-      }
-    </div>
+      </div>
+    }
+
+    @if (futurePosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--future">🔵 Future</div>
+        <div class="posts-grid">
+          @for (post of futurePosts(); track post.id) {
+            <div class="post-box post-clickable" (click)="openModal(post)">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+              </div>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (pastPosts().length > 0) {
+      <div class="status-section">
+        <div class="status-header status-header--past">⚪ Past</div>
+        <div class="posts-grid">
+          @for (post of pastPosts(); track post.id) {
+            <div class="post-box post-clickable"
+                 [class.post-success]="post.outcomeStatus === 'SUCCESS'"
+                 [class.post-failure]="post.outcomeStatus === 'FAILURE'"
+                 (click)="openModal(post)">
+              <h3 class="post-title">{{ post.title }}</h3>
+              <div class="post-dates">
+                <span class="post-date-label">Start:</span>
+                <span class="post-date-value">{{ post.scheduledDateTime ? formatDate(post.scheduledDateTime) : formatDate(post.createdAt) }}</span>
+              </div>
+              <div class="post-dates">
+                <span class="post-date-label">End:</span>
+                <span class="post-date-value">{{ formatEndDate(post) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
   }
 </div>
 

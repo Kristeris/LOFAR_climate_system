@@ -43,6 +43,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   private missChart: echarts.ECharts | null = null;
   private nohupSub: Subscription | null = null;
   private progressTimer: ReturnType<typeof setInterval> | null = null;
+  private statusTimer: ReturnType<typeof setInterval> | null = null;
 
   private readonly apiBase = 'http://localhost:8080/api/forum';
 
@@ -52,7 +53,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private wsService: WebSocketService
   ) {
     effect(() => {
-      if (this.outcome()) {
+      if (this.outcome() && this.post()?.status !== 'CURRENT') {
         setTimeout(() => this.initCharts(), 200);
       }
     });
@@ -66,8 +67,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopLiveUpdates();
+    if (this.statusTimer) clearInterval(this.statusTimer);
+  }
+
+  private stopLiveUpdates(): void {
     this.nohupSub?.unsubscribe();
-    if (this.progressTimer) clearInterval(this.progressTimer);
+    this.nohupSub = null;
+    if (this.progressTimer) {
+      clearInterval(this.progressTimer);
+      this.progressTimer = null;
+    }
+    this.volumeChart?.dispose();
+    this.volumeChart = null;
+    this.missChart?.dispose();
+    this.missChart = null;
   }
 
   private startLiveUpdates(): void {
@@ -79,6 +93,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.parseLiveMetrics(block);
       }
     });
+    setTimeout(() => {
+      this.initCharts();
+      this.wsService.requestFullNohupLog();
+    }, 300);
   }
 
   private updateProgress(): void {
@@ -134,20 +152,42 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.http.get<ForumPost>(`${this.apiBase}/${id}`).subscribe({
       next: (post) => {
         this.post.set(post);
+        this.loading.set(false);
         if (post.status === 'CURRENT') {
           this.startLiveUpdates();
+        } else {
+          this.loadOutcome(id);
         }
-        this.http.get<EventOutcomeData>(`${this.apiBase}/${id}/outcome`).subscribe({
-          next: (outcome) => {
-            this.outcome.set(outcome);
-            this.parseLast5Logs(outcome);
-            this.loading.set(false);
-          },
-          error: () => this.loading.set(false)
-        });
+        this.startStatusPoller(id);
       },
       error: () => this.loading.set(false)
     });
+  }
+
+  private loadOutcome(id: number): void {
+    this.http.get<EventOutcomeData>(`${this.apiBase}/${id}/outcome`).subscribe({
+      next: (outcome) => {
+        this.outcome.set(outcome);
+        this.parseLast5Logs(outcome);
+      },
+      error: () => {}
+    });
+  }
+
+  private startStatusPoller(id: number): void {
+    this.statusTimer = setInterval(() => {
+      this.http.get<ForumPost>(`${this.apiBase}/${id}`).subscribe(p => {
+        const currentStatus = this.post()?.status;
+        if (p.status === 'CURRENT' && currentStatus !== 'CURRENT') {
+          this.post.set(p);
+          this.startLiveUpdates();
+        } else if (p.status === 'PAST' && currentStatus !== 'PAST') {
+          this.stopLiveUpdates();
+          this.post.set(p);
+          this.loadOutcome(id);
+        }
+      });
+    }, 10000);
   }
 
   private parseLast5Logs(outcome: EventOutcomeData): void {

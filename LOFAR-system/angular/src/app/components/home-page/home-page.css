@@ -36,6 +36,38 @@
   border: 1px solid #e9ecef;
 }
 
+.status-section {
+  margin-bottom: 20px;
+}
+
+.status-header {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.status-header--current {
+  color: #2b8a3e;
+  background: #d3f9d8;
+  border-left: 4px solid #51cf66;
+}
+
+.status-header--future {
+  color: #1971c2;
+  background: #e7f5ff;
+  border-left: 4px solid #4dabf7;
+}
+
+.status-header--past {
+  color: #868e96;
+  background: #f1f3f5;
+  border-left: 4px solid #adb5bd;
+}
+
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

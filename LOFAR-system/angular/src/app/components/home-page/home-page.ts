@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -22,6 +22,10 @@ interface OutcomeData {
 export class HomePage implements OnInit {
   posts = signal<ForumPost[]>([]);
   loading = signal(false);
+
+  currentPosts = computed(() => this.posts().filter(p => p.status === 'CURRENT'));
+  futurePosts  = computed(() => this.posts().filter(p => p.status === 'FUTURE'));
+  pastPosts    = computed(() => this.posts().filter(p => p.status === 'PAST'));
 
   /** Modal state */
   selectedPost = signal<ForumPost | null>(null);
