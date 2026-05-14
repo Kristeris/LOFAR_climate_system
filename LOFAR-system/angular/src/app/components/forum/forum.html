@@ -483,7 +483,7 @@
               </div>
               @if (expandedPostId() === post.id) {
                 <div class="comments-section">
-                  @for (comment of post.comments; track comment.id) {
+                  @for (comment of (post.comments || []); track comment.id) {
                     <div class="comment">
                       <strong class="comment-author">{{ comment.authorUsername }}</strong>
                       <span class="comment-text">{{ comment.content }}</span>
@@ -555,7 +555,7 @@
               </div>
               @if (expandedPostId() === post.id) {
                 <div class="comments-section">
-                  @for (comment of post.comments; track comment.id) {
+                  @for (comment of (post.comments || []); track comment.id) {
                     <div class="comment">
                       <strong class="comment-author">{{ comment.authorUsername }}</strong>
                       <span class="comment-text">{{ comment.content }}</span>
@@ -627,7 +627,7 @@
               </div>
               @if (expandedPostId() === post.id) {
                 <div class="comments-section">
-                  @for (comment of post.comments; track comment.id) {
+                  @for (comment of (post.comments || []); track comment.id) {
                     <div class="comment">
                       <strong class="comment-author">{{ comment.authorUsername }}</strong>
                       <span class="comment-text">{{ comment.content }}</span>

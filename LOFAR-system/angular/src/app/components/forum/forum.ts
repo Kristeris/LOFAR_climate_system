@@ -497,8 +497,9 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
   loadComments(post: ForumPost): void {
     this.http.get<ForumComment[]>(`${this.apiBase}/${post.id}/comments`).subscribe({
       next: (data) => {
-        post.comments = data;
-        post.commentCount = data.length;
+        this.posts.update(posts =>
+          posts.map(p => p.id === post.id ? { ...p, comments: data, commentCount: data.length } : p)
+        );
       }
     });
   }
