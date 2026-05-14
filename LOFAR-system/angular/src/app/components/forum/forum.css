@@ -845,6 +845,31 @@
   -moz-appearance: textfield;
 }
 
+/* ---- SIMBAD lookup ---- */
+.simbad-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.simbad-row input {
+  flex: 1;
+}
+
+.simbad-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #dee2e6;
+  border-top-color: #4dabf7;
+  border-radius: 50%;
+  animation: simbadSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes simbadSpin {
+  to { transform: rotate(360deg); }
+}
+
 /* ---- LuMP recorder details (native <details>) ---- */
 .lofar-details {
   background: #f8f9fa;

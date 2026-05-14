@@ -72,7 +72,12 @@
             <div class="lofar-row">
               <div class="lofar-field lofar-field--wide">
                 <label title="Target name for the observation (used for auto-coordinates if using planet system)">Target name</label>
-                <input type="text" [(ngModel)]="lofar.targetName" (ngModelChange)="onTargetNameChange()" placeholder="e.g. JUPITER" title="Target name for the observation (used for auto-coordinates if using planet system)" />
+                <div class="simbad-row">
+                  <input type="text" [(ngModel)]="lofar.targetName" (ngModelChange)="onTargetNameChange()" placeholder="e.g. JUPITER" title="Target name for the observation (used for auto-coordinates if using planet system)" />
+                  @if (simbadLoading()) {
+                    <span class="simbad-spinner" title="Looking up coordinates in SIMBAD…"></span>
+                  }
+                </div>
               </div>
             </div>
           </div>

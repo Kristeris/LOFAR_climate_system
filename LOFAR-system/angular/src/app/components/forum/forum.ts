@@ -110,6 +110,8 @@ export class Forum implements OnInit {
 
   // ── LOFAR structured fields ────────────────────────────────────
   druExpanded = true;
+
+  simbadLoading = signal(false);
 lofar: LofarObsFields = {
       targetName:  'JUPITER',
       swlevel:     '3',
@@ -267,6 +269,8 @@ lofar: LofarObsFields = {
     this.recalculateBeamlets();
   }
 
+  private readonly simbadApi = 'http://localhost:8080/api/simbad';
+
   /** Auto-update title when target name changes in LOFAR mode */
 onTargetNameChange(): void {
     if (this.activePreset() === 'lofar') {
@@ -274,7 +278,28 @@ onTargetNameChange(): void {
       this.lofar.anadirX = '0';
       this.lofar.anadirY = '0';
       this.lofar.anadirSystem = this.lofar.targetName;
+      this.lookupSimbad(this.lofar.targetName);
     }
+  }
+
+  lookupSimbad(target: string): void {
+    const name = target?.trim();
+    if (!name) return;
+    const planets = ['MERCURY', 'VENUS', 'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE', 'PLUTO', 'SUN', 'MOON'];
+    if (planets.includes(name.toUpperCase())) return;
+
+    this.simbadLoading.set(true);
+    this.http.get<any>(`${this.simbadApi}/coordinates`, { params: { object: name } }).subscribe({
+      next: (data) => {
+        if (data && data.raRad != null && data.decRad != null) {
+          this.lofar.anadirX = data.raRad.toString();
+          this.lofar.anadirY = data.decRad.toString();
+          this.lofar.anadirSystem = 'J2000';
+        }
+        this.simbadLoading.set(false);
+      },
+      error: () => this.simbadLoading.set(false)
+    });
   }
 
   isPlanetSystem(): boolean {
