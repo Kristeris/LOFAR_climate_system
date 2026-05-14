@@ -451,6 +451,20 @@
             <span class="filter-dot filter-dot--past"></span> Past
           </label>
         </div>
+        <div class="filter-group">
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowSuccess()" (change)="filterShowSuccess.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--success"></span> Success
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowFailure()" (change)="filterShowFailure.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--failure"></span> Failure
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [checked]="filterShowUnknown()" (change)="filterShowUnknown.set(($any($event.target).checked))" />
+            <span class="filter-dot filter-dot--unknown"></span> Unknown
+          </label>
+        </div>
       </div>
     }
     @if (currentPosts().length > 0) {
@@ -602,7 +616,9 @@
         <div class="status-header status-header--past">⚪ Past</div>
         <div class="posts-list">
           @for (post of pastPosts(); track post.id) {
-            <div class="post-card">
+            <div class="post-card"
+                 [class.post-success]="post.outcomeStatus === 'SUCCESS'"
+                 [class.post-failure]="post.outcomeStatus === 'FAILURE'">
               <h3 class="post-title">{{ post.title }}</h3>
               <div class="post-dates">
                 <span class="post-date-label">Start:</span>

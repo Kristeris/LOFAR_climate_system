@@ -287,6 +287,9 @@
 .filter-dot--current { background: #51cf66; }
 .filter-dot--future  { background: #4dabf7; }
 .filter-dot--past    { background: #adb5bd; }
+.filter-dot--success { background: #51cf66; }
+.filter-dot--failure { background: #ff6b6b; }
+.filter-dot--unknown { background: #868e96; }
 
 .post-card {
   background: white;
@@ -304,6 +307,14 @@
 .post-card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
+}
+
+.post-success {
+  border-left: 4px solid #51cf66;
+}
+
+.post-failure {
+  border-left: 4px solid #ff6b6b;
 }
 
 .post-title {

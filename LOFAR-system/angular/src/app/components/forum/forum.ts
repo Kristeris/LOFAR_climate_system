@@ -151,6 +151,9 @@ lofar: LofarObsFields = {
   filterShowCurrent = signal(true);
   filterShowFuture  = signal(true);
   filterShowPast    = signal(true);
+  filterShowSuccess = signal(true);
+  filterShowFailure = signal(true);
+  filterShowUnknown = signal(true);
 
   uniqueUsers  = computed(() => [...new Set(this.posts().map(p => p.authorUsername))].sort());
 
@@ -161,7 +164,14 @@ lofar: LofarObsFields = {
         (p.status === 'CURRENT' && this.filterShowCurrent()) ||
         (p.status === 'FUTURE'  && this.filterShowFuture()) ||
         (p.status === 'PAST'    && this.filterShowPast());
-      return userMatch && statusMatch;
+      if (!userMatch || !statusMatch) return false;
+      if (p.status === 'PAST') {
+        const outcome = p.outcomeStatus;
+        if (outcome === 'SUCCESS' && !this.filterShowSuccess()) return false;
+        if (outcome === 'FAILURE' && !this.filterShowFailure()) return false;
+        if ((!outcome || outcome === 'UNKNOWN') && !this.filterShowUnknown()) return false;
+      }
+      return true;
     });
   });
 

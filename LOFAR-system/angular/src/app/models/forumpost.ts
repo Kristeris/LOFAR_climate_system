@@ -18,4 +18,5 @@ export interface ForumPost {
   status?: string;
   commentCount?: number;
   comments?: ForumComment[];
+  outcomeStatus?: string;
 }

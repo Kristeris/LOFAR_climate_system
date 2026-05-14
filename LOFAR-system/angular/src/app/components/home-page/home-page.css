@@ -59,6 +59,14 @@
   transform: translateY(-2px);
 }
 
+.post-box.post-success {
+  border-left: 4px solid #51cf66;
+}
+
+.post-box.post-failure {
+  border-left: 4px solid #ff6b6b;
+}
+
 .post-title {
   font-size: 14px;
   font-weight: 700;

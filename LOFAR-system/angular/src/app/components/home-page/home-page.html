@@ -11,7 +11,9 @@
   } @else {
     <div class="posts-grid">
       @for (post of posts(); track post.id) {
-        <div class="post-box">
+        <div class="post-box"
+             [class.post-success]="post.status === 'PAST' && post.outcomeStatus === 'SUCCESS'"
+             [class.post-failure]="post.status === 'PAST' && post.outcomeStatus === 'FAILURE'">
           <h3 class="post-title">{{ post.title }}</h3>
           <div class="post-dates">
             <span class="post-date-label">Start:</span>
