@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
-import { ForumPost } from '../../models/forumpost';
+import { ForumPost, ForumComment } from '../../models/forumpost';
 import { calculateBeamletsFromForum } from '../../services/sub-band.js';
 
 export type PostPreset = 'simple' | 'lofar';
@@ -166,6 +166,10 @@ lofar: LofarObsFields = {
   currentPosts = computed(() => this.filteredPosts().filter(p => p.status === 'CURRENT'));
   futurePosts  = computed(() => this.filteredPosts().filter(p => p.status === 'FUTURE'));
   pastPosts    = computed(() => this.filteredPosts().filter(p => p.status === 'PAST'));
+
+  /** Comments */
+  expandedPostId = signal<number | null>(null);
+  commentInput = signal('');
 
   private readonly apiBase = 'http://localhost:8080/api/forum';
 
@@ -475,6 +479,50 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
     this.http.delete(`${this.apiBase}/${id}`, { params: { reason: reason || '' } }).subscribe({
       next: () => this.loadPosts(),
       error: () => this.error.set('Failed to delete post.')
+    });
+  }
+
+  // ── Comments ─────────────────────────────────────────────────
+
+  toggleComments(post: ForumPost): void {
+    if (this.expandedPostId() === post.id) {
+      this.expandedPostId.set(null);
+      return;
+    }
+    this.expandedPostId.set(post.id);
+    this.commentInput.set('');
+    this.loadComments(post);
+  }
+
+  loadComments(post: ForumPost): void {
+    this.http.get<ForumComment[]>(`${this.apiBase}/${post.id}/comments`).subscribe({
+      next: (data) => {
+        post.comments = data;
+        post.commentCount = data.length;
+      }
+    });
+  }
+
+  addComment(postId: number): void {
+    const text = this.commentInput().trim();
+    if (!text) return;
+    this.commentInput.set('');
+    this.http.post<ForumComment>(`${this.apiBase}/${postId}/comments`, { content: text }).subscribe({
+      next: () => {
+        const post = this.posts().find(p => p.id === postId);
+        if (post) this.loadComments(post);
+      },
+      error: (err) => this.error.set(err.error?.error ?? 'Failed to add comment.')
+    });
+  }
+
+  deleteComment(postId: number, commentId: number): void {
+    this.http.delete(`${this.apiBase}/${postId}/comments/${commentId}`).subscribe({
+      next: () => {
+        const post = this.posts().find(p => p.id === postId);
+        if (post) this.loadComments(post);
+      },
+      error: (err) => this.error.set(err.error?.error ?? 'Failed to delete comment.')
     });
   }
 

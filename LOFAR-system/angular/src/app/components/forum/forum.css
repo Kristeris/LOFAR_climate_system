@@ -396,6 +396,136 @@
   overflow-y: auto;
 }
 
+/* ---- Post actions ---- */
+.post-actions {
+  margin-top: 4px;
+}
+
+.comment-btn {
+  background: none;
+  border: 1px solid #dee2e6;
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #868e96;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comment-btn:hover {
+  background: #e7f5ff;
+  border-color: #4dabf7;
+  color: #1971c2;
+}
+
+/* ---- Comments section ---- */
+.comments-section {
+  border-top: 1px solid #e9ecef;
+  margin-top: 8px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.comment-author {
+  font-size: 11px;
+  color: #495057;
+}
+
+.comment-text {
+  color: #1a252f;
+  line-height: 1.4;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.comment-time {
+  font-size: 10px;
+  color: #adb5bd;
+}
+
+.comment-delete {
+  background: none;
+  border: none;
+  font-size: 10px;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  padding: 0 2px;
+}
+
+.comment-delete:hover {
+  opacity: 1;
+}
+
+.comment-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #1a252f;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+}
+
+.comment-post-btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: #4dabf7;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.comment-post-btn:hover {
+  background: #339af0;
+}
+
+.comment-post-btn:disabled {
+  background: #ced4da;
+  cursor: not-allowed;
+}
+
 .btn-edit-time,
 .btn-delete {
   background: none;

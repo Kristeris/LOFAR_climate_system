@@ -1,3 +1,11 @@
+export interface ForumComment {
+  id: number;
+  postId: number;
+  authorUsername: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface ForumPost {
   id: number;
   title: string;
@@ -8,4 +16,6 @@ export interface ForumPost {
   scheduledDateTime: string | null;
   durationSeconds?: number;
   status?: string;
+  commentCount?: number;
+  comments?: ForumComment[];
 }

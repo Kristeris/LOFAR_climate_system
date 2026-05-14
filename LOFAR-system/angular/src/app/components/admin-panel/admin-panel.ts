@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -36,6 +36,16 @@ export class AdminPanel implements OnInit {
   userHours = signal<UserHourInfo[]>([]);
   loadingUserHours = signal<boolean>(false);
 
+  /** Log viewer */
+  logTab = signal<'app' | 'errors'>('app');
+  appLogLines = signal<string[]>([]);
+  errorLogLines = signal<string[]>([]);
+  loadingLogs = signal<boolean>(false);
+  logError = signal<string | null>(null);
+  private logPollTimer: ReturnType<typeof setInterval> | null = null;
+
+  logViewer = viewChild<ElementRef<HTMLPreElement>>('logViewer');
+
   private readonly apiBase = 'http://localhost:8080/api/admin';
 
   constructor(
@@ -49,6 +59,12 @@ export class AdminPanel implements OnInit {
     });
     this.fetchSchedulerStatus();
     this.fetchUserHours();
+    this.fetchLogs();
+    this.startLogPolling();
+  }
+
+  ngOnDestroy(): void {
+    this.stopLogPolling();
   }
 
   fetchUserHours(): void {
@@ -170,6 +186,56 @@ export class AdminPanel implements OnInit {
     a.download = `${user.username}_${user.yearMonth}_stats.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  fetchLogs(): void {
+    this.loadingLogs.set(true);
+    this.logError.set(null);
+    const tab = this.logTab();
+    this.http.get<{ lines: string[] }>(`${this.apiBase}/logs/${tab}?lines=200`).subscribe({
+      next: (data) => {
+        if (tab === 'app') {
+          this.appLogLines.set(data.lines);
+        } else {
+          this.errorLogLines.set(data.lines);
+        }
+        this.loadingLogs.set(false);
+        this.scrollLogToBottom();
+      },
+      error: () => {
+        this.logError.set('Failed to fetch logs.');
+        this.loadingLogs.set(false);
+      }
+    });
+  }
+
+  switchLogTab(tab: 'app' | 'errors'): void {
+    this.logTab.set(tab);
+    this.fetchLogs();
+  }
+
+  downloadLog(): void {
+    const a = document.createElement('a');
+    a.href = `${this.apiBase}/logs/app/download`;
+    a.download = this.logTab() === 'app' ? 'lofar-system.log' : 'lofar-system-error.log';
+    a.click();
+  }
+
+  private startLogPolling(): void {
+    this.logPollTimer = setInterval(() => this.fetchLogs(), 5000);
+  }
+
+  private stopLogPolling(): void {
+    if (this.logPollTimer) {
+      clearInterval(this.logPollTimer);
+      this.logPollTimer = null;
+    }
+  }
+
+  private scrollLogToBottom(): void {
+    setTimeout(() => {
+      this.logViewer()?.nativeElement?.scrollTo({ top: this.logViewer()!.nativeElement.scrollHeight, behavior: 'smooth' });
+    }, 50);
   }
 
   private showStatus(msg: string, isError: boolean): void {

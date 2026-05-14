@@ -197,4 +197,50 @@
 
   </details>
 
+  <!-- Logs Dropdown -->
+  <details class="dropdown-details">
+    <summary class="dropdown-summary">📋 Logs</summary>
+
+  <div class="section-card">
+    <div class="section-header">
+      <h3>📋 Application logs</h3>
+      <p class="section-desc">
+        Live tail of the backend application logs. Polls every 5 seconds.
+      </p>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="log-tabs">
+      <button class="log-tab" [class.log-tab--active]="logTab() === 'app'" (click)="switchLogTab('app')">App Log</button>
+      <button class="log-tab" [class.log-tab--active]="logTab() === 'errors'" (click)="switchLogTab('errors')">Error Log</button>
+    </div>
+
+    <!-- Control row -->
+    <div class="control-row">
+      <button class="control-btn btn-trigger" (click)="fetchLogs()" [disabled]="loadingLogs()">
+        <span class="btn-icon">🔄</span>
+        Refresh
+      </button>
+      <button class="control-btn btn-download-log" (click)="downloadLog()">
+        <span class="btn-icon">⬇</span>
+        Download
+      </button>
+      @if (loadingLogs()) {
+        <span class="log-loading-text">Loading...</span>
+      }
+    </div>
+
+    <!-- Log viewer -->
+    @if (logError()) {
+      <div class="log-error">{{ logError() }}</div>
+    }
+    <pre #logViewer class="log-viewer">
+      @for (line of (logTab() === 'app' ? appLogLines() : errorLogLines()); track $index) {
+        <span class="log-line">{{ line }}</span>
+      }
+    </pre>
+  </div>
+
+  </details>
+
 </div>

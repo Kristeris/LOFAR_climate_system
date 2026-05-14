@@ -476,6 +476,31 @@
                   <pre class="admin-commands-content">{{ post.content }}</pre>
                 </details>
               }
+              <div class="post-actions">
+                <button class="comment-btn" (click)="toggleComments(post)">
+                  💬 {{ post.commentCount || 0 }}
+                </button>
+              </div>
+              @if (expandedPostId() === post.id) {
+                <div class="comments-section">
+                  @for (comment of post.comments; track comment.id) {
+                    <div class="comment">
+                      <strong class="comment-author">{{ comment.authorUsername }}</strong>
+                      <span class="comment-text">{{ comment.content }}</span>
+                      <div class="comment-meta">
+                        <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+                        @if (comment.authorUsername === auth.currentUser()?.username || auth.isAdmin()) {
+                          <button class="comment-delete" (click)="deleteComment(post.id, comment.id)" title="Delete comment">🗑️</button>
+                        }
+                      </div>
+                    </div>
+                  }
+                  <div class="comment-input-row">
+                    <input class="comment-input" [(ngModel)]="commentInput" (keyup.enter)="addComment(post.id)" placeholder="Write a comment..." maxlength="2000" />
+                    <button class="comment-post-btn" (click)="addComment(post.id)" [disabled]="!commentInput().trim()">Post</button>
+                  </div>
+                </div>
+              }
               @if (editingTimeId === post.id) {
                 <div class="edit-time-form">
                   <label>New scheduled time:</label>
@@ -523,6 +548,31 @@
                   <pre class="admin-commands-content">{{ post.content }}</pre>
                 </details>
               }
+              <div class="post-actions">
+                <button class="comment-btn" (click)="toggleComments(post)">
+                  💬 {{ post.commentCount || 0 }}
+                </button>
+              </div>
+              @if (expandedPostId() === post.id) {
+                <div class="comments-section">
+                  @for (comment of post.comments; track comment.id) {
+                    <div class="comment">
+                      <strong class="comment-author">{{ comment.authorUsername }}</strong>
+                      <span class="comment-text">{{ comment.content }}</span>
+                      <div class="comment-meta">
+                        <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+                        @if (comment.authorUsername === auth.currentUser()?.username || auth.isAdmin()) {
+                          <button class="comment-delete" (click)="deleteComment(post.id, comment.id)" title="Delete comment">🗑️</button>
+                        }
+                      </div>
+                    </div>
+                  }
+                  <div class="comment-input-row">
+                    <input class="comment-input" [(ngModel)]="commentInput" (keyup.enter)="addComment(post.id)" placeholder="Write a comment..." maxlength="2000" />
+                    <button class="comment-post-btn" (click)="addComment(post.id)" [disabled]="!commentInput().trim()">Post</button>
+                  </div>
+                </div>
+              }
               @if (editingTimeId === post.id) {
                 <div class="edit-time-form">
                   <label>New scheduled time:</label>
@@ -569,6 +619,31 @@
                   <summary class="admin-commands-summary">📋 View Commands</summary>
                   <pre class="admin-commands-content">{{ post.content }}</pre>
                 </details>
+              }
+              <div class="post-actions">
+                <button class="comment-btn" (click)="toggleComments(post)">
+                  💬 {{ post.commentCount || 0 }}
+                </button>
+              </div>
+              @if (expandedPostId() === post.id) {
+                <div class="comments-section">
+                  @for (comment of post.comments; track comment.id) {
+                    <div class="comment">
+                      <strong class="comment-author">{{ comment.authorUsername }}</strong>
+                      <span class="comment-text">{{ comment.content }}</span>
+                      <div class="comment-meta">
+                        <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+                        @if (comment.authorUsername === auth.currentUser()?.username || auth.isAdmin()) {
+                          <button class="comment-delete" (click)="deleteComment(post.id, comment.id)" title="Delete comment">🗑️</button>
+                        }
+                      </div>
+                    </div>
+                  }
+                  <div class="comment-input-row">
+                    <input class="comment-input" [(ngModel)]="commentInput" (keyup.enter)="addComment(post.id)" placeholder="Write a comment..." maxlength="2000" />
+                    <button class="comment-post-btn" (click)="addComment(post.id)" [disabled]="!commentInput().trim()">Post</button>
+                  </div>
+                </div>
               }
               @if (editingTimeId === post.id) {
                 <div class="edit-time-form">
