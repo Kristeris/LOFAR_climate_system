@@ -193,7 +193,58 @@ public class EmailService {
             logger.error("Failed to send conflict rejection e-mail to {}: {}", toEmail, e.getMessage(), e);
         }
     }
- 
+
+    // ---------------------------------------------------------------
+    //  Post deleted by admin
+    // ---------------------------------------------------------------
+
+    /**
+     * Notifies a post author that an admin has deleted their forum post.
+     */
+    public void sendPostDeletedNotification(
+            String toEmail,
+            String username,
+            String postTitle,
+            LocalDateTime scheduledStart,
+            String adminReason) {
+
+        if (toEmail == null || toEmail.isBlank()) {
+            logger.warn("Post-deleted notification skipped — no e-mail for user '{}'", username);
+            return;
+        }
+        try {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setFrom(fromAddress);
+            msg.setTo(toEmail);
+            msg.setSubject("LOFAR Observation Deleted — " + postTitle);
+
+            StringBuilder body = new StringBuilder();
+            body.append("Hello ").append(username).append(",\n\n");
+            body.append("An administrator has deleted your observation post:\n\n");
+            body.append("  Title : ").append(postTitle).append("\n");
+
+            if (scheduledStart != null) {
+                body.append("  Scheduled start : ")
+                    .append(scheduledStart.format(DISPLAY_FMT)).append("\n");
+            }
+
+            if (adminReason != null && !adminReason.isBlank()) {
+                body.append("\nAdmin comment:\n  \"").append(adminReason.trim()).append("\"\n");
+            }
+
+            body.append("\nIf you have questions, please contact your administrator.\n\n");
+            body.append("You can schedule a new observation at:\n");
+            body.append("http://localhost:4200/forum\n\n");
+            body.append("— LOFAR Climate System");
+
+            msg.setText(body.toString());
+            mailSender.send(msg);
+            logger.info("Post-deleted notification sent to {} for post '{}'", toEmail, postTitle);
+        } catch (Exception e) {
+            logger.error("Failed to send post-deleted notification to {}: {}",
+                toEmail, e.getMessage(), e);
+        }
+    }
     // ---------------------------------------------------------------
     //  Welcome / Registration
     // ---------------------------------------------------------------

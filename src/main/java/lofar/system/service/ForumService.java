@@ -115,14 +115,30 @@ public class ForumService {
     public void deletePost(Long id, String reason) {
         ForumPost post = forumRepo.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Post not found: " + id));
- 
+
         logger.info("Deleting post {} ('{}') — reason: '{}', calendarId: {}",
             id, post.getTitle(), reason != null ? reason : "not provided",
             post.getGoogleCalendarEventId());
- 
+
+        // Capture author details before deletion
+        MyUser author = post.getAuthor();
+        String postTitle = post.getTitle();
+        LocalDateTime scheduledStart = post.getScheduledDateTime();
+
         calendarService.deleteCalendarEvent(post.getGoogleCalendarEventId());
         forumRepo.deleteById(id);
         logger.info("Post {} deleted successfully", id);
+
+        // Notify the author by e-mail (after deletion so DB is clean)
+        if (author != null && author.getEmail() != null && !author.getEmail().isBlank()) {
+            emailService.sendPostDeletedNotification(
+                author.getEmail(),
+                author.getUsername(),
+                postTitle,
+                scheduledStart,
+                reason
+            );
+        }
     }
  
     public void deletePost(Long id) { deletePost(id, null); }
