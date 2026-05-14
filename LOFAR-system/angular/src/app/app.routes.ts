@@ -12,6 +12,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { Role } from './models/role';
 import { NohupMonitorComponent } from './components/nohup-monitor/nohup-monitor.component';
 import { HomePage } from './components/home-page/home-page';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
 
 export const routes: Routes = [
   // Public
@@ -26,6 +27,12 @@ export const routes: Routes = [
     component: HomePage,
     canActivate: [AuthGuard],
     data: { roles: [Role.User], title: 'Home' }
+  },
+  {
+    path: 'home/post/:id',
+    component: PostDetailComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.User], title: 'Post Detail' }
   },
 
   // Authenticated (USER + ADMIN)

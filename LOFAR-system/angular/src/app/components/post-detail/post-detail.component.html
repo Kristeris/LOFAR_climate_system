@@ -1,0 +1,139 @@
+<div class="detail-container">
+  <a routerLink="/home" class="back-link">← Back to Home</a>
+
+  @if (loading()) {
+    <div class="detail-loading">Loading…</div>
+  } @else if (post()) {
+    @let p = post()!;
+    @let o = outcome();
+
+    <div class="detail-header">
+      <h2>{{ p.title }}</h2>
+      @if (p.status === 'CURRENT') {
+        <span class="outcome-badge badge-current">🟢 Current</span>
+      } @else if (p.status === 'FUTURE') {
+        <span class="outcome-badge badge-future">🔵 Future</span>
+      } @else {
+        <span class="outcome-badge"
+              [class.badge-success]="o?.status === 'SUCCESS'"
+              [class.badge-failure]="o?.status === 'FAILURE'"
+              [class.badge-unknown]="!o?.status || o?.status === 'UNKNOWN'">
+          {{ o?.status || 'UNKNOWN' }}
+        </span>
+      }
+    </div>
+
+    <div class="detail-meta">
+      <div class="meta-row">
+        <span class="meta-label">Start:</span>
+        <span class="meta-value">{{ formatDate(p.scheduledDateTime!) }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">End:</span>
+        <span class="meta-value">{{ formatEndDate(p) }}</span>
+      </div>
+      @if (p.anadirX != null && p.anadirY != null) {
+        <div class="meta-row">
+          <span class="meta-label">Coordinates:</span>
+          <span class="meta-value">RA {{ p.anadirX }}, Dec {{ p.anadirY }} ({{ p.anadirSystem || 'J2000' }})</span>
+        </div>
+      }
+      @if (p.status === 'CURRENT') {
+        <div class="meta-row">
+          <span class="meta-label">Progress:</span>
+          <span class="meta-value">{{ progressPercent() }}%</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Duration:</span>
+          <span class="meta-value">{{ formatDuration(p.durationSeconds) }}</span>
+        </div>
+      }
+      @if (p.status === 'FUTURE') {
+        <div class="meta-row">
+          <span class="meta-label">Countdown:</span>
+          <span class="meta-value">{{ timeUntilStart(p) }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Duration:</span>
+          <span class="meta-value">{{ formatDuration(p.durationSeconds) }}</span>
+        </div>
+      }
+      @if (p.status === 'PAST' && o?.summary) {
+        <div class="meta-row">
+          <span class="meta-label">Summary:</span>
+          <span class="meta-value">{{ o!.summary }}</span>
+        </div>
+      }
+    </div>
+
+    @if (p.status === 'CURRENT') {
+      <div class="progress-bar-track detail-progress">
+        <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+
+      <div class="graphs-section">
+        <h3>📊 Live Observation Statistics</h3>
+        <div class="graphs-row">
+          <div class="chart-wrapper">
+            <div class="chart-title">📊 Live Volume vs Dropped by Kernel</div>
+            <div id="volumeChart" class="chart-box"></div>
+          </div>
+          <div class="chart-wrapper">
+            <div class="chart-title">📈 Live Packet Miss Rate</div>
+            <div id="missChart" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logs-section">
+        <h3>📋 Live Terminal</h3>
+        <pre class="log-viewer live-terminal">@for (line of liveTerminalLines(); track $index) {
+<span class="log-line">{{ line }}</span>
+}</pre>
+      </div>
+    }
+
+    @if (p.status === 'FUTURE') {
+      <div class="commands-section">
+        <h3>📋 Generated Command Preview</h3>
+        <pre class="commands-viewer">{{ p.content }}</pre>
+      </div>
+    }
+
+    @if (p.status === 'PAST' && o && (o.totalGb != null || o.missedPercent != null)) {
+      <div class="graphs-section">
+        <h3>📊 Observation Statistics</h3>
+        <div class="graphs-row">
+          <div class="chart-wrapper">
+            <div class="chart-title">📊 Total Volume vs Dropped by Kernel</div>
+            <div id="volumeChart" class="chart-box"></div>
+          </div>
+          <div class="chart-wrapper">
+            <div class="chart-title">📈 Packet Miss Rate</div>
+            <div id="missChart" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (p.status === 'PAST' && last5Logs().length > 0) {
+      <div class="logs-section">
+        <h3>📋 Last 5 Log Lines</h3>
+        <pre class="log-viewer">@for (line of last5Logs(); track $index) {
+<span class="log-line">{{ line }}</span>
+}</pre>
+      </div>
+    }
+
+    @if (p.status === 'PAST') {
+      <div class="detail-actions">
+        <button class="action-btn btn-download-log" (click)="downloadLogs()">
+          ⬇ Download Logs
+        </button>
+        <button class="action-btn btn-download-graph" (click)="downloadGraphs()">
+          📊 Download Graphs
+        </button>
+      </div>
+    }
+  }
+</div>

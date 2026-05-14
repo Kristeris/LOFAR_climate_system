@@ -12,8 +12,10 @@
     <div class="posts-grid">
       @for (post of posts(); track post.id) {
         <div class="post-box"
+             [class.post-clickable]="true"
              [class.post-success]="post.status === 'PAST' && post.outcomeStatus === 'SUCCESS'"
-             [class.post-failure]="post.status === 'PAST' && post.outcomeStatus === 'FAILURE'">
+             [class.post-failure]="post.status === 'PAST' && post.outcomeStatus === 'FAILURE'"
+             (click)="openModal(post)">
           <h3 class="post-title">{{ post.title }}</h3>
           <div class="post-dates">
             <span class="post-date-label">Start:</span>
@@ -28,3 +30,95 @@
     </div>
   }
 </div>
+
+<!-- Modal overlay -->
+@if (selectedPost()) {
+  @let p = selectedPost()!;
+  @let o = selectedOutcome();
+
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModal()">✕</button>
+
+      <div class="modal-header">
+        <h3>{{ p.title }}</h3>
+        @if (p.status === 'CURRENT') {
+          <span class="outcome-badge badge-current">🟢 Current</span>
+        } @else if (p.status === 'FUTURE') {
+          <span class="outcome-badge badge-future">🔵 Future</span>
+        } @else {
+          <span class="outcome-badge"
+                [class.badge-success]="o?.status === 'SUCCESS'"
+                [class.badge-failure]="o?.status === 'FAILURE'"
+                [class.badge-unknown]="!o?.status || o?.status === 'UNKNOWN'">
+            {{ o?.status || 'UNKNOWN' }}
+          </span>
+        }
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-row">
+          <span class="modal-label">Start:</span>
+          <span class="modal-value">{{ p.scheduledDateTime ? formatDate(p.scheduledDateTime) : formatDate(p.createdAt) }}</span>
+        </div>
+        <div class="modal-row">
+          <span class="modal-label">End:</span>
+          <span class="modal-value">{{ formatEndDate(p) }}</span>
+        </div>
+        @if (p.anadirX != null && p.anadirY != null) {
+          <div class="modal-row">
+            <span class="modal-label">Coordinates:</span>
+            <span class="modal-value">RA {{ p.anadirX }}, Dec {{ p.anadirY }} ({{ p.anadirSystem || 'J2000' }})</span>
+          </div>
+        }
+        @if (p.status === 'CURRENT') {
+          <div class="modal-row">
+            <span class="modal-label">Progress:</span>
+            <span class="modal-value">{{ progressPercent(p) }}%</span>
+          </div>
+          <div class="modal-row">
+            <span class="modal-label">Duration:</span>
+            <span class="modal-value">{{ formatDuration(p.durationSeconds) }}</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="progressPercent(p)"></div>
+          </div>
+        }
+        @if (p.status === 'FUTURE') {
+          <div class="modal-row">
+            <span class="modal-label">Countdown:</span>
+            <span class="modal-value">{{ timeUntilStart(p) }}</span>
+          </div>
+          <div class="modal-row">
+            <span class="modal-label">Duration:</span>
+            <span class="modal-value">{{ formatDuration(p.durationSeconds) }}</span>
+          </div>
+        }
+        @if (p.status === 'PAST' && o?.summary) {
+          <div class="modal-row">
+            <span class="modal-label">Summary:</span>
+            <span class="modal-value">{{ o!.summary }}</span>
+          </div>
+        }
+        @if (p.status === 'PAST' && o && o.totalGb != null) {
+          <div class="modal-row">
+            <span class="modal-label">Volume:</span>
+            <span class="modal-value">{{ o.totalGb }} GB</span>
+          </div>
+        }
+        @if (p.status === 'PAST' && o && o.missedPercent != null) {
+          <div class="modal-row">
+            <span class="modal-label">Missed:</span>
+            <span class="modal-value">{{ o.missedPercent }} %</span>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn btn-detail" (click)="goToDetail(p.id)">
+          {{ p.status === 'FUTURE' ? '📋 View Commands' : '📊 View Full Details' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -19,4 +19,7 @@ export interface ForumPost {
   commentCount?: number;
   comments?: ForumComment[];
   outcomeStatus?: string;
+  anadirX?: number;
+  anadirY?: number;
+  anadirSystem?: string;
 }
