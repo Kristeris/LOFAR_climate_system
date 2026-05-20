@@ -54,9 +54,41 @@
 
     @if (pastPosts().length > 0) {
       <div class="status-section">
-        <div class="status-header status-header--past">⚪ Past</div>
+        <div class="status-header status-header--past">
+          <span>⚪ Past</span>
+          <span class="filter-group">
+            <label class="filter-label" for="pastStatus">Status</label>
+            <select id="pastStatus" class="filter-select" (change)="onPastStatusFilterChange($event)">
+              <option value="all"     [selected]="pastStatusFilter() === 'all'">All</option>
+              <option value="success" [selected]="pastStatusFilter() === 'success'">Successful</option>
+              <option value="failure" [selected]="pastStatusFilter() === 'failure'">Unsuccessful</option>
+            </select>
+
+            <label class="filter-label" for="pastTime">Period</label>
+            <select id="pastTime" class="filter-select" (change)="onPastTimeFilterChange($event)">
+              <option value="all"    [selected]="pastTimeFilter() === 'all'">All time</option>
+              <option value="7days"  [selected]="pastTimeFilter() === '7days'">Last 7 days</option>
+              <option value="30days" [selected]="pastTimeFilter() === '30days'">Last 30 days</option>
+              <option value="90days" [selected]="pastTimeFilter() === '90days'">Last 90 days</option>
+              <option value="year"   [selected]="pastTimeFilter() === 'year'">This year</option>
+            </select>
+
+            <label class="filter-label" for="pastSort">Sort</label>
+            <select id="pastSort" class="filter-select" (change)="onPastSortOrderChange($event)">
+              <option value="desc" [selected]="pastSortOrder() === 'desc'">Newest</option>
+              <option value="asc"  [selected]="pastSortOrder() === 'asc'">Oldest</option>
+            </select>
+
+            <label class="filter-label" for="pastPageSize">Show</label>
+            <select id="pastPageSize" class="filter-select" (change)="onPastPageSizeChange($event)">
+              <option value="5"  [selected]="pastPageSize() === 5">5</option>
+              <option value="10" [selected]="pastPageSize() === 10">10</option>
+              <option value="25" [selected]="pastPageSize() === 25">25</option>
+            </select>
+          </span>
+        </div>
         <div class="posts-grid">
-          @for (post of pastPosts(); track post.id) {
+          @for (post of paginatedPastPosts(); track post.id) {
             <div class="post-box post-clickable"
                  [class.post-success]="post.outcomeStatus === 'SUCCESS'"
                  [class.post-failure]="post.outcomeStatus === 'FAILURE'"
@@ -73,6 +105,19 @@
             </div>
           }
         </div>
+        @if (totalPastPages() > 1) {
+          <div class="pagination-bar">
+            <button class="pagination-btn" (click)="prevPastPage()" [disabled]="pastCurrentPage() === 1">Prev</button>
+            <div class="pagination-pages">
+              @for (page of [].constructor(totalPastPages()); track $index) {
+                <button class="pagination-btn pagination-page"
+                        [class.pagination-page--active]="pastCurrentPage() === $index + 1"
+                        (click)="goToPastPage($index + 1)">{{ $index + 1 }}</button>
+              }
+            </div>
+            <button class="pagination-btn" (click)="nextPastPage()" [disabled]="pastCurrentPage() === totalPastPages()">Next</button>
+          </div>
+        }
       </div>
     }
 

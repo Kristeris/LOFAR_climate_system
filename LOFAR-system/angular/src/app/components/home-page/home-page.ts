@@ -27,6 +27,59 @@ export class HomePage implements OnInit {
   futurePosts  = computed(() => this.posts().filter(p => p.status === 'FUTURE'));
   pastPosts    = computed(() => this.posts().filter(p => p.status === 'PAST'));
 
+  pastPageSize = signal<number>(10);
+  pastCurrentPage = signal<number>(1);
+  pastStatusFilter = signal<string>('all');
+  pastTimeFilter = signal<string>('all');
+  pastSortOrder = signal<string>('desc');
+
+  filteredPastPosts = computed(() => {
+    let result = this.pastPosts();
+
+    const status = this.pastStatusFilter();
+    if (status === 'success') {
+      result = result.filter(p => p.outcomeStatus === 'SUCCESS');
+    } else if (status === 'failure') {
+      result = result.filter(p => p.outcomeStatus !== 'SUCCESS');
+    }
+
+    const period = this.pastTimeFilter();
+    if (period !== 'all') {
+      const now = Date.now();
+      const cutoffs: Record<string, number> = {
+        '7days': 7 * 86400000,
+        '30days': 30 * 86400000,
+        '90days': 90 * 86400000,
+        'year': 365 * 86400000,
+      };
+      const cutoff = cutoffs[period];
+      result = result.filter(p => {
+        const date = p.scheduledDateTime
+          ? new Date(p.scheduledDateTime).getTime()
+          : new Date(p.createdAt).getTime();
+        return (now - date) <= cutoff;
+      });
+    }
+
+    result = [...result].sort((a, b) => {
+      const dateA = a.scheduledDateTime
+        ? new Date(a.scheduledDateTime).getTime()
+        : new Date(a.createdAt).getTime();
+      const dateB = b.scheduledDateTime
+        ? new Date(b.scheduledDateTime).getTime()
+        : new Date(b.createdAt).getTime();
+      return this.pastSortOrder() === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+
+    return result;
+  });
+
+  totalPastPages = computed(() => Math.max(1, Math.ceil(this.filteredPastPosts().length / this.pastPageSize())));
+  paginatedPastPosts = computed(() => {
+    const start = (this.pastCurrentPage() - 1) * this.pastPageSize();
+    return this.filteredPastPosts().slice(start, start + this.pastPageSize());
+  });
+
   /** Modal state */
   selectedPost = signal<ForumPost | null>(null);
   selectedOutcome = signal<OutcomeData | null>(null);
@@ -116,6 +169,39 @@ export class HomePage implements OnInit {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
+  }
+
+  onPastPageSizeChange(event: Event): void {
+    const value = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.pastPageSize.set(value);
+    this.pastCurrentPage.set(1);
+  }
+
+  goToPastPage(page: number): void {
+    this.pastCurrentPage.set(page);
+  }
+
+  prevPastPage(): void {
+    if (this.pastCurrentPage() > 1) this.pastCurrentPage.update(p => p - 1);
+  }
+
+  nextPastPage(): void {
+    if (this.pastCurrentPage() < this.totalPastPages()) this.pastCurrentPage.update(p => p + 1);
+  }
+
+  onPastStatusFilterChange(event: Event): void {
+    this.pastStatusFilter.set((event.target as HTMLSelectElement).value);
+    this.pastCurrentPage.set(1);
+  }
+
+  onPastTimeFilterChange(event: Event): void {
+    this.pastTimeFilter.set((event.target as HTMLSelectElement).value);
+    this.pastCurrentPage.set(1);
+  }
+
+  onPastSortOrderChange(event: Event): void {
+    this.pastSortOrder.set((event.target as HTMLSelectElement).value);
+    this.pastCurrentPage.set(1);
   }
 
   formatEndDate(post: ForumPost): string {
