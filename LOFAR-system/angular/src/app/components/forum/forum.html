@@ -198,7 +198,16 @@
                 <div class="lofar-row">
                   <div class="lofar-field lofar-field--wide">
                     <label title="Directory path to cd to before running dump_udp_ow">DRU path (cd …)</label>
-                    <input type="text" [(ngModel)]="lofar.druPath" placeholder="/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter" title="Directory path to cd to before running dump_udp_ow" />
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                      <input type="text" [(ngModel)]="lofar.druPath" (ngModelChange)="onDruPathChange()" placeholder="/mnt/LOFAR0/pulsars/dump_udp_ow/jupiter" title="Directory path to cd to before running dump_udp_ow" style="flex: 1;" />
+                      @if (druPathStatus() === 'checking') {
+                        <span class="spinner-sm" title="Checking..."></span>
+                      } @else if (druPathStatus() === 'valid') {
+                        <span style="color: #51cf66; font-size: 1.2rem; margin-left: 5px;" title="Path exists!">✅</span>
+                      } @else if (druPathStatus() === 'invalid') {
+                        <span style="color: #ff6b6b; font-size: 1.2rem; margin-left: 5px;" title="Path does not exist on the server!">❌</span>
+                      }
+                    </div>
                   </div>
                 </div>
                 <div class="lofar-row">
@@ -407,7 +416,7 @@
           @if (submitting()) {
             <span class="spinner-sm"></span> Publishing…
           } @else {
-            🚀 Publish Post
+            🚀 Publish Submission
           }
         </button>
       </div>

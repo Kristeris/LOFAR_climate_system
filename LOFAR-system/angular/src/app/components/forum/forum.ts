@@ -110,6 +110,27 @@ export class Forum implements OnInit {
 
   // ── LOFAR structured fields ────────────────────────────────────
   druExpanded = true;
+  druPathStatus = signal<'none'|'checking'|'valid'|'invalid'>('none');
+  private pathCheckTimeout: any;
+
+  onDruPathChange(): void {
+    const path = this.lofar.druPath?.trim();
+    if (!path) {
+      this.druPathStatus.set('none');
+      return;
+    }
+    
+    this.druPathStatus.set('checking');
+    if (this.pathCheckTimeout) clearTimeout(this.pathCheckTimeout);
+    
+    this.pathCheckTimeout = setTimeout(() => {
+      this.http.get<{exists: boolean}>(`${this.apiBase}/check-path`, { params: { path } })
+        .subscribe({
+          next: (res) => this.druPathStatus.set(res.exists ? 'valid' : 'invalid'),
+          error: () => this.druPathStatus.set('invalid')
+        });
+    }, 500);
+  }
 
   simbadLoading = signal(false);
 lofar: LofarObsFields = {
@@ -199,6 +220,7 @@ lofar: LofarObsFields = {
     }
     if (preset === 'lofar') {
       this.recalculateBeamlets();
+      this.onDruPathChange();
     }
   }
 
@@ -450,6 +472,14 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
         this.error.set(`Missing required fields: ${missingFields.join(', ')}`);
         return;
       }
+
+      if (this.druPathStatus() === 'invalid') {
+        this.error.set('Submission aborted: DRU path does not exist on the server.');
+        return;
+      } else if (this.druPathStatus() === 'checking') {
+        this.error.set('Still checking DRU path, please wait...');
+        return;
+      }
     }
 
     const bandNum = parseInt(this.lofar.band, 10);
@@ -675,5 +705,6 @@ this.lofar = {
       ],
     };
     this.recalculateBeamlets();
+    this.druPathStatus.set('none');
   }
 }

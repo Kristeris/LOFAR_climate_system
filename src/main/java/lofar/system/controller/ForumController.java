@@ -37,7 +37,13 @@ public class ForumController {
     // ---------------------------------------------------------------
     //  GET list
     // ---------------------------------------------------------------
- 
+
+    @GetMapping("/check-path")
+    public ResponseEntity<?> checkPath(@RequestParam String path) {
+        boolean exists = java.nio.file.Files.exists(java.nio.file.Paths.get(path));
+        return ResponseEntity.ok(Map.of("exists", exists));
+    }
+
     @GetMapping
     public ResponseEntity<List<ForumPostDTO>> getAllPosts(
             Principal principal,
