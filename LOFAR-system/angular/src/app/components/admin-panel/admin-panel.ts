@@ -35,6 +35,7 @@ export class AdminPanel implements OnInit {
   /** User hours tracking */
   userHours = signal<UserHourInfo[]>([]);
   loadingUserHours = signal<boolean>(false);
+  viewingStats = signal<string | null>(null);
 
   /** Log viewer */
   logTab = signal<'app' | 'errors'>('app');
@@ -167,7 +168,28 @@ export class AdminPanel implements OnInit {
   }
 
   downloadUserTxt(user: UserHourInfo): void {
-    const content = [
+    const content = this.generateUserStatsContent(user);
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${user.username}_${user.yearMonth}_stats.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  viewUserStats(user: UserHourInfo): void {
+    const content = this.generateUserStatsContent(user);
+    this.viewingStats.set(content);
+  }
+
+  closeStatsView(): void {
+    this.viewingStats.set(null);
+  }
+
+  private generateUserStatsContent(user: UserHourInfo): string {
+    return [
       `User: ${user.username}`,
       `Month: ${user.yearMonth}`,
       `Total Hours: ${user.totalHours}h`,
@@ -178,14 +200,6 @@ export class AdminPanel implements OnInit {
       `Event Hours: ${user.totalHours} hours`,
       `Number of Events: ${user.eventCount}`,
     ].join('\n');
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${user.username}_${user.yearMonth}_stats.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   fetchLogs(): void {

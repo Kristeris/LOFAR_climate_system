@@ -47,7 +47,6 @@ import { AuthService } from '../../services/auth.service';
             <div class="user-badge" [class.badge-admin]="auth.isAdmin()">
               <span class="user-role-dot"></span>
               <span class="user-name">{{ auth.currentUser()?.username }}</span>
-              <span class="user-role">{{ auth.isAdmin() ? 'ADMIN' : 'USER' }}</span>
             </div>
             <button class="logout-btn" (click)="auth.logout()">
               <span>⏻</span>
