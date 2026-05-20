@@ -421,10 +421,6 @@
     <div class="empty-state">
       <p>🗒️ No posts yet. Be the first to share something!</p>
     </div>
-  } @else if (filteredPosts().length === 0) {
-    <div class="empty-state">
-      <p>🔍 No posts match the current filter.</p>
-    </div>
   } @else {
     @if (auth.isAdmin()) {
       <div class="filter-bar">
@@ -467,7 +463,12 @@
         </div>
       </div>
     }
-    @if (currentPosts().length > 0) {
+    @if (filteredPosts().length === 0) {
+      <div class="empty-state">
+        <p>🔍 No posts match the current filter.</p>
+      </div>
+    } @else {
+      @if (currentPosts().length > 0) {
       <div class="status-section">
         <div class="status-header status-header--current">🟢 Current</div>
         <div class="posts-list">
@@ -683,6 +684,7 @@
           }
         </div>
       </div>
+      }
     }
   }
 
