@@ -7,7 +7,7 @@
     </div>
     @if (auth.isLoggedIn()) {
       <button class="btn-new-post" (click)="toggleForm()">
-        {{ showForm() ? '✕ Cancel' : '✏️ New Post' }}
+        {{ showForm() ? '✕ Cancel' : '✏️ New Submission' }}
       </button>
     }
   </div>
@@ -21,7 +21,7 @@
 
   @if (showForm()) {
     <div class="new-post-card">
-      <h3>Create New Post</h3>
+      <h3>Create New Submission</h3>
 
       <!-- ── Preset switcher ── -->
       <div class="preset-switcher">
@@ -29,13 +29,13 @@
           class="preset-tab"
           [class.active]="activePreset() === 'simple'"
           (click)="setPreset('simple')">
-          ✏️ Simple post
+          ✏️ Standard Proposal
         </button>
         <button
           class="preset-tab"
           [class.active]="activePreset() === 'lofar'"
           (click)="setPreset('lofar')">
-          📡 LOFAR observation
+          📡 Custom Proposal
         </button>
       </div>
 

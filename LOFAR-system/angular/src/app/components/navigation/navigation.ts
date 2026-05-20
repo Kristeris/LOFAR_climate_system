@@ -11,8 +11,8 @@ import { AuthService } from '../../services/auth.service';
       <div class="nav-container">
         <!-- Brand -->
         <a [routerLink]="auth.isAdmin() ? '/admin' : '/home'" class="logo">
-          <span class="logo-icon">📡</span>
-          LOFAR Climate System
+          
+          Lofar Control System
         </a>
 
         <!-- Nav links - shown to all authenticated users -->
@@ -25,24 +25,19 @@ import { AuthService } from '../../services/auth.service';
                 </a>
               </li>
               <li>
-                <a routerLink="/forum" routerLinkActive="active">🎛️ Observation Control</a>
+                <a routerLink="/forum" routerLinkActive="active">Submissions</a>
               </li>
             } @else {
               <li>
                 <a routerLink="/home" routerLinkActive="active">🏠 Home</a>
               </li>
               <li>
-                <a routerLink="/tower-status" routerLinkActive="active">
-                  🗼 Tower Status
+                <a routerLink="/antenna-status" routerLinkActive="active">
+                  📡 Antenna Status
                 </a>
               </li>
               <li>
-                <a routerLink="/monitoring" routerLinkActive="active">
-                  🛰️ Monitor
-                </a>
-              </li>
-              <li>
-                <a routerLink="/forum" routerLinkActive="active">🎛️ Observation Control</a>
+                <a routerLink="/forum" routerLinkActive="active">Submissions</a>
               </li>
             }
           </ul>

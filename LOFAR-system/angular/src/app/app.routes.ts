@@ -8,7 +8,6 @@ import { Forum } from './components/forum/forum';
 import { TowerStatusComponent } from './components/tower-status/tower-status.component';
 import { AuthGuard } from './guards/auth.guard';
 import { Role } from './models/role';
-import { NohupMonitorComponent } from './components/nohup-monitor/nohup-monitor.component';
 import { HomePage } from './components/home-page/home-page';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 
@@ -35,10 +34,10 @@ export const routes: Routes = [
 
   // Authenticated (USER + ADMIN)
   {
-    path: 'tower-status',
+    path: 'antenna-status',
     component: TowerStatusComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'Tower Status' }
+    data: { roles: [Role.Admin, Role.User], title: 'Antenna Status' }
   },
   {
     path: 'forum',
@@ -60,13 +59,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin], title: 'WebSocket Monitor' }
   },
-  {
-    path: 'monitoring',
-    component: NohupMonitorComponent,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'Nohup Monitor' }
-  },
-
   // Catch-all
   { path: '**', redirectTo: '/home' }
 ];
