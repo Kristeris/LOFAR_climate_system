@@ -101,9 +101,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   private updateProgress(): void {
     const p = this.post();
-    if (!p?.scheduledDateTime || !p.durationSeconds) return;
-    const start = new Date(p.scheduledDateTime).getTime();
-    const end = start + p.durationSeconds * 1000;
+    if (!p) return;
+    const startDateStr = p.scheduledDateTime || p.createdAt;
+    if (!startDateStr) return;
+    const durationSec = p.durationSeconds || 3600;
+    const start = new Date(startDateStr).getTime();
+    const end = start + durationSec * 1000;
     const now = Date.now();
     if (now <= start) { this.progressPercent.set(0); return; }
     if (now >= end) { this.progressPercent.set(100); return; }
@@ -272,9 +275,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   formatDuration(seconds: number | undefined): string {
-    if (!seconds) return '—';
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
+    const sec = seconds || 3600;
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
     if (h > 0 && m > 0) return `${h}h ${m}m`;
     if (h > 0) return `${h}h`;
     return `${m}m`;
@@ -288,8 +291,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   formatEndDate(post: ForumPost): string {
-    if (!post.scheduledDateTime || !post.durationSeconds) return '—';
-    const end = new Date(new Date(post.scheduledDateTime).getTime() + post.durationSeconds * 1000);
+    const startDateStr = post.scheduledDateTime || post.createdAt;
+    if (!startDateStr) return '—';
+    const durationSec = post.durationSeconds || 3600;
+    const end = new Date(new Date(startDateStr).getTime() + durationSec * 1000);
     return end.toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'

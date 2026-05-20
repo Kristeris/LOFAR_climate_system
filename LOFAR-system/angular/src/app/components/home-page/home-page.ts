@@ -159,18 +159,20 @@ export class HomePage implements OnInit {
   }
 
   formatDuration(seconds: number | undefined): string {
-    if (!seconds) return '—';
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
+    const sec = seconds || 3600;
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
     if (h > 0 && m > 0) return `${h}h ${m}m`;
     if (h > 0) return `${h}h`;
     return `${m}m`;
   }
 
   progressPercent(post: ForumPost): number {
-    if (!post.scheduledDateTime || !post.durationSeconds) return 0;
-    const start = new Date(post.scheduledDateTime).getTime();
-    const end = start + post.durationSeconds * 1000;
+    const startDateStr = post.scheduledDateTime || post.createdAt;
+    if (!startDateStr) return 0;
+    const durationSec = post.durationSeconds || 3600;
+    const start = new Date(startDateStr).getTime();
+    const end = start + durationSec * 1000;
     const now = Date.now();
     if (now <= start) return 0;
     if (now >= end) return 100;
@@ -218,8 +220,12 @@ export class HomePage implements OnInit {
   }
 
   formatEndDate(post: ForumPost): string {
-    if (!post.scheduledDateTime || !post.durationSeconds) return '—';
-    const end = new Date(new Date(post.scheduledDateTime).getTime() + post.durationSeconds * 1000);
+    const startDateStr = post.scheduledDateTime || post.createdAt;
+    if (!startDateStr) return '—';
+    
+    const durationSec = post.durationSeconds || 3600;
+    const end = new Date(new Date(startDateStr).getTime() + durationSec * 1000);
+    
     return end.toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'

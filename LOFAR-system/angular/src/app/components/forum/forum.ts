@@ -614,8 +614,12 @@ nohup dump_udp_ow_17 --compress --duration ${f.duration} --ports ${f.port2} --ou
   }
 
   formatEndDate(post: ForumPost): string {
-    if (!post.scheduledDateTime || !post.durationSeconds) return '—';
-    const end = new Date(new Date(post.scheduledDateTime).getTime() + post.durationSeconds * 1000);
+    const startDateStr = post.scheduledDateTime || post.createdAt;
+    if (!startDateStr) return '—';
+    
+    const durationSec = post.durationSeconds || 3600;
+    const end = new Date(new Date(startDateStr).getTime() + durationSec * 1000);
+    
     return end.toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
