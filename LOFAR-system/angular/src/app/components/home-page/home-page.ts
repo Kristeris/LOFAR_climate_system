@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ForumPost } from '../../models/forumpost';
+import { SensorList } from '../sensor-list/sensor-list';
+import { SensorChart } from '../sensor-chart/sensor-chart';
 
 interface OutcomeData {
   status: string;
@@ -15,7 +17,7 @@ interface OutcomeData {
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule],
+  imports: [CommonModule, SensorList, SensorChart],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })
@@ -79,6 +81,17 @@ export class HomePage implements OnInit {
     const start = (this.pastCurrentPage() - 1) * this.pastPageSize();
     return this.filteredPastPosts().slice(start, start + this.pastPageSize());
   });
+
+  showSensorTable = signal<boolean>(false);
+  showSensorChart = signal<boolean>(false);
+
+  toggleSensorTable(): void {
+    this.showSensorTable.update(v => !v);
+  }
+
+  toggleSensorChart(): void {
+    this.showSensorChart.update(v => !v);
+  }
 
   /** Modal state */
   selectedPost = signal<ForumPost | null>(null);

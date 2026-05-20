@@ -122,6 +122,28 @@
     }
 
   }
+
+  <!-- Sensor Data section -->
+  <div class="status-section">
+    <div class="status-header status-header--sensors">
+      <span>📊 Sensor Data</span>
+      <span class="filter-group">
+        <button class="toggle-btn" (click)="toggleSensorTable()">
+          {{ showSensorTable() ? '▼' : '▶' }} Table View
+        </button>
+        <button class="toggle-btn" (click)="toggleSensorChart()">
+          {{ showSensorChart() ? '▼' : '▶' }} Chart View
+        </button>
+      </span>
+    </div>
+    @if (showSensorTable()) {
+      <app-sensor-list />
+    }
+    @if (showSensorChart()) {
+      <app-sensor-chart />
+    }
+  </div>
+
 </div>
 
 <!-- Modal overlay -->

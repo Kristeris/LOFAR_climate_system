@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { SensorList } from './components/sensor-list/sensor-list';
-import { SensorChart } from './components/sensor-chart/sensor-chart';
 import { WsTest } from './components/ws-test/ws-test';
 import { AdminPanel } from './components/admin-panel/admin-panel';
 
@@ -36,18 +34,6 @@ export const routes: Routes = [
   },
 
   // Authenticated (USER + ADMIN)
-  {
-    path: 'sensors',
-    component: SensorList,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'Sensor Data' }
-  },
-  {
-    path: 'charts',
-    component: SensorChart,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.User], title: 'Charts' }
-  },
   {
     path: 'tower-status',
     component: TowerStatusComponent,

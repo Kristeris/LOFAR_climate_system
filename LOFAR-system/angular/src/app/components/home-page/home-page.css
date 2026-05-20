@@ -72,6 +72,35 @@
   flex-wrap: wrap;
 }
 
+.status-header--sensors {
+  color: #0c8599;
+  background: #e3fafc;
+  border-left: 4px solid #22b8cf;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toggle-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  color: #495057;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.toggle-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

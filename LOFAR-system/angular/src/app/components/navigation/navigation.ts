@@ -32,16 +32,6 @@ import { AuthService } from '../../services/auth.service';
                 <a routerLink="/home" routerLinkActive="active">🏠 Home</a>
               </li>
               <li>
-                <a routerLink="/sensors" routerLinkActive="active">
-                  📋 Table View
-                </a>
-              </li>
-              <li>
-                <a routerLink="/charts" routerLinkActive="active">
-                  📈 Charts
-                </a>
-              </li>
-              <li>
                 <a routerLink="/tower-status" routerLinkActive="active">
                   🗼 Tower Status
                 </a>
