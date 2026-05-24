@@ -1,8 +1,5 @@
 package lofar.system.controller;
  
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import lofar.system.model.ForumPostDTO;
 import lofar.system.service.ForumService;
 
@@ -26,7 +23,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  
 @ExtendWith(MockitoExtension.class)
 class ForumControllerTest {
@@ -35,7 +34,7 @@ class ForumControllerTest {
  
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
-            .disable(tools.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
  
     @Mock
     private ForumService forumService;

@@ -68,6 +68,8 @@ dependencies {
  
 	// H2 in-memory database — replaces MySQL during tests so no real DB needed
 	testRuntimeOnly 'com.h2database:h2'
+
+	testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
  
 	// JUnit platform launcher (required by Gradle to run JUnit 5)
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
