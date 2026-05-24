@@ -56,8 +56,33 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+	// ── Test dependencies ──────────────────────────────────────────────
+ 
+	// Core Spring Boot test starter (includes JUnit 5, Mockito, AssertJ)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+ 
+	// Spring Security test support (@WithMockUser, csrf(), etc.)
+	testImplementation 'org.springframework.security:spring-security-test'
+ 
+	// H2 in-memory database — replaces MySQL during tests so no real DB needed
+	testRuntimeOnly 'com.h2database:h2'
+ 
+	// JUnit platform launcher (required by Gradle to run JUnit 5)
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+ 
+	// Lombok for test classes (needed if any test class uses Lombok annotations)
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	// Show test results in console while running
+	testLogging {
+		events 'passed', 'failed', 'skipped'
+		showStandardStreams = false
+		exceptionFormat = 'full'
+	}
 }
